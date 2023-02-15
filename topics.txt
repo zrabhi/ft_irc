@@ -1,0 +1,14 @@
+
+• Scokets:a way to speak to other programs using standard Unix file descriptors.
+
+• Send and recv function offer much greater control over  yout data transmission
+
+
+• What is connection: A relationship between two machines, where two pieces of software know about each other.
+                    Those two pieces of software know how to communicate with each other. 
+                    In other words, they know how to send bits to each other. 
+                    A socket connection means the two machines have information about each other, including network location (IP address) and TCP port. 
+                    (If we can use an analogy, IP address is the phone number and the TCP port is the extension). 
+• AF_INET and AF_INET6: AF_INET and AF_INET6 (internet domain) sockets provide a means of communicating between application programs 
+        that are on different systems using the TCP and UDP transport protocols provided by a TCP/IP product 
+        

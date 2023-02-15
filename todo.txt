@@ -1,0 +1,5 @@
+• Nickname: having a maximum lenght of nine (9)
+• Channel :  names are strings (beginning with a '&' or '#' character) of length up to 200 characters
+• Your executable will be run as follows: ./ircserv <port> <password>
+• port: The port number on which your IRC server will be listening to for incoming IRC connections.
+• password: The connection password. It will be needed by any IRC client that tries to connect to your serve
