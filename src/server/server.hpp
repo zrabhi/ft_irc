@@ -1,20 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_defines.hpp                                     :+:      :+:    :+:   */
+/*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/15 22:35:36 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/17 18:19:46 by zrabhi           ###   ########.fr       */
+/*   Created: 2023/02/16 18:43:26 by zrabhi            #+#    #+#             */
+/*   Updated: 2023/02/17 18:50:07 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_DEFINES_HPP
-# define FT_DEFINES_HPP
+#ifndef  SERVER_HPP
+# define SERVER_HPP
+#include <iostream>
+
+# include <sys/socket.h>
+
+class Server
+{
+    private:
+            int socketFd;
+            std::string _hostname;
+            int _port;
+    public:
+        Server();
+        ~Server();
+    void    start() ;
+};
+
+// server::server(/* args */)
+// {
+// }
+
+// server::~server()
+// {
+// }
 
 
-# define TRUE 1
-# define RUN_TIME_ERR "run time error occured"
-# define INVALID_SCOKET -1
-#endif
+
+
+
+#endif  

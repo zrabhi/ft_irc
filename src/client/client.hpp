@@ -6,12 +6,12 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 19:12:01 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/15 19:12:02 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/16 18:36:30 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPP
-# define    CLIEN_HPP
+#ifndef  CLIENT_HPP
+# define CLIENT_HPP
 
 #include <iostream>
 
@@ -24,6 +24,7 @@ class Client
         int         _fd;
         std::string _nickname;
         std::string _username;
+        std::string _realname;
     public:
         Client();
         
