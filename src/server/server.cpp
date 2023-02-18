@@ -30,7 +30,7 @@ void		Server::init() {
 	}
 
 	int opt = 1;
-	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR,
+	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT,
 		&opt, sizeof(opt)) == -1) {
 		std::cerr << "setsockopt() failed: " << strerror(errno) << std::endl;
 		return ;
@@ -46,7 +46,7 @@ void		Server::init() {
 		return ;
 	}
 
-	if (listen(sockfd, 4) == -1) {
+	if (listen(sockfd, 3) == -1) {
 		std::cerr << "listen() failed: " << strerror(errno) << std::endl;
 		return ;
 	}
@@ -57,11 +57,14 @@ void		Server::init() {
 		std::cerr << "accept() failed: " << strerror(errno) << std::endl;
 		return ;
 	}
+
 	char buffer[1024] = {0};
 	while (1) {
 		recv(newSocket, &buffer, sizeof(buffer), 0);
 		send(newSocket, "server says hi\n", sizeof("server says hi\n"), 0);
     	std::cout << buffer;
+		if (buffer[0] == 0)
+			break;
 		memset(buffer, 0, sizeof(buffer));
 	}
     close(newSocket);
