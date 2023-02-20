@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 19:12:01 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/16 18:36:30 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/20 18:48:12 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,11 @@ class Client
     protected:
         int         _port;
         int         _fd;
+        std::string _hostname;
         std::string _nickname;
         std::string _username;
         std::string _realname;
+        int         socketFd;
     public:
         Client();
         
@@ -45,6 +47,8 @@ class Client
         void setNickName(std::string &NickName);
      
         void   setUserName(std::string &UserName);
+
+        void    connected();
     
 
 };
