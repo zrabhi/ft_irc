@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/16 18:43:26 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/22 21:28:17 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/22 22:20:09 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef enum e_state{
 class client_{
     public:
         int     state;      
+        ///------
         client_(){state = FREE;};
 };
 
@@ -37,6 +38,7 @@ class Server
             int         _port;
             fd_set      read_fds;
             fd_set      write_fds;
+            
             fd_set      active_fds;
             int         nfds;
             client_     clients[1024];
