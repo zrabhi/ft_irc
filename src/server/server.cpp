@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/16 19:13:23 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/20 21:41:56 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/22 21:45:11 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,18 @@ Server::~Server()
     
 }
 
+void    disconnect()
+{
+    
+}
+
 void Server::start()
 {
     /// @brief return 0 if the operation was succesfully,
     //// Otherwise, the value SOCKET_ERROR IS RETURND
     /// @brief SOCK_STREAM REFERS TO TCP SOCKET
     struct sockaddr_in adr; 
+    int value_read;
     adr.sin_family = AF_INET;
     adr.sin_port = htons( _port );
     inet_aton("127.0.0.1", &adr.sin_addr);
@@ -68,18 +74,16 @@ void Server::start()
     {
         int checkout = 0;
         write_fds = read_fds = active_fds; 
-        checkout = select(nfds + 1, &read_fds, &write_fds, NULL, NULL);
-        if (checkout > 0)
+        // FD_ZERO(&read_fds);
+        // FD_SET(socketFd, &read_fds);
+       if ((checkout = select(nfds + 1, &read_fds, &write_fds, NULL, NULL) > 0))
         {
-            // std::cout << "here0" << std::endl;
-            for (int i = socketFd -1  ; i < nfds; i++) 
+            for (int i = 0  ; i < nfds + 1; i++) 
             {
                 if (FD_ISSET(i, &read_fds)) 
                 {
-                std::cout << "in conditions\n";
                     if (i == socketFd) 
-                    {
-                        std::cout << "here1" << std::endl;
+                    { 
                         connection_fd = accept(socketFd,NULL, NULL);
                         if (connection_fd == INVALID_SCOKET)
                         {
@@ -87,13 +91,18 @@ void Server::start()
                                 return ;
                         }
                         nfds = nfds >= connection_fd ? nfds : connection_fd;
-                        FD_SET(connection_fd, &active_fds);
+                        FD_SET(connection_fd, &read_fds);
                         std::cout << "connection accepted succefully!" << std::endl;
                     }
-                    char buf[1024];
-                    std::cout << "here2" << std::endl;
-                    read(connection_fd,  buf, 1024);
-                    std::cout << buf << std::endl;
+                    value_read = read(connection_fd,  buf, 1024);
+                    if (value_read <= 0)
+                        std::cout << "client went away " << std::endl;
+                    else
+                    {
+                        buf[value_read] = '\0';
+                        std::cout << buf << std::endl;
+                    }
+                    memset(buf, 0, sizeof(buf));
                 }
             }
         }
