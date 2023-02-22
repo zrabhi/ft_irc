@@ -16,8 +16,8 @@
             "parentId": "page",
             "childIndex": 1,
             "point": [
-              818.11,
-              273.77
+              173.35,
+              272.61
             ],
             "rotation": 0,
             "text": "Server",
@@ -38,8 +38,8 @@
             "parentId": "page",
             "childIndex": 2,
             "point": [
-              370.83,
-              269.7
+              -273.93,
+              268.54
             ],
             "rotation": 0,
             "text": "Client",
@@ -60,8 +60,8 @@
             "parentId": "page",
             "childIndex": 3,
             "point": [
-              814.46,
-              343.29
+              169.7,
+              342.13
             ],
             "rotation": 0,
             "text": "socket()",
@@ -82,8 +82,8 @@
             "parentId": "page",
             "childIndex": 4,
             "point": [
-              779.03,
-              334.96
+              134.27,
+              333.8
             ],
             "size": [
               158.65,
@@ -110,8 +110,8 @@
             "parentId": "page",
             "childIndex": 5,
             "point": [
-              862.96,
-              390.11
+              218.2,
+              388.95
             ],
             "rotation": 0,
             "bend": 0.00034109719447539174,
@@ -166,8 +166,8 @@
             "parentId": "page",
             "childIndex": 6,
             "point": [
-              827.46,
-              497.31
+              182.7,
+              496.15
             ],
             "rotation": 0,
             "text": "bind()",
@@ -188,8 +188,8 @@
             "parentId": "page",
             "childIndex": 7,
             "point": [
-              783.14,
-              490.39
+              138.38,
+              489.23
             ],
             "size": [
               160.59,
@@ -216,8 +216,8 @@
             "parentId": "page",
             "childIndex": 9,
             "point": [
-              782.33,
-              596.28
+              137.57,
+              595.12
             ],
             "size": [
               160.59,
@@ -244,8 +244,8 @@
             "parentId": "page",
             "childIndex": 11,
             "point": [
-              820.84,
-              605.25
+              176.08,
+              604.09
             ],
             "rotation": 0,
             "text": "listen()",
@@ -266,8 +266,8 @@
             "parentId": "page",
             "childIndex": 12,
             "point": [
-              783.63,
-              702.59
+              138.87,
+              701.43
             ],
             "size": [
               160.59,
@@ -294,8 +294,8 @@
             "parentId": "page",
             "childIndex": 13,
             "point": [
-              863.62,
-              759.34
+              218.86,
+              758.18
             ],
             "rotation": 0,
             "bend": -0.000002778008120369903,
@@ -350,8 +350,8 @@
             "parentId": "page",
             "childIndex": 14,
             "point": [
-              818.35,
-              709.16
+              173.59,
+              708
             ],
             "rotation": 0,
             "text": "accept()",
@@ -372,8 +372,8 @@
             "parentId": "page",
             "childIndex": 15,
             "point": [
-              786.16,
-              806.48
+              141.4,
+              805.32
             ],
             "size": [
               160.59,
@@ -400,8 +400,8 @@
             "parentId": "page",
             "childIndex": 16,
             "point": [
-              866.15,
-              863.23
+              221.39,
+              862.07
             ],
             "rotation": 0,
             "bend": -0.000002778008120369903,
@@ -456,8 +456,8 @@
             "parentId": "page",
             "childIndex": 17,
             "point": [
-              832.48,
-              815.26
+              187.72,
+              814.1
             ],
             "rotation": 0,
             "text": "recv()",
@@ -478,8 +478,8 @@
             "parentId": "page",
             "childIndex": 18,
             "point": [
-              788.47,
-              911.44
+              143.71,
+              910.28
             ],
             "size": [
               160.59,
@@ -506,8 +506,8 @@
             "parentId": "page",
             "childIndex": 19,
             "point": [
-              868.46,
-              968.19
+              223.7,
+              967.03
             ],
             "rotation": 0,
             "bend": 0.00012457217371031633,
@@ -563,8 +563,8 @@
             "parentId": "page",
             "childIndex": 20,
             "point": [
-              835.01,
-              920.27
+              190.25,
+              919.11
             ],
             "rotation": 0,
             "text": "send()",
@@ -585,8 +585,8 @@
             "parentId": "page",
             "childIndex": 24,
             "point": [
-              786.82,
-              1033.94
+              142.06,
+              1032.78
             ],
             "size": [
               160.59,
@@ -613,8 +613,8 @@
             "parentId": "page",
             "childIndex": 26,
             "point": [
-              830.6,
-              1041.59
+              185.84,
+              1040.43
             ],
             "rotation": 0,
             "text": "close()",
@@ -635,8 +635,8 @@
             "parentId": "page",
             "childIndex": 27,
             "point": [
-              332.86,
-              327.9
+              -311.9,
+              326.74
             ],
             "size": [
               160.59,
@@ -663,8 +663,8 @@
             "parentId": "page",
             "childIndex": 28,
             "point": [
-              413.64,
-              386
+              -231.12,
+              384.84
             ],
             "rotation": 0,
             "bend": 0.000032709195796236796,
@@ -720,8 +720,8 @@
             "parentId": "page",
             "childIndex": 29,
             "point": [
-              372.4,
-              338.66
+              -272.36,
+              337.5
             ],
             "rotation": 0,
             "text": "socket()",
@@ -742,8 +742,8 @@
             "parentId": "page",
             "childIndex": 30,
             "point": [
-              347.11,
-              690.86
+              -297.65,
+              689.7
             ],
             "size": [
               147.79,
@@ -770,8 +770,8 @@
             "parentId": "page",
             "childIndex": 31,
             "point": [
-              370.44,
-              699.07
+              -274.32,
+              697.91
             ],
             "rotation": 0,
             "text": "connect()",
@@ -792,8 +792,8 @@
             "parentId": "page",
             "childIndex": 32,
             "point": [
-              417.84,
-              752.71
+              -226.92,
+              751.55
             ],
             "rotation": 0,
             "bend": -0.000006386804011938118,
@@ -848,8 +848,8 @@
             "parentId": "page",
             "childIndex": 33,
             "point": [
-              343.51,
-              794.76
+              -301.25,
+              793.6
             ],
             "size": [
               160.59,
@@ -876,8 +876,8 @@
             "parentId": "page",
             "childIndex": 34,
             "point": [
-              423.5,
-              851.51
+              -221.26,
+              850.35
             ],
             "rotation": 0,
             "bend": -0.000002778008120369903,
@@ -932,8 +932,8 @@
             "parentId": "page",
             "childIndex": 35,
             "point": [
-              391.73,
-              908.81
+              -253.03,
+              907.65
             ],
             "rotation": 0,
             "text": "recv()",
@@ -954,8 +954,8 @@
             "parentId": "page",
             "childIndex": 36,
             "point": [
-              345.82,
-              899.72
+              -298.94,
+              898.56
             ],
             "size": [
               162.04,
@@ -982,8 +982,8 @@
             "parentId": "page",
             "childIndex": 37,
             "point": [
-              429.4,
-              967.17
+              -215.36,
+              966.01
             ],
             "rotation": 0,
             "bend": 0.00015819833435608022,
@@ -1038,8 +1038,8 @@
             "parentId": "page",
             "childIndex": 38,
             "point": [
-              384.07,
-              802.92
+              -260.69,
+              801.76
             ],
             "rotation": 0,
             "text": "send()",
@@ -1060,8 +1060,8 @@
             "parentId": "page",
             "childIndex": 39,
             "point": [
-              235.16,
-              773.57
+              -409.6,
+              772.41
             ],
             "size": [
               786.73,
@@ -1088,8 +1088,8 @@
             "parentId": "page",
             "childIndex": 40,
             "point": [
-              354.37,
-              1030.66
+              -290.39,
+              1029.5
             ],
             "size": [
               160.59,
@@ -1116,8 +1116,8 @@
             "parentId": "page",
             "childIndex": 41,
             "point": [
-              398.15,
-              1038.31
+              -246.61,
+              1037.15
             ],
             "rotation": 0,
             "text": "close()",
@@ -1138,8 +1138,8 @@
             "parentId": "page",
             "childIndex": 8,
             "point": [
-              863.05,
-              547.51
+              218.29,
+              546.35
             ],
             "rotation": 0,
             "bend": -0.000002778008120369903,
@@ -1194,8 +1194,8 @@
             "parentId": "page",
             "childIndex": 10,
             "point": [
-              862.07,
-              654.01
+              217.31,
+              652.85
             ],
             "rotation": 0,
             "bend": -0.000002778008120369903,
@@ -1250,8 +1250,8 @@
             "parentId": "page",
             "childIndex": 42,
             "point": [
-              779.09,
-              420.21
+              134.33,
+              419.05
             ],
             "size": [
               160.77,
@@ -1278,8 +1278,8 @@
             "parentId": "page",
             "childIndex": 43,
             "point": [
-              801.68,
-              424.33
+              156.92,
+              423.17
             ],
             "rotation": 0,
             "text": "setsockopt()",
@@ -1300,8 +1300,8 @@
             "parentId": "page",
             "childIndex": 44,
             "point": [
-              861.81,
-              462.81
+              217.05,
+              461.65
             ],
             "rotation": 0,
             "bend": 0,
@@ -1356,8 +1356,8 @@
             "parentId": "page",
             "childIndex": 45,
             "point": [
-              504.1,
-              824.5
+              -140.66,
+              823.34
             ],
             "rotation": 0,
             "bend": -0.00003593405331713743,
@@ -1413,8 +1413,8 @@
             "parentId": "page",
             "childIndex": 46,
             "point": [
-              955.74,
-              846.9
+              310.98,
+              845.74
             ],
             "rotation": 0,
             "style": {
@@ -1815,8 +1815,8 @@
             "parentId": "page",
             "childIndex": 47,
             "point": [
-              947.49,
-              832.38
+              302.73,
+              831.22
             ],
             "rotation": 0,
             "style": {
@@ -1992,8 +1992,8 @@
             "parentId": "page",
             "childIndex": 48,
             "point": [
-              301.58,
-              831.99
+              -343.18,
+              830.83
             ],
             "rotation": 0,
             "style": {
@@ -2344,8 +2344,8 @@
             "parentId": "page",
             "childIndex": 49,
             "point": [
-              328.35,
-              821.88
+              -316.41,
+              820.72
             ],
             "rotation": 0,
             "style": {
@@ -2491,8 +2491,8 @@
             "parentId": "page",
             "childIndex": 50,
             "point": [
-              509.64,
-              939.2
+              -135.12,
+              938.04
             ],
             "rotation": 0,
             "bend": 0,
@@ -2548,8 +2548,8 @@
             "parentId": "page",
             "childIndex": 51,
             "point": [
-              964.27,
-              341.87
+              319.51,
+              340.71
             ],
             "rotation": 0,
             "text": "socket() : creates an endpoint for communication and returns a descriptor.",
@@ -2570,8 +2570,8 @@
             "parentId": "page",
             "childIndex": 52,
             "point": [
-              963.46,
-              418.74
+              318.7,
+              417.58
             ],
             "rotation": 0,
             "text": "setsockopt() : sets options on sockets",
@@ -2592,8 +2592,8 @@
             "parentId": "page",
             "childIndex": 53,
             "point": [
-              966.98,
-              496.72
+              322.22,
+              495.56
             ],
             "rotation": 0,
             "text": "bind() : assigns a name to an unnamed socket.  When a socket is created with socket(2) it exists in a name space\n(address family) but has no name assigned.  bind() requests that address be assigned to the socket.",
@@ -2614,8 +2614,8 @@
             "parentId": "page",
             "childIndex": 54,
             "point": [
-              958.54,
-              604.64
+              313.78,
+              603.48
             ],
             "rotation": 0,
             "text": "listen() : listens for connections on a socket, it applies only to sockets of type SOCK_STREAM.",
@@ -2636,8 +2636,8 @@
             "parentId": "page",
             "childIndex": 55,
             "point": [
-              977.28,
-              708.88
+              332.52,
+              707.72
             ],
             "rotation": 0,
             "text": "accept() : accepts a connection on a socket",
@@ -2658,8 +2658,8 @@
             "parentId": "page",
             "childIndex": 56,
             "point": [
-              -219.1,
-              702.06
+              -863.86,
+              700.9
             ],
             "rotation": 0,
             "text": "connect() : attempts to make a connection to another socket.",
@@ -2680,8 +2680,8 @@
             "parentId": "page",
             "childIndex": 57,
             "point": [
-              1059.34,
-              913.56
+              414.58,
+              912.4
             ],
             "rotation": 0,
             "text": "send() : sends a message to another socket",
@@ -2702,8 +2702,8 @@
             "parentId": "page",
             "childIndex": 58,
             "point": [
-              1237.96,
-              1059.6
+              593.2,
+              1058.44
             ],
             "rotation": 0,
             "text": " send() and recv() may be used only when the socket is in a\n     connect()'ed state",
@@ -2724,8 +2724,8 @@
             "parentId": "page",
             "childIndex": 59,
             "point": [
-              1062.3,
-              812.92
+              417.54,
+              811.76
             ],
             "rotation": 0,
             "text": "recv() : receives a message from a socket ",

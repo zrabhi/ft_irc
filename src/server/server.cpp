@@ -4,8 +4,7 @@
 #include <sys/_endian.h>
 #include <sys/_types/_socklen_t.h>
 #include <sys/socket.h>
-
-// # define SERVER_FAILED 
+#include <fcntl.h>
 
 Server::Server( std::string port, std::string password) {
 	if (atoi(port.c_str()) < 1024 || atoi(port.c_str()) > 65536)
@@ -25,54 +24,53 @@ int		Server::getPort() const { return _port; }
 std::string Server::getPassword() const { return _password; }
 
 void		Server::init() {
-	int sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (sockfd == -1) {
+	_sockFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (_sockFd == -1) {
 		std::cerr << "socket() failed: " << strerror(errno) << std::endl;
 		return ;
 	}
 
-	int option = 1;
-	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT,
-		&option, sizeof(option)) == -1) {
+	int optionvalue = 1;
+	if (setsockopt(_sockFd, SOL_SOCKET, SO_REUSEADDR,
+		&optionvalue, sizeof(optionvalue)) == -1) {
 		std::cerr << "setsockopt() failed: " << strerror(errno) << std::endl;
-		close(sockfd);
+		close(_sockFd);
 		return ;
 	}
 
-	struct	sockaddr_in address;
-	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = INADDR_ANY;
-	address.sin_port = htons(_port);
+	_address.sin_family = AF_INET;
+	_address.sin_addr.s_addr = INADDR_ANY;
+	_address.sin_port = htons(_port);
 
-	if (bind(sockfd, (struct sockaddr*)&address, sizeof(address)) == -1) {
+	if (bind(_sockFd, (struct sockaddr*)&_address, sizeof(_address)) == -1) {
 		std::cerr << "bind() failed: " << strerror(errno) << std::endl;
-		close(sockfd);
+		close(_sockFd);
 		return ;
 	}
 
-	if (listen(sockfd, 3) == -1) {
+	if (listen(_sockFd, 3) == -1) {
 		std::cerr << "listen() failed: " << strerror(errno) << std::endl;
-		close(sockfd);
+		close(_sockFd);
 		return ;
 	}
 
-	int addrlen = sizeof(address);
-	int newSocket = accept(sockfd, (struct sockaddr*)&address, (socklen_t*)&addrlen);
-	if (newSocket == -1) {
+	int addrlen = sizeof(_address);
+	_newSocketFd = accept(_sockFd, (struct sockaddr*)&_address, (socklen_t*)&addrlen);
+	if (_newSocketFd == -1) {
 		std::cerr << "accept() failed: " << strerror(errno) << std::endl;
-		close(sockfd);
+		close(_sockFd);
 		return ;
 	}
 
 	char buffer[1024] = {0};
 	while (1) {
-		recv(newSocket, &buffer, sizeof(buffer), 0);
-		
-		send(newSocket, "server says hi\n", sizeof("server says hi\n"), 0);
-    	std::cout << buffer;
+		recv(_newSocketFd, &buffer, sizeof(buffer), 0);
 		if (buffer[0] == 0)
-			break;
+			return;
+		send(_newSocketFd, "server says hi\n", sizeof("server says hi\n"), 0);
+    	std::cout << buffer;
 		memset(buffer, 0, sizeof(buffer));
 	}
-    close(newSocket);
+    close(_newSocketFd);
+	close(_sockFd);
 }

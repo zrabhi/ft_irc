@@ -1,11 +1,16 @@
 #pragma once
 
 #include "../header.hpp"
+#include <netinet/in.h>
 
 class Server {
 	private:
-		int			_port;
-		std::string _password;
+		int					_port;
+		std::string 		_password;
+
+		int					_sockFd;
+		int					_newSocketFd;
+		struct sockaddr_in	_address;
 
 		Server();
 		Server(const Server& obj);
@@ -21,5 +26,8 @@ class Server {
 		int			getPort() const;
 		std::string getPassword() const;
 
+		void		createSocket();
+		void		setSocketOptions();
+		void		assignAddress2Socket();
 		void		init();
 } ;
