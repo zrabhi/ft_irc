@@ -34,8 +34,10 @@ class Server {
 		int			getPort() const;
 		std::string getPassword() const;
 
-		void		createSocket();
-		void		setSocketOptions();
-		void		assignAddress2Socket();
+		bool		createSocket();
+		bool		setSocketOptions();
+		bool		editSocketmode();
+		bool		assignAddress2Socket();
+		bool		listenforConnections();
 		void		init();
 } ;
