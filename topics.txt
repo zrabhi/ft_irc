@@ -11,4 +11,9 @@
                     (If we can use an analogy, IP address is the phone number and the TCP port is the extension). 
 • AF_INET and AF_INET6: AF_INET and AF_INET6 (internet domain) sockets provide a means of communicating between application programs 
         that are on different systems using the TCP and UDP transport protocols provided by a TCP/IP product 
-        
+
+fucntion for the client:
+• connect function will wait 75 seconds for server to respond.
+• retunrs 0 if successful or SOCKET_ERROR if not.
+
+usefull resource : http://www.lsv.fr/~rodrigue/teach/npp/2012/tp1.pdf
