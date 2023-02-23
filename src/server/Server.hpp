@@ -39,5 +39,10 @@ class Server {
 		bool		editSocketmode();
 		bool		assignAddress2Socket();
 		bool		listenforConnections();
+		bool		monitorEvents();
+		bool		acceptNewConnection();
+		bool		incomingConnectionRequest();
+		void		incomingClientData();
+		void		addClientSockettoFdSet();
 		void		init();
 } ;
