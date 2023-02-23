@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
+/*   By: ooumlil <ooumlil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 19:12:01 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/20 18:48:12 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/16 01:49:36 by ooumlil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef  CLIENT_HPP
-# define CLIENT_HPP
+#ifndef CLIENT_HPP
+# define    CLIENT_HPP
 
 #include <iostream>
 
@@ -22,11 +22,8 @@ class Client
     protected:
         int         _port;
         int         _fd;
-        std::string _hostname;
         std::string _nickname;
         std::string _username;
-        std::string _realname;
-        int         socketFd;
     public:
         Client();
         
@@ -47,8 +44,6 @@ class Client
         void setNickName(std::string &NickName);
      
         void   setUserName(std::string &UserName);
-
-        void    connected();
     
 
 };

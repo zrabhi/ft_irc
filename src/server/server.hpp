@@ -1,65 +1,47 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   server.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/16 18:43:26 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/22 22:20:09 by zrabhi           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#pragma once
 
-#ifndef  SERVER_HPP
-# define SERVER_HPP
-#include <iostream>
+#include "../header.hpp"
+#include <netinet/in.h>
+#include <fcntl.h>
+#include <poll.h>
+# include "../Commands/Commands.hpp"
 
-#include "../client/client.hpp"
-# include <sys/socket.h>
+# define MAX_CLIENTS 30
+# define NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
 
-typedef enum e_state{
-    FREE = 0,
-    BUSY = 1
-} t_state;
+class Server {
+	private:
+		int					_port;
+		std::string 		_password;
+		int					_sockFd;
+		int					_newSocketFd;
+		struct sockaddr_in	_address;
+		struct pollfd 		_fds[MAX_CLIENTS + 1];
+		int					_nfds;
+		Commands			_cmd;
+		Server();
+		Server(const Server& obj);
+		Server& operator = (const Server& obj);
 
-class client_{
-    public:
-        int     state;      
-        ///------
-        client_(){state = FREE;};
-};
+	public:
+		Server( std::string port, std::string password);
+		~Server();
 
-class Server
-{
-    private:
-            int socketFd;
-            int connection_fd;
-            std::string _hostname;
-            int         _port;
-            fd_set      read_fds;
-            fd_set      write_fds;
-            
-            fd_set      active_fds;
-            int         nfds;
-            client_     clients[1024];
-            char        buf[1025];
-            // Client _client;
-    public:
-        Server();
-        ~Server();
-    void    start() ;
-};
+		void		setPort( int n );
+		void		setPassword( std::string password );
 
-// server::server(/* args */)
-// {
-// }
+		int			getPort() const;
+		std::string getPassword() const;
 
-// server::~server()
-// {
-// }
-
-
-
-
-
-#endif  
+		bool		createSocket();
+		bool		setSocketOptions();
+		bool		editSocketmode();
+		bool		assignAddress2Socket();
+		bool		listenforConnections();
+		bool		monitorEvents();
+		bool		acceptNewConnection();
+		bool		incomingConnectionRequest();
+		void		incomingClientData();
+		void		addClientSockettoFdSet();
+		void		init();
+} ;

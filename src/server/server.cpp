@@ -1,140 +1,180 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   server.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/16 19:13:23 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/23 01:02:48 by zrabhi           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "Server.hpp"
+#include <ostream>
+#include <sys/fcntl.h>
+#include <sys/socket.h>
 
-#include "server.hpp"
-# include "../utils/ft_defines.hpp"
-# include <unistd.h>
-# include <netinet/in.h>
-#include <arpa/inet.h>
-Server::Server() : socketFd(-1), connection_fd(-1), 
-        _hostname("127.0.0.1"), _port(5502)
-{
-    FD_ZERO(&active_fds);
+
+
+Server::Server( std::string port, std::string password) {
+	if (atoi(port.c_str()) < 1024 || atoi(port.c_str()) > 65536)
+		throw std::runtime_error("Port number should be between 1025 and 65536");
+	_port = atoi(port.c_str());
+	_password = password;
 }
 
-Server::~Server()
+Server::~Server() {}
+
+void	Server::setPort( int n ) { _port = n; }
+
+void	Server::setPassword( std::string password ) { _password = password; }
+
+int		Server::getPort() const { return _port; }
+
+std::string Server::getPassword() const { return _password; }
+
+bool	Server::createSocket() 
 {
-    
+	_sockFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (_sockFd == -1) {
+		std::cerr << "socket() failed: " << strerror(errno) << std::endl;
+		return false;
+	}
+	return true;
 }
 
-void    disconnect()
-{
-    
+bool	Server::setSocketOptions() {
+	int optionvalue = 1;
+	if (setsockopt(_sockFd, SOL_SOCKET, SO_REUSEADDR,
+		&optionvalue, sizeof(optionvalue)) == -1)
+	{
+		std::cerr << "setsockopt() failed: " << strerror(errno) << std::endl;
+		close(_sockFd);
+		return false;
+	}
+	return true;
 }
 
-void Server::start()
+bool	Server::editSocketmode() {
+	if (fcntl(_sockFd, F_SETFL, O_NONBLOCK) == -1)
+	{
+			std::cerr << "fcntl() failed: " << strerror(errno) << std::endl;
+		close(_sockFd);
+		return false;
+	}
+	return true;
+}
+
+bool	Server::assignAddress2Socket()
 {
-    /// @brief return 0 if the operation was succesfully,
-    //// Otherwise, the value SOCKET_ERROR IS RETURND
-    /// @brief SOCK_STREAM REFERS TO TCP SOCKET
-    struct sockaddr_in adr; 
-    int value_read;
-    adr.sin_family = AF_INET;
-    adr.sin_port = htons( _port );
-    inet_aton("127.0.0.1", &adr.sin_addr);
-    socketFd = socket(AF_INET, SOCK_STREAM, 0);
-    nfds = socketFd;
-    FD_SET(socketFd, &active_fds);
-    if (socketFd == INVALID_SCOKET)
-    {
-        std::cout << "Socket error!" << std::endl;
-        return ;
+	_address.sin_family = AF_INET;
+	_address.sin_addr.s_addr = INADDR_ANY;
+	_address.sin_port = htons(_port);
+
+	if (bind(_sockFd, (struct sockaddr*)&_address, sizeof(_address)) == -1)
+	{
+		std::cerr << "bind() failed: " << strerror(errno) << std::endl;
+		close(_sockFd);
+		return false;
+	}
+	return true;
+}
+
+bool	Server::listenforConnections() {
+	if (listen(_sockFd, MAX_CLIENTS) == -1) 
+	{
+		std::cerr << "listen() failed: " << strerror(errno) << std::endl;
+		close(_sockFd);
+		return false;
+	}
+	return true;
+}
+
+bool	Server::monitorEvents()
+{
+	int poll_ret = poll(_fds, _nfds, -1); /// Should add a timeout for poll instead of -1
+    if (poll_ret <= 0)
+	{
+		if (poll_ret == -1)
+		{
+        	std::cerr << "poll() failed: " << strerror(errno) << std::endl;
+        	close(_sockFd);
+        	return false;
+		}
+		/// to add a condition for timeout
     }
-    else
-    {
-        std::cout << " created succefully!" << std::endl;
-        std::cout << "socketFd id ====> " << socketFd << std::endl;
+	return true;
+}
+
+bool	Server::acceptNewConnection() {
+    int addrlen = sizeof(_address);
+    _newSocketFd = accept(_sockFd, (struct sockaddr*)&_address, (socklen_t*)&addrlen);
+	///---- server must get client Nickname , real_name && password to access serevr If not print error msg
+	// NEW_CLIENT(_newSocketFd,  inet_ntoa(_address.sin_addr), ntohs(_address.sin_port));
+    if (_newSocketFd == -1) {
+        std::cerr << "accept() failed: " << strerror(errno) << std::endl;
+        close(_sockFd);
+        return false;
     }
-    if (bind(socketFd, (sockaddr*)&adr,sizeof(adr)) == INVALID_SCOKET)
-    {
-        std::cout << "Bind error!" << std::endl;
-        close(socketFd);
-        return ;
+	return true;
+}
+
+void	Server::addClientSockettoFdSet() {
+    if (_nfds <= MAX_CLIENTS) {
+        _fds[_nfds].fd = _newSocketFd;
+        _fds[_nfds].events = POLLIN;
+		std::cout << "Welcome " << _nfds << std::endl;
+        _nfds++;
+    } else {
+        std::cerr << "Too many clients, rejecting connection." << std::endl;
+        close(_newSocketFd);
     }
-    else
-        std::cout << "Binded succefully!" << std::endl;
-    if (listen(socketFd, 1) == INVALID_SCOKET)
-    {
-        std::cout << "Listen error!" << std::endl;
-        close(socketFd);        
+}
+
+bool	Server::incomingConnectionRequest() {
+    if (_fds[0].revents & POLLIN)
+	{
+		if (!acceptNewConnection())
+			return false;
+		addClientSockettoFdSet();
     }
-    std::cout << "succefully listening" << std::endl;     
-    // close(socketFd);
-    /// @brief accept returns a file descriptor for communication
-    struct sockaddr_in csin;
-    socklen_t csin_len= sizeof(csin);
-    while (TRUE)
-    {
-        int checkout = 0;
-        write_fds = read_fds = active_fds; 
-        // FD_ZERO(&read_fds);
-        // FD_SET(socketFd, &read_fds);
-       if ((checkout = select(nfds + 1, &read_fds, &write_fds, NULL, NULL) > 0))
-        {
-            for (int i = 0  ; i < nfds + 1; i++) 
-            {
-                // std::cout << "in loop\n";
-                if (FD_ISSET(i, &read_fds)) 
-                {
-                    std::cout << "im here2\n";
-                    if (i == socketFd) 
-                    { 
-                        connection_fd = accept(socketFd,(struct sockaddr*)&csin, &csin_len);
-                        NEW_CLIENT(connection_fd,  inet_ntoa(csin.sin_addr), ntohs(csin.sin_port));
-                        if (connection_fd == INVALID_SCOKET)
-                        {
-                                std::cout << "Accept error!" << std::endl;
-                                return ;
-                        }
-                        FD_SET(connection_fd, &read_fds);
-                        nfds = nfds >= connection_fd ? nfds : connection_fd;
-                        // i = 0;
-                        // FD_ISSET(i, &read_fds)
-                        std::cout << "connection accepted succefully!" << std::endl;
-                    std::cout << "im heree0\n";
-                    }
-                    value_read = recv(connection_fd, buf, 1024, 0);
-                    std::cout << "im heree1\n"; 
-                    if (value_read <= 0){
-                        CLIENT_GONE(connection_fd);
-                        close(connection_fd);
-                        break ;
-                    }
-                    else
-                    {
-                        buf[value_read] = '\0';
-                        PRINT_BUF(buf);
-                        write(connection_fd, "msg recieved succefully\n", 25);
-                        memset(buf, 0, sizeof(buf));
-                        break ;
-                    }
-                }
-            }
-        }
-        else if (checkout == INVALID_SCOKET)
-        {
-            // FD_CLR(&read_fds);
-            // FD_CLR(&write_fds);
-            // close(socketFd);
-            std::cout << "Select error!"<< std::endl;
-            return ;
-        }
-        // if(connection_fd != )
-        //     {
-        //         // send(Client.)
-                
-        //     }
-    }
-    // send()
-    ///------client sidee-----------
-    
+	return true;
+}
+
+void	Server::incomingClientData()
+{
+	for (int i = 1; i < _nfds; i++)
+	{
+        if (_fds[i].revents & POLLIN)
+		{
+            char buffer[1024] = {0};
+            int result = recv(_fds[i].fd, &buffer, sizeof(buffer), 0);
+			if (buffer[0] != '\n' && buffer[0] != 0 )
+			{
+				std::string buf(buffer);
+				_cmd.checkArg(buf);
+				std::cout << "Client " << i << " says " << buffer << std::flush;
+				send(_fds[i].fd, "salaaam\n", sizeof("salaaam\n"), 0); ///sends back a message to that client only
+			}
+            if (result == 0)
+			{
+                // Connection closed by the client
+				std::cout << "Client " << i << " Left" << std::endl;
+                close(_fds[i].fd);
+                _fds[i] = _fds[_nfds - 1];
+                _nfds--;
+                i--;
+            } 
+			else if (result == -1)
+			{
+                std::cerr << "recv() failed: " << strerror(errno) << std::endl;
+                close(_fds[i].fd);
+                _fds[i] = _fds[_nfds];
+			}
+		}
+	}
+}
+
+void	Server::init() {
+	if (!createSocket() || !setSocketOptions() || !editSocketmode()
+		|| !assignAddress2Socket() || !listenforConnections())
+			return ;
+	_fds[0].fd = _sockFd;
+	_fds[0].events = POLLIN;
+	_nfds = 1;
+	while (true)
+	{
+		if (!monitorEvents() || !incomingConnectionRequest())
+			break ;
+    	incomingClientData();
+	}
 }

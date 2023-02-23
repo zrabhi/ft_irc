@@ -1,39 +1,24 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/15 18:54:31 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/17 18:27:46 by zrabhi           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "header.hpp"
 
-# include <iostream>
-# include <sys/socket.h>
- 
-// # include <stdio.h>
-// # include <string.h>  
-// # include <stdlib.h>
-// # include <errno.h>
-// # include <unistd.h>   
-// # include <arpa/inet.h>    
-// # include <sys/types.h>
-// # include <sys/socket.h>
-// # include <netinet/in.h>
-// # include <sys/time.h>
-#include "server/server.hpp"
+bool isNum(char *arg) {
+    if (!arg || !arg[0])
+        return false;
+    for (int i = 0; arg[i]; i++)
+        if (!isdigit(arg[i]))
+            return false;
+    return true;
+}
+
 int main(int ac, char **av)
 {
-    try {
-         Server i_server;
-
-         i_server.start();
+    if (ac != 3 || !isNum(av[1]) || !av[2] || !av[2][0])
+        return INVALID_ARGS(), 1;
+    try {  
+        Server  server(av[1], av[2]);
+        server.init();
+    } catch(std::exception& e) {
+        std::cout << e.what() << std::endl;
+        return 1;
     }
-    catch(...)
-    {
-        
-    }
-        
+    return 0;
 }
