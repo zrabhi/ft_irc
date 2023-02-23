@@ -2,6 +2,10 @@
 
 #include "../header.hpp"
 #include <netinet/in.h>
+#include <fcntl.h>
+#include <poll.h>
+
+# define MAX_CLIENTS 30
 
 class Server {
 	private:
@@ -11,6 +15,10 @@ class Server {
 		int					_sockFd;
 		int					_newSocketFd;
 		struct sockaddr_in	_address;
+
+		struct pollfd 		_fds[MAX_CLIENTS + 1];
+		int					_nfds;
+
 
 		Server();
 		Server(const Server& obj);
