@@ -105,23 +105,4 @@ void		Server::init() {
 			}
 		}
 	}
-	// int addrlen = sizeof(_address);
-	// _newSocketFd = accept(_sockFd, (struct sockaddr*)&_address, (socklen_t*)&addrlen);
-	// if (_newSocketFd == -1) {
-	// 	std::cerr << "accept() failed: " << strerror(errno) << std::endl;
-	// 	close(_sockFd);
-	// 	return ;
-	// }
-
-	// char buffer[1024] = {0};
-	// while (1) {
-	// 	recv(_newSocketFd, &buffer, sizeof(buffer), 0);
-	// 	if (buffer[0] == 0)
-	// 		return;
-	// 	send(_newSocketFd, "server says hi\n", sizeof("server says hi\n"), 0);
-    // 	std::cout << buffer;
-	// 	memset(buffer, 0, sizeof(buffer));
-	// }
-    // close(_newSocketFd);
-	// close(_sockFd);
 }
