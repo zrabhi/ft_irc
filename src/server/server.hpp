@@ -1,12 +1,11 @@
 #pragma once
 
-#include "../header.hpp"
-#include <netinet/in.h>
-#include <fcntl.h>
-#include <poll.h>
-#include <vector>
+# include "../header.hpp"
 # include "../Commands/Commands.hpp"
-# include  "../client/client.hpp"
+# include "../client/client.hpp"
+#include <sys/poll.h>
+#include <vector>
+
 # define MAX_CLIENTS 30
 # define NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
 
@@ -17,7 +16,7 @@ class Server {
 		int					_sockFd;
 		int					_newSocketFd;
 		struct sockaddr_in	_address;
-		struct pollfd 		_fds[MAX_CLIENTS + 1];
+		struct pollfd		_fds[MAX_CLIENTS + 1]; // todo: should be changed to a vector
 		int					_nfds;
 		Commands			_cmd;
 		std::vector<Client> _clients;

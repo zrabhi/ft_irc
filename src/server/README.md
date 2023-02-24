@@ -55,11 +55,54 @@ The function takes the following arguments:
 </p>
 </details>
 
+<details><summary>fcntl()</summary>
+<p>
+
+The `fcntl()` provides control over descriptors.
+
+```fcntl(int fildes, int cmd, ...)```
+
+* `fildes`: a descriptor to be operated on by `cmd`.
+  * <span style="color: green">takes our server sockfd.</span>
+
+* `cmd`: Set descriptor status flags to `arg`(the third and last arg in our case).
+  * <span style="color: green">`F_SETFL` Set descriptor status flags to `arg`.</span>
+
+* `arg`: here we'll use the `O_NONBLOCK` flag.
+  * <span style="color: green">`O_NONBLOCK`: Non-blocking I/O; if no data is available to a read/recv call, or if a write/send operation would block, the read/recv or write/send call returns -1 with the error `EAGAIN`.</span>
+
+</p>
+</details>
 
 <details><summary>bind()</summary>
 <p>
 
+`bind()` assigns a name to an unnamed socket.  When a socket is created with `socket()` it exists in a name space (address family) but has no name
+assigned.  _bind()_ requests that address be assigned to the socket.
 
+```bind(int socket, const struct sockaddr *address, socklen_t address_len);```
+
+* `socket`: server socketfd.
+
+* `address`: A pointer to a `sockaddr` structure that specifies the local address to bind to the socket. The exact structure used depends on the address family of the socket.
+
+  * We filled a sockaddr_in struct with the following:
+  ```c++
+  _address.sin_family = AF_INET;
+  _address.sin_addr.s_addr = INADDR_ANY;
+  _address.sin_port = htons(_port);
+  ```
+    * <span style="color: green">`address.sin_family = AF_INET` The sin_family member variable is set to the address family of the socket when the sockaddr_in structure is initialized. For IPv4 sockets, the value of sin_family should be set to AF_INET.</span>
+
+    * <span style="color: green">`_address.sin_addr.s_addr = INADDR_ANY` When `INADDR_ANY` is used as the IP address, it tells the _bind()_ function to bind the socket to all available network interfaces on the local machine. This is useful when the exact IP address of the machine is not known or when the program needs to be able to accept connections on any available network interface.</span>
+
+    * <span style="color: green">`_address.sin_port = htons(_port)` The sin_port member variable of the sockaddr_in structure specifies the port number of the socket address.</span>
+    
+[htons](https://www.tutorialspoint.com/unix_sockets/network_byte_orders.htm) resource.
+
+[sockaddr_in](http://www.ccplusplus.com/2011/10/struct-sockaddrin.html) resource.
+
+* `address_len`: The size of the sockaddr structure pointed to by the address argument.
 
 </p>
 </details>
@@ -67,11 +110,15 @@ The function takes the following arguments:
 <details><summary>listen()</summary>
 <p>
 
+[manual of listen](https://man7.org/linux/man-pages/man2/listen.2.html)
+
 </p>
 </details>
 
-<details><summary>connect()</summary>
+<details><summary>poll()</summary>
 <p>
+
+[manual of poll](https://man7.org/linux/man-pages/man2/poll.2.html)
 
 </p>
 </details>
@@ -79,11 +126,15 @@ The function takes the following arguments:
 <details><summary>accept()</summary>
 <p>
 
+[manual of accept](https://man7.org/linux/man-pages/man2/accept.2.html)
+
 </p>
 </details>
 
 <details><summary>send()</summary>
 <p>
+
+[manual of send](https://man7.org/linux/man-pages/man2/send.2.html)
 
 </p>
 </details>
@@ -91,5 +142,13 @@ The function takes the following arguments:
 <details><summary>recv()</summary>
 <p>
 
+[manual of recv](https://man7.org/linux/man-pages/man2/recv.2.html)
+
 </p>
 </details>
+
+#### Other Resources
+
+[Network programming](https://beej.us/guide/bgnet/html/)
+
+[poll() or select()](https://www.ibm.com/docs/en/i/7.4?topic=designs-using-poll-instead-select)
