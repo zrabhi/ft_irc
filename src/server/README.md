@@ -3,6 +3,10 @@
 ### What is a Socket?
 > A socket is a way to speak to other programs using standard Unix file descriptors.
 
+### Server Structure
+
+![picture](./structure.png)
+
 #### Used system calls:
 
 <details><summary>socket()</summary>
