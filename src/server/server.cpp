@@ -110,8 +110,11 @@ bool	Server::acceptNewConnection() {
 
 void	Server::addClientSockettoFdSet() {
     if (_nfds <= MAX_CLIENTS) {
+		Client _new_client;
+		_new_client._fd = _newSocketFd;			
         _fds[_nfds].fd = _newSocketFd;
         _fds[_nfds].events = POLLIN;
+		_clients.push_back(_new_client);
 		std::cout << "Welcome " << _nfds << std::endl;
         _nfds++;
     } else {
@@ -141,6 +144,7 @@ void	Server::incomingClientData()
 			if (buffer[0] != '\n' && buffer[0] != 0 )
 			{
 				std::string buf(buffer);
+				// if (_fds[])
 				_cmd.checkArg(buf);
 				std::cout << "Client " << i << " says " << buffer << std::flush;
 				send(_fds[i].fd, "salaaam\n", sizeof("salaaam\n"), 0); ///sends back a message to that client only

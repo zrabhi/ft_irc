@@ -4,8 +4,9 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <poll.h>
+#include <vector>
 # include "../Commands/Commands.hpp"
-
+# include  "../client/client.hpp"
 # define MAX_CLIENTS 30
 # define NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
 
@@ -19,6 +20,7 @@ class Server {
 		struct pollfd 		_fds[MAX_CLIENTS + 1];
 		int					_nfds;
 		Commands			_cmd;
+		std::vector<Client> _clients;
 		Server();
 		Server(const Server& obj);
 		Server& operator = (const Server& obj);

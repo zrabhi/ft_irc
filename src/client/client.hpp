@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ooumlil <ooumlil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 19:12:01 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/16 01:49:36 by ooumlil          ###   ########.fr       */
+/*   Updated: 2023/02/24 00:45:39 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,11 @@
 // server needs to know client id's thats why were creating a Client class
 class Client
 {
-    protected:
+    public:
         int         _port;
         int         _fd;
         std::string _nickname;
         std::string _username;
-    public:
         Client();
         
         ~Client();
