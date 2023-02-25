@@ -1,4 +1,5 @@
 #include "server.hpp"
+#include "../header.hpp"
 
 Server::Server( std::string port, std::string password) {
 	if (atoi(port.c_str()) < 1024 || atoi(port.c_str()) > 65536)
@@ -104,21 +105,27 @@ bool	Server::acceptNewConnection() {
 }
 
 void	Server::addClientSockettoFdSet() {
-	if (_nfds <= MAX_CLIENTS) {
+
+	if (_nfds <= MAX_CLIENTS)
+	{
 		Client _new_client;
-		_new_client._fd = _newSocketFd;			
+		_new_client._fd = _newSocketFd;
+		_new_client._auth = NOT_REGISTERED;
 		_fds[_nfds].fd = _newSocketFd;
 		_fds[_nfds].events = POLLIN;
-		_clients.push_back(_new_client);
+		_clients.insert(std::pair<int, Client>(_newSocketFd, _new_client));
 		std::cout << "Welcome " << _nfds << std::endl;
         _nfds++;
-    } else {
+    } 
+	else 
+	{
 		std::cerr << "Too many clients, rejecting connection." << std::endl;
 		close(_newSocketFd);
 	}
 }
 
-bool	Server::incomingConnectionRequest() {
+bool	Server::incomingConnectionRequest()
+{
     if (_fds[0].revents & POLLIN)
 	{
 		if (!acceptNewConnection())
@@ -139,14 +146,16 @@ void	Server::incomingClientData()
 			if (buffer[0] != '\n' && buffer[0] != 0 )
 			{
 				std::string buf(buffer);
-				// if (_fds[])
-				_cmd.checkArg(buf);
-				std::cout << "Client " << i << " says " << buffer << std::flush;
-				send(_fds[i].fd, "salaaam\n", sizeof("salaaam\n"), 0); ///sends back a message to that client only
+				std::map<int, Client>::iterator _it = _clients.find(_fds[i].fd); 
+				// std::cout << "client file descriptor is " << _it->first << std::endl;
+				if (_it->first && _it->second._auth == NOT_REGISTERED)
+					_cmd.checkArg(buf, _it);
+				else
+					std::cout << "Client " << i << " says " << buffer << std::flush;
+				// send(_fds[i].fd, "salaaam\n", sizeof("salaaam\n"), 0); ///sends back a message to that client only
 			}
 			if (result == 0)
 			{
-				// Connection closed by the client
 				std::cout << "Client " << i << " Left" << std::endl;
 				close(_fds[i].fd);
 				_fds[i] = _fds[_nfds - 1];
