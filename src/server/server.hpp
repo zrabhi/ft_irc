@@ -19,7 +19,6 @@ class Server {
 		// struct pollfd		_fds[MAX_CLIENTS + 1]; // todo: should be changed to a vector
 		std::vector<pollfd>	_fds1;
 		int					_nfds;
-		std::vector<pollfd> _fds1;
 		Commands			_cmd;
 		std::map<int, Client> _clients;
 		Server();
