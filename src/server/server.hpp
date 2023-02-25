@@ -6,17 +6,18 @@
 #include <sys/poll.h>
 #include <vector>
 
-# define MAX_CLIENTS 30
+# define SIMULTANEOUS_CONNECTIONS 30
 # define NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
 
 class Server {
 	private:
 		int					_port;
 		std::string 		_password;
-		int					_sockFd;
+		int					_serverFd;
 		int					_newSocketFd;
 		struct sockaddr_in	_address;
-		struct pollfd		_fds[MAX_CLIENTS + 1]; // todo: should be changed to a vector
+		// struct pollfd		_fds[MAX_CLIENTS + 1]; // todo: should be changed to a vector
+		std::vector<pollfd>	_fds1;
 		int					_nfds;
 		Commands			_cmd;
 		std::vector<Client> _clients;
