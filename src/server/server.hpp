@@ -4,7 +4,7 @@
 # include "../Commands/Commands.hpp"
 # include "../client/client.hpp"
 #include <sys/poll.h>
-#include <vector>
+#include <map>
 
 # define SIMULTANEOUS_CONNECTIONS 30
 # define NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
@@ -19,8 +19,9 @@ class Server {
 		// struct pollfd		_fds[MAX_CLIENTS + 1]; // todo: should be changed to a vector
 		std::vector<pollfd>	_fds1;
 		int					_nfds;
+		std::vector<pollfd> _fds1;
 		Commands			_cmd;
-		std::vector<Client> _clients;
+		std::map<int, Client> _clients;
 		Server();
 		Server(const Server& obj);
 		Server& operator = (const Server& obj);

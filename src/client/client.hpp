@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 19:12:01 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/24 00:45:39 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/25 00:58:57 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,18 @@
 
 #include <iostream>
 
-
+// enum T_flag
+// {   
+//     REGISTERD = 1,
+//     NOT_REGISTERED,
+// };
 // server needs to know client id's thats why were creating a Client class
 class Client
 {
     public:
         int         _port;
         int         _fd;
+        int         _auth;
         std::string _nickname;
         std::string _username;
         Client();
