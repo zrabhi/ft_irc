@@ -144,12 +144,12 @@ void	Server::incomingClientData()
 			char buffer[1024] = {0};
 			int result = recv(_fds[i].fd, &buffer, sizeof(buffer), 0);
 			if (buffer[0] != '\n' && buffer[0] != 0 )
-			{
+			{ 
 				std::string buf(buffer);
 				std::map<int, Client>::iterator _it = _clients.find(_fds[i].fd); 
 				// std::cout << "client file descriptor is " << _it->first << std::endl;
 				if (_it->first && _it->second._auth == NOT_REGISTERED)
-					_cmd.checkArg(buf, _it);
+					_cmd.authentification(buf, _it);
 				else
 					std::cout << "Client " << i << " says " << buffer << std::flush;
 				// send(_fds[i].fd, "salaaam\n", sizeof("salaaam\n"), 0); ///sends back a message to that client only
