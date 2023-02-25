@@ -77,7 +77,7 @@ bool	Server::listenforConnections() {
 
 bool	Server::monitorEvents()
 {
-	int poll_ret = poll(&_fds1[0], _nfds, -1); /// Should add a timeout for poll instead of -1
+	int poll_ret = poll(&_fds[0], _nfds, -1); /// Should add a timeout for poll instead of -1
 	if (poll_ret <= 0)
 	{
 		if (poll_ret == -1)
@@ -105,23 +105,14 @@ bool	Server::acceptNewConnection() {
 }
 
 void	Server::addClientSockettoFdSet() {
-
-	if (_nfds <= MAX_CLIENTS)
-	{
-		Client _new_client;
-		_new_client._fd = _newSocketFd;
-		_new_client._auth = NOT_REGISTERED;
-		_fds[_nfds].fd = _newSocketFd;
-		_fds[_nfds].events = POLLIN;
-		_clients.insert(std::pair<int, Client>(_newSocketFd, _new_client));
-		std::cout << "Welcome " << _nfds << std::endl;
-        _nfds++;
-    } 
-	else 
-	{
-		std::cerr << "Too many clients, rejecting connection." << std::endl;
-		close(_newSocketFd);
-	}
+	Client _new_client;
+	_new_client._fd = _newSocketFd;
+	_new_client._auth = NOT_REGISTERED;
+	_fds[_nfds].fd = _newSocketFd;
+	_fds[_nfds].events = POLLIN;
+	_clients.insert(std::pair<int, Client>(_newSocketFd, _new_client));
+	std::cout << "Welcome " << _nfds << std::endl;
+    _nfds++;
 }
 
 bool	Server::incomingConnectionRequest()
@@ -139,10 +130,10 @@ void	Server::incomingClientData()
 {
 	for (int i = 1; i < _nfds; i++)
 	{	
-		if (_fds1[i].revents & POLLIN)
+		if (_fds[i].revents & POLLIN)
 		{
 			char buffer[1024] = {0};
-			int result = recv(_fds1[i].fd, &buffer, sizeof(buffer), 0);
+			int result = recv(_fds[i].fd, &buffer, sizeof(buffer), 0);
 			if (buffer[0] != '\n' && buffer[0] != 0)
 			{
 				std::string buf(buffer);
@@ -157,14 +148,14 @@ void	Server::incomingClientData()
 			if (result == 0)
 			{
 				std::cout << "Client " << i << " Left" << std::endl;
-				close(_fds1[i].fd);
-				_fds1[i] = _fds1[_nfds - 1];
+				close(_fds[i].fd);
+				_fds[i] = _fds[_nfds - 1];
 				_nfds--;
 				i--;
 			} else if (result == -1) {
 				std::cerr << "recv() failed: " << strerror(errno) << std::endl;
-				close(_fds1[i].fd);
-				_fds1[i] = _fds1[_nfds];
+				close(_fds[i].fd);
+				_fds[i] = _fds[_nfds];
 			}
 		}
 	}
@@ -177,7 +168,7 @@ void	Server::init() {
 	struct pollfd	tmp;
 	tmp.fd = _serverFd;
 	tmp.events = POLLIN;
-	_fds1.push_back(tmp);
+	_fds.push_back(tmp);
 	_nfds = 1;
 	while (true)
 	{

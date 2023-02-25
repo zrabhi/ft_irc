@@ -16,11 +16,11 @@ class Server {
 		int					_serverFd;
 		int					_newSocketFd;
 		struct sockaddr_in	_address;
-		// struct pollfd		_fds[MAX_CLIENTS + 1]; // todo: should be changed to a vector
-		std::vector<pollfd>	_fds1;
+		std::vector<pollfd>	_fds;
 		int					_nfds;
 		Commands			_cmd;
 		std::map<int, Client> _clients;
+
 		Server();
 		Server(const Server& obj);
 		Server& operator = (const Server& obj);
