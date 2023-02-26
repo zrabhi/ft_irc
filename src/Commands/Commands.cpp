@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/26 00:36:04 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/26 22:02:27 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ std::vector<std::string> Commands::splite(std::string &parametrs, std::string de
 		parametrs.erase(0, position + delemiter.length());
 	}
 	vals.push_back(parametrs);
-
 	return vals;
 }
 
@@ -47,14 +46,22 @@ void    Commands::makeUpper(std::string &param)
 void    Commands::commandsErrors(std::string cmd)
 {
     if (!cmd.compare(0, 4, "NICK"))
+    {
         ERR_NONICKNAMEGIVEN;
+        return;
+    }
     if(!cmd.compare(0, 4, "PASS"))
     {
         ERR_NEEDMOREPARAMS(cmd);
         REPLYPASS(cmd);
+        return;
     }
-    if (!cmd.compare(0, 4, "USER"))
+    else if (!cmd.compare(0, 4, "USER"))
+    {
         ERR_NEEDMOREPARAMS(cmd);
+        return;
+    }
+    ERR_UNKNOWNCOMMAND(cmd);
 }
 
 void    Commands::authentification(std::string &string, std::map<int, Client> _clients, int fd)
@@ -77,19 +84,37 @@ void    Commands::authentification(std::string &string, std::map<int, Client> _c
     }
     std::map<int, Client>::iterator _it = _clients.find(fd); 
     if (_it->second._auth == REGISTERD && i == 2)
-            ERR_ALREADYREGISTRED;
-        
-    (this->*_commands[i])(tmp[1], _it);
-    
+            ERR_ALREADYREGISTRED;    
+            //segfault;
+    switch(i)
+    {
+        case 0:
+            if (!validateNick(tmp[1].substr(0, tmp[1].find("\n")), _clients))
+                {
+                    ERR_NICKNAMEINUSE(tmp[1])
+                    return ;
+                }
+            (this->*_commands[i])(tmp[1].substr(0, tmp[1].find("\n")), _it);
+            break ;
+        case 1:
+            (this->*_commands[i])(tmp[1].substr(0, tmp[1].find("\n")), _it);
+            break ;
+        case 2:
+            (this->*_commands[i])(tmp[1].substr(0, tmp[1].find("\n")), _it);
+            break ;
+        default :
+            ERR_UNKNOWNCOMMAND(tmp[0]);
+    }
     // _client->second._auth = REGISTERD;
     
 }
 
 
-bool    Commands::validateNick(std::string &nickName, std::map<int ,Client> _user)
+bool    Commands::validateNick(std::string nickName, std::map<int ,Client> _user)
 {
     for(std::map<int ,Client>::iterator _it = _user.begin(); _it != _user.end(); _it++)
     {
+        std::cout << "in loop\n";
         if (!nickName.compare(_it->second._nickname))
             return (false);   
     }
@@ -103,10 +128,10 @@ bool    Commands::NICK(std::string nickName,std::map<int , Client>::iterator &_c
     // (void)nickName;
     // if ()
     //--- TODO: need to check nickName validity 
-   
+    // if (!validateNick(nickName))
     _client->second._nickname = nickName;
     std::vector<std::string> _mgs ;
-    _mgs.push_back("\033[1m\033[36m you are known as " + nickName + RESET);
+    _mgs.push_back("\033[1m\033[32myou are known as " + nickName + RESET);
     // _mgs += 
     send(_client->first, (*_mgs.begin()).c_str(), 40, 0);
     // KNOWNAS(nickName.substr(0, nickName.find("\n")));

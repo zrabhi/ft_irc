@@ -54,9 +54,9 @@ enum T_flag
 # define   ARGS_ERR "Usage: ./ircserv <port> <password>\nport: A number between 1025 and 65536\npassword: a sequence of characeters"
 # define   INVALID_ARGS() std::cerr << ARGS_ERR << std::endl
 # define   ERR_NONICKNAMEGIVEN  std::cout << BOLDYELLOW <<"Error(431): No nickname given." << RESET << std::endl;
-# define   ERR_UNKNOWNCOMMAND(a)  std::cout << "Error(421): "  << a << " Unknown command."  << std::endl;
+# define   ERR_UNKNOWNCOMMAND(a)  std::cout << BOLDYELLOW << "Error(421): "  << a << " Unknown command."  << RESET <<  std::endl;
 # define   ERR_NEEDMOREPARAMS(a) std::cout << BOLDYELLOW <<"Error(461): " +  a + " Not enough parameters." << RESET << std::endl;
-# define   ERR_NICKNAMEINUSE(a) std::cout << a << " :Nickname is already in use" << std::endl;
+# define   ERR_NICKNAMEINUSE(a) std::cout << BOLDYELLOW << a << " :Nickname is already in use" << RESET << std::endl;
 # define   ERR_USERNOTINCHANNEL(a, b) std::cout << a << " :They aren't on that channel" << b << std::endl;
 # define   ERR_NOTONCHANNEL(a) std::cout << a << " :You're not on that channel" << std::endl;
 # define   ERR_USERONCHANNEL(a, b) std::cout << a << " " << b << " :is already on channel" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/26 00:03:37 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/26 21:59:35 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ class Commands
 {
     private:
         std::vector<std::string> splite(std::string &parametrs, std::string delemiter);
-        bool    validateNick(std::string &nickName, std::map<int ,Client> _user);
+        bool    validateNick(std::string nickName, std::map<int ,Client> _user);
         void    makeUpper(std::string &param);
         void    commandsErrors(std::string cmd);
     public:
