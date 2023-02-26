@@ -21,7 +21,8 @@
 # include <netinet/in.h>
 # include <sys/_endian.h>
 # include <sys/_types/_socklen_t.h>
-# include "./server/server.hpp"
+// #include "Commands/Commands.hpp"
+// # include "./server/server.hpp"
 enum T_flag
 {   
     NOT_REGISTERED = 0,
@@ -69,7 +70,7 @@ enum T_flag
 # define   ERR_NOPRIVILEGES  std::cout << " :Permission Denied- You're not an IRC operator" << std::endl;
 # define   ERR_CANTKILLSERVER std::cout << " You cant kill a server!" << std::endl;
 # define   ERR_ERRONEUSNICKNAME(a)  std::cout << "Error(432): " + a << " Erroneus nickname." << std::endl;
-
+# define   ERR_ALREADYREGISTRED    std::cout << BOLDYELLOW << "Error(462): You may not reregister" << std::endl;
 /*
     SERVER REPLY
 */
@@ -84,5 +85,6 @@ enum T_flag
 // }
 #endif
 
-# define REPLY_PASS(a) std:: cout << BOLDGREEN << "Reply(650) : PASS <password>" << RESET << std::endl; 
+# define REPLYPASS(a) std:: cout << BOLDGREEN << "Reply(650) : PASS <password>" << RESET << std::endl; 
 # define KNOWNAS(a)  std::cout << BOLDCYAN  << "You are known as " + a << RESET << std::endl;
+# define REPLYACCESS std::cout <<  BOLDGREEN << "Reply(650) : You dont have privilege " << RESET << std::endl; 

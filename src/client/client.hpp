@@ -27,6 +27,7 @@ class Client
         int         _port;
         int         _fd;
         int         _auth;
+        std::string passWord;
         std::string _nickname;
         std::string _username;
         Client();
