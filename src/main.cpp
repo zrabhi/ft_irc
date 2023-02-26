@@ -1,5 +1,5 @@
 #include "header.hpp"
-
+# include "./server/server.hpp"
 bool isNum(char *arg) {
     if (!arg || !arg[0])
         return false;

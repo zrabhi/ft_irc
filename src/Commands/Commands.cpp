@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/25 02:15:49 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/26 22:02:27 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ std::vector<std::string> Commands::splite(std::string &parametrs, std::string de
 		parametrs.erase(0, position + delemiter.length());
 	}
 	vals.push_back(parametrs);
-
 	return vals;
 }
 
@@ -47,76 +46,121 @@ void    Commands::makeUpper(std::string &param)
 void    Commands::commandsErrors(std::string cmd)
 {
     if (!cmd.compare(0, 4, "NICK"))
+    {
         ERR_NONICKNAMEGIVEN;
+        return;
+    }
     if(!cmd.compare(0, 4, "PASS"))
+    {
         ERR_NEEDMOREPARAMS(cmd);
+        REPLYPASS(cmd);
+        return;
+    }
+    else if (!cmd.compare(0, 4, "USER"))
+    {
+        ERR_NEEDMOREPARAMS(cmd);
+        return;
+    }
+    ERR_UNKNOWNCOMMAND(cmd);
 }
 
-void    Commands::checkArg(std::string &string, std::map<int , Client>::iterator& _client)
+void    Commands::authentification(std::string &string, std::map<int, Client> _clients, int fd)
 {
     std::vector<std::string> tmp = splite(string, " ");
     makeUpper(tmp[0]);
     if (tmp.size() == 1)
-    {
-        commandsErrors(tmp[0]);
+    {   
+        commandsErrors(tmp[0].substr(0, tmp[0].find("\n")));
         return;
     }
     size_t i = 0;
-    std::vector<std::string> cmdChecks ;
+    std::vector<std::string> cmdChecks;
     cmdChecks.push_back("NICK");
     cmdChecks.push_back("PASS");
     cmdChecks.push_back("USER");
     BMemFun _commands[] = {&Commands::NICK, &Commands::PASS, &Commands::USER};
-    // while (i < 3 && )
     for(i = 0;  i < 3 && tmp[0].compare(cmdChecks[i]); i++)
     {    
     }
-    (this->*_commands[i])(tmp[1], _client);
-    // if ()
-    _client->second._auth = REGISTERD;
-    // if (!tmp[0].compare(cmdChecks[i]))
-    // if (!tmp[0].compare(0, 4, "NICK") || !tmp[0].compare(0, 4, "PASS") || !tmp[0].compare(0, 4, "USER")) 
-    // {
-    //     if (tmp.size() == 1)
-    //     {
-    //         if (tmp[0] == "nick")
-    //             std::cout << "there are equal!" << std::endl;
-    //         ERR_NONICKNAMEGIVEN;
-    //         return ;
-    //     }
-    //     for(std::vector<std::string>::iterator _it = tmp.begin(); _it != tmp.end(); _it++)
-    //     {
-    //         std::cout << "parametre is " << *_it << std::endl;   
-    //     }
-    //     std::cout << "Command found!" << std::endl;
-    // }
+    std::map<int, Client>::iterator _it = _clients.find(fd); 
+    if (_it->second._auth == REGISTERD && i == 2)
+            ERR_ALREADYREGISTRED;    
+            //segfault;
+    switch(i)
+    {
+        case 0:
+            if (!validateNick(tmp[1].substr(0, tmp[1].find("\n")), _clients))
+                {
+                    ERR_NICKNAMEINUSE(tmp[1])
+                    return ;
+                }
+            (this->*_commands[i])(tmp[1].substr(0, tmp[1].find("\n")), _it);
+            break ;
+        case 1:
+            (this->*_commands[i])(tmp[1].substr(0, tmp[1].find("\n")), _it);
+            break ;
+        case 2:
+            (this->*_commands[i])(tmp[1].substr(0, tmp[1].find("\n")), _it);
+            break ;
+        default :
+            ERR_UNKNOWNCOMMAND(tmp[0]);
+    }
+    // _client->second._auth = REGISTERD;
+    
 }
-void    Commands::NICK(std::string nickName,std::map<int , Client>::iterator &_client)
+
+
+bool    Commands::validateNick(std::string nickName, std::map<int ,Client> _user)
 {
-    std::cout << " In nick fucntion 1" << std::endl;
+    for(std::map<int ,Client>::iterator _it = _user.begin(); _it != _user.end(); _it++)
+    {
+        std::cout << "in loop\n";
+        if (!nickName.compare(_it->second._nickname))
+            return (false);   
+    }
+    return (true);
+
+}
+
+bool    Commands::NICK(std::string nickName,std::map<int , Client>::iterator &_client)
+{
+    // std::cout << "In nick fucntion " << std::endl;
     // (void)nickName;
+    // if ()
+    //--- TODO: need to check nickName validity 
+    // if (!validateNick(nickName))
     _client->second._nickname = nickName;
+    std::vector<std::string> _mgs ;
+    _mgs.push_back("\033[1m\033[32myou are known as " + nickName + RESET);
+    // _mgs += 
+    send(_client->first, (*_mgs.begin()).c_str(), 40, 0);
+    // KNOWNAS(nickName.substr(0, nickName.find("\n")));
     // (void)User;
     //// check if already the nickname is used
     // User.setNickName(nickName);   
+    return (true);
 }
 
 
 
-void    Commands::USER( std::string userName, std::map<int , Client>::iterator &_client)
+bool    Commands::USER( std::string userName, std::map<int , Client>::iterator &_client)
 {
-    std::cout << " In nick fucntion " << std::endl;
+    // std::cout << " In nick fucntion " << std::endl;
     (void)userName;
     (void)_client;
     //// check if already the nickname is used
     // User.setNickName(nickName);   
+    return (true);
 }
 
-void    Commands::PASS(std::string passWord, std::map<int , Client>::iterator &_client)
+bool    Commands::PASS(std::string passWord, std::map<int , Client>::iterator &_client)
 {
-    std::cout << " In nick fucntion " << std::endl;
+    // std::cout << "In nick fucntion " << std::endl;
     (void)passWord;
     (void)_client;
+    _client->second.passWord = passWord;
+    _client->second._auth = REGISTERD;
+    return (true);
     //// check if already the nickname is used
     // User.setNickName(nickName);   
 }

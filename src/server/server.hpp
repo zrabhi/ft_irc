@@ -1,8 +1,9 @@
-#pragma once
+#ifndef SERVER_HPP
+# define SERVER_HPP
 
-# include "../header.hpp"
 # include "../Commands/Commands.hpp"
-# include "../client/client.hpp"
+# include "../header.hpp"
+// # include "../client/client.hpp"
 #include <sys/poll.h>
 #include <map>
 
@@ -10,6 +11,7 @@
 # define NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
 
 class Server {
+
 	private:
 		int					_port;
 		std::string 		_password;
@@ -28,12 +30,12 @@ class Server {
 	public:
 		Server( std::string port, std::string password);
 		~Server();
-
 		void		setPort( int n );
 		void		setPassword( std::string password );
 
 		int			getPort() const;
 		std::string getPassword() const;
+		std::map<int, Client> getClients() const;
 
 		bool		createSocket();
 		bool		setSocketOptions();
@@ -47,3 +49,5 @@ class Server {
 		void		addClientSockettoFdSet();
 		void		init();
 } ;
+
+#endif

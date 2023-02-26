@@ -1,5 +1,6 @@
+# include "../Commands/Commands.hpp"
 #include "server.hpp"
-#include "../header.hpp"
+// #include "../header.hpp"
 
 Server::Server( std::string port, std::string password) {
 	if (atoi(port.c_str()) < 1024 || atoi(port.c_str()) > 65536)
@@ -10,12 +11,15 @@ Server::Server( std::string port, std::string password) {
 
 Server::~Server() {}
 
+
+
 void	Server::setPort( int n ) { _port = n; }
 
 void	Server::setPassword( std::string password ) { _password = password; }
 
 int		Server::getPort() const { return _port; }
 
+std::map<int, Client> Server::getClients() const { return _clients; }
 std::string Server::getPassword() const { return _password; }
 
 bool	Server::createSocket() 
@@ -97,7 +101,7 @@ bool	Server::acceptNewConnection() {
 	///---- server must get client Nickname , real_name && password to access serevr If not print error msg
 	// NEW_CLIENT(_newSocketFd,  inet_ntoa(_address.sin_addr), ntohs(_address.sin_port));
 	if (_newSocketFd == -1) {
-		std::cerr << "accept() failed: " << strerror(errno) << 		std::endl;
+		std::cerr << "accept() failed: " << strerror(errno) << std::endl;
 		close(_serverFd);
 		return false;
 	}
@@ -137,22 +141,28 @@ void	Server::incomingClientData()
 			if (buffer[0] != '\n' && buffer[0] != 0)
 			{
 				std::string buf(buffer);
-				std::map<int, Client>::iterator _it = _clients.find(_fds[i].fd); 
+				// std::map<int, Client>::iterator _it = _clients.find(_fds[i].fd); 
 				// std::cout << "client file descriptor is " << _it->first << std::endl;
-				if (_it->first && _it->second._auth == NOT_REGISTERED)
-					_cmd.checkArg(buf, _it);
-				else
+				// if (_it->first && _it->second._auth == NOT_REGISTERED)
+
+				_cmd.authentification(buf, _clients, _fds[i].fd);
+				if (_clients[_fds[i].fd]._auth == REGISTERD)
 					std::cout << "Client " << i << " says " << buffer << std::flush;
+				// else 
+				// 	REPLYACCESS;
 				// send(_fds[i].fd, "salaaam\n", sizeof("salaaam\n"), 0); ///sends back a message to that client only
 			}
 			if (result == 0)
 			{
 				std::cout << "Client " << i << " Left" << std::endl;
+				_clients.erase(_fds[i].fd);
 				close(_fds[i].fd);
 				_fds[i] = _fds[_nfds - 1];
 				_nfds--;
 				i--;
-			} else if (result == -1) {
+			} 
+			else if (result == -1) 
+			{
 				std::cerr << "recv() failed: " << strerror(errno) << std::endl;
 				close(_fds[i].fd);
 				_fds[i] = _fds[_nfds];
