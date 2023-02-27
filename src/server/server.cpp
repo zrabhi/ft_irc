@@ -110,11 +110,14 @@ bool	Server::acceptNewConnection() {
 
 void	Server::addClientSockettoFdSet() {
 	Client _new_client;
+	//--to work withe setters later and make this attributes private:
 	_new_client._fd = _newSocketFd;
-	_new_client._auth = NOT_REGISTERED;
+	_new_client.serverPass = _password;
+	_new_client._hostname = inet_ntoa(_address.sin_addr);
+	_new_client.setPort(ntohs(_address.sin_port));
 	_fds[_nfds].fd = _newSocketFd;
 	_fds[_nfds].events = POLLIN;
-	_clients.insert(std::pair<int, Client>(_newSocketFd, _new_client));
+	_clients.insert(std::make_pair<int, Client>(_newSocketFd, _new_client));
 	std::cout << "Welcome " << _nfds << std::endl;
     _nfds++;
 }
@@ -141,16 +144,9 @@ void	Server::incomingClientData()
 			if (buffer[0] != '\n' && buffer[0] != 0)
 			{
 				std::string buf(buffer);
-				// std::map<int, Client>::iterator _it = _clients.find(_fds[i].fd); 
-				// std::cout << "client file descriptor is " << _it->first << std::endl;
-				// if (_it->first && _it->second._auth == NOT_REGISTERED)
-
 				_cmd.authentification(buf, _clients, _fds[i].fd);
-				if (_clients[_fds[i].fd]._auth == REGISTERD)
-					std::cout << "Client " << i << " says " << buffer << std::flush;
-				// else 
-				// 	REPLYACCESS;
-				// send(_fds[i].fd, "salaaam\n", sizeof("salaaam\n"), 0); ///sends back a message to that client only
+				// if (_clients[_fds[i].fd]._auth == REGISTERD &&_clients[_fds[i].fd]._status == CLIENT )
+				// 	std::cout << "Client " << i << " says " << buffer << std::flush;
 			}
 			if (result == 0)
 			{

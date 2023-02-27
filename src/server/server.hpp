@@ -8,7 +8,6 @@
 #include <map>
 
 # define SIMULTANEOUS_CONNECTIONS 30
-# define NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
 
 class Server {
 

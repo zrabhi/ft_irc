@@ -27,6 +27,8 @@ enum T_flag
 {   
     NOT_REGISTERED = 0,
     REGISTERD = 1,
+    GUEST,
+    CLIENT,
 };
 
 /*
@@ -56,7 +58,7 @@ enum T_flag
 # define   ERR_NONICKNAMEGIVEN  std::cout << BOLDYELLOW <<"Error(431): No nickname given." << RESET << std::endl;
 # define   ERR_UNKNOWNCOMMAND(a)  std::cout << BOLDYELLOW << "Error(421): "  << a << " Unknown command."  << RESET <<  std::endl;
 # define   ERR_NEEDMOREPARAMS(a) std::cout << BOLDYELLOW <<"Error(461): " +  a + " Not enough parameters." << RESET << std::endl;
-# define   ERR_NICKNAMEINUSE(a) std::cout << BOLDYELLOW << a << " :Nickname is already in use" << RESET << std::endl;
+# define   ERR_NICKNAMEINUSE(a) std::cout << BOLDYELLOW << ":Nickname is already in use" << RESET << std::endl;
 # define   ERR_USERNOTINCHANNEL(a, b) std::cout << a << " :They aren't on that channel" << b << std::endl;
 # define   ERR_NOTONCHANNEL(a) std::cout << a << " :You're not on that channel" << std::endl;
 # define   ERR_USERONCHANNEL(a, b) std::cout << a << " " << b << " :is already on channel" << std::endl;
@@ -85,6 +87,7 @@ enum T_flag
 // }
 #endif
 
+# define NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
 # define REPLYPASS(a) std:: cout << BOLDGREEN << "Reply(650) : PASS <password>" << RESET << std::endl; 
 # define KNOWNAS(a)  std::cout << BOLDCYAN  << "You are known as " + a << RESET << std::endl;
 # define REPLYACCESS std::cout <<  BOLDGREEN << "Reply(650) : You dont have privilege " << RESET << std::endl; 

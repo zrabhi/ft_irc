@@ -6,15 +6,24 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 18:57:03 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/15 22:30:08 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/27 21:07:50 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "client.hpp"
+#include "../header.hpp"
 
 // initialize data memebers
-Client::Client()
+Client::Client() : _port(), 
+                _fd(-1), 
+                _auth(NOT_REGISTERED),
+                _status(GUEST),
+                _hostname(""),
+                passWord(""),
+                _nickname(""),
+                _username(),
+                _realname()
 {
 
 }
