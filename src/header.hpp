@@ -56,7 +56,6 @@ enum T_flag
 # define   ARGS_ERR "Usage: ./ircserv <port> <password>\nport: A number between 1025 and 65536\npassword: a sequence of characeters"
 # define   INVALID_ARGS() std::cerr << ARGS_ERR << std::endl
 # define   ERR_NONICKNAMEGIVEN  std::cout << BOLDYELLOW <<"Error(431): No nickname given." << RESET << std::endl;
-# define   ERR_UNKNOWNCOMMAND(a)  std::cout << BOLDYELLOW << "Error(421): "  << a << " Unknown command."  << RESET <<  std::endl;
 # define   ERR_NEEDMOREPARAMS(a) std::cout << BOLDYELLOW <<"Error(461): " +  a + " Not enough parameters." << RESET << std::endl;
 # define   ERR_NICKNAMEINUSE(a) std::cout << BOLDYELLOW << ":Nickname is already in use" << RESET << std::endl;
 # define   ERR_USERNOTINCHANNEL(a, b) std::cout << a << " :They aren't on that channel" << b << std::endl;
@@ -71,8 +70,10 @@ enum T_flag
 # define   ERR_BANNEDFROMCHAN(a) std::cout << a << "  :Cannot join channel (+b)" << std::endl;
 # define   ERR_NOPRIVILEGES  std::cout << " :Permission Denied- You're not an IRC operator" << std::endl;
 # define   ERR_CANTKILLSERVER std::cout << " You cant kill a server!" << std::endl;
-# define   ERR_ERRONEUSNICKNAME(a)  std::cout << "Error(432): " + a << " Erroneus nickname." << std::endl;
+# define   ERR_ERRONEUSNICKNAME(a)  BOLDYELLOW  + a + " :Erroneus nickname." + RESET + "\n";
 # define   ERR_ALREADYREGISTRED    std::cout << BOLDYELLOW << "Error(462): You may not reregister" << std::endl;
+# define   ERR_UNKNOWNCOMMAND(a)  BOLDYELLOW  + a + " Unknown command." + RESET +"\n"
+# define   NICKNAMEMESG(a)  "\033[1m\033[33myou are known as " +  a  +  RESET + "\n";
 /*
     SERVER REPLY
 */

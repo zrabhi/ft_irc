@@ -160,8 +160,8 @@ void	Server::incomingClientData()
 			else if (result == -1) 
 			{
 				std::cerr << "recv() failed: " << strerror(errno) << std::endl;
-				close(_fds[i].fd);
-				_fds[i] = _fds[_nfds];
+				close(_fds.at(i).fd);
+	
 			}
 		}
 	}
