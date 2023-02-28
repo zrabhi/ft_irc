@@ -1,5 +1,8 @@
 # include "../Commands/Commands.hpp"
 #include "server.hpp"
+#include <sys/_types/_size_t.h>
+#include <sys/socket.h>
+#include <vector>
 // #include "../header.hpp"
 
 Server::Server( std::string port, std::string password) {
@@ -81,7 +84,7 @@ bool	Server::listenforConnections() {
 
 bool	Server::monitorEvents()
 {
-	int poll_ret = poll(&_fds[0], _nfds, -1); /// Should add a timeout for poll instead of -1
+	int poll_ret = poll(&_fds[0], _fds.size(), -1); /// Should add a timeout for poll instead of -1
 	if (poll_ret <= 0)
 	{
 		if (poll_ret == -1)
@@ -98,8 +101,6 @@ bool	Server::monitorEvents()
 bool	Server::acceptNewConnection() {
 	int addrlen = sizeof(_address);
 	_newSocketFd = accept(_serverFd, (struct sockaddr*)&_address, (socklen_t*)&addrlen);
-	///---- server must get client Nickname , real_name && password to access serevr If not print error msg
-	// NEW_CLIENT(_newSocketFd,  inet_ntoa(_address.sin_addr), ntohs(_address.sin_port));
 	if (_newSocketFd == -1) {
 		std::cerr << "accept() failed: " << strerror(errno) << std::endl;
 		close(_serverFd);
@@ -115,16 +116,17 @@ void	Server::addClientSockettoFdSet() {
 	_new_client.serverPass = _password;
 	_new_client._hostname = inet_ntoa(_address.sin_addr);
 	_new_client.setPort(ntohs(_address.sin_port));
-	_fds[_nfds].fd = _newSocketFd;
-	_fds[_nfds].events = POLLIN;
+	struct pollfd newGuestFd;
+	newGuestFd.fd = _newSocketFd;
+	newGuestFd.events = POLLIN;
+	_fds.push_back(newGuestFd);
+	std::cout << "Welcome Client #" << _fds.at(_fds.size() - 1).fd << std::endl;
 	_clients.insert(std::make_pair<int, Client>(_newSocketFd, _new_client));
-	std::cout << "Welcome " << _nfds << std::endl;
-    _nfds++;
 }
 
 bool	Server::incomingConnectionRequest()
 {
-    if (_fds[0].revents & POLLIN)
+    if (_fds.at(0).revents & POLLIN)
 	{
 		if (!acceptNewConnection())
 			return false;
@@ -135,12 +137,12 @@ bool	Server::incomingConnectionRequest()
 
 void	Server::incomingClientData()
 {
-	for (int i = 1; i < _nfds; i++)
+	for (size_t i = 1; i < _fds.size(); i++)
 	{	
-		if (_fds[i].revents & POLLIN)
+		if (_fds.at(i).revents & POLLIN)
 		{
 			char buffer[1024] = {0};
-			int result = recv(_fds[i].fd, &buffer, sizeof(buffer), 0);
+			int result = recv(_fds.at(i).fd, &buffer, sizeof(buffer), 0);
 			if (buffer[0] != '\n' && buffer[0] != 0)
 			{
 				std::string buf(buffer);
@@ -150,18 +152,18 @@ void	Server::incomingClientData()
 			}
 			if (result == 0)
 			{
-				std::cout << "Client " << i << " Left" << std::endl;
-				_clients.erase(_fds[i].fd);
-				close(_fds[i].fd);
-				_fds[i] = _fds[_nfds - 1];
-				_nfds--;
+				std::cout << "Client #" << _fds.at(i).fd << " Left" << std::endl;
+				_clients.erase(_fds.at(i).fd);
+				close(_fds.at(i).fd);
+				_fds.erase(_fds.begin() + i);
 				i--;
 			} 
 			else if (result == -1) 
 			{
-				std::cerr << "recv() failed: " << strerror(errno) << std::endl;
+				char msg[19] = "Wait a little bit\n";
+				send(_fds.at(i).fd, msg, sizeof(msg), 0);
 				close(_fds.at(i).fd);
-	
+				_fds.erase(_fds.begin() + i);
 			}
 		}
 	}
@@ -175,7 +177,6 @@ void	Server::init() {
 	tmp.fd = _serverFd;
 	tmp.events = POLLIN;
 	_fds.push_back(tmp);
-	_nfds = 1;
 	while (true)
 	{
 		if (!monitorEvents() || !incomingConnectionRequest())

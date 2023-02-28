@@ -18,7 +18,6 @@ class Server {
 		int					_newSocketFd;
 		struct sockaddr_in	_address;
 		std::vector<pollfd>	_fds;
-		int					_nfds;
 		Commands			_cmd;
 		std::map<int, Client> _clients;
 
