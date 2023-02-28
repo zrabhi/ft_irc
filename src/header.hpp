@@ -55,25 +55,25 @@ enum T_flag
 
 # define   ARGS_ERR "Usage: ./ircserv <port> <password>\nport: A number between 1025 and 65536\npassword: a sequence of characeters"
 # define   INVALID_ARGS() std::cerr << ARGS_ERR << std::endl
-# define   ERR_NONICKNAMEGIVEN  std::cout << BOLDYELLOW <<"Error(431): No nickname given." << RESET << std::endl;
-# define   ERR_NEEDMOREPARAMS(a) std::cout << BOLDYELLOW <<"Error(461): " +  a + " Not enough parameters." << RESET << std::endl;
-# define   ERR_NICKNAMEINUSE(a) std::cout << BOLDYELLOW << ":Nickname is already in use" << RESET << std::endl;
+# define   ERR_NICKNAMEINUSE(a)  "\033[1m\033[33m:Nickname is already in use\n\033[0m"
 # define   ERR_USERNOTINCHANNEL(a, b) std::cout << a << " :They aren't on that channel" << b << std::endl;
 # define   ERR_NOTONCHANNEL(a) std::cout << a << " :You're not on that channel" << std::endl;
 # define   ERR_USERONCHANNEL(a, b) std::cout << a << " " << b << " :is already on channel" << std::endl;
 # define   ERR_SUMMONDISABLED(a)  std::cout << a << " has been disabled" << std::endl;
 # define   ERR_NOTREGISTERED   std::cout << " You have not registered" << std::endl;
-# define   ERR_PASSWDMISMATCH  std::cout << " Password incorrect" << std::endl;
+# define   ERR_PASSWDMISMATCH   "\033[1m\033[33m:Password incorrect\n\033[1m"
 # define   ERR_YOUREBANNEDCREEP std::cout << " You are banned from this server" << std::endl;
 # define   ERR_INVITEONLYCHAN(a) std::cout << a << " :Cannot join channel (+i)" << std::endl;
 # define   ERR_CHANNELISFULL(a) std::cout << a << " :Cannot join channel (+l)" << std::endl;
 # define   ERR_BANNEDFROMCHAN(a) std::cout << a << "  :Cannot join channel (+b)" << std::endl;
 # define   ERR_NOPRIVILEGES  std::cout << " :Permission Denied- You're not an IRC operator" << std::endl;
 # define   ERR_CANTKILLSERVER std::cout << " You cant kill a server!" << std::endl;
-# define   ERR_ERRONEUSNICKNAME(a)  BOLDYELLOW  + a + " :Erroneus nickname." + RESET + "\n";
-# define   ERR_ALREADYREGISTRED    std::cout << BOLDYELLOW << "Error(462): You may not reregister" << std::endl;
+# define   ERR_ERRONEUSNICKNAME(a)  BOLDYELLOW  + a + " :Erroneus nickname." + RESET + "\n"
+# define   ERR_ALREADYREGISTRED     "\033[1m\033[33mError(462): You may not reregister\033[0m" 
 # define   ERR_UNKNOWNCOMMAND(a)  BOLDYELLOW  + a + " Unknown command." + RESET +"\n"
-# define   NICKNAMEMESG(a)  "\033[1m\033[33myou are known as " +  a  +  RESET + "\n";
+# define   NICKNAMEMESG(a)  "\033[1m\033[33myou are known as " +  a  +  RESET + "\n"
+# define   ERR_NONICKNAMEGIVEN  "\033[1m\033[33m:No nickname given.\n\033[0m" 
+# define   ERR_NEEDMOREPARAMS(a) "\033[1m\033[33mError(461): " +  a + " Not enough parameters." +RESET +"\n"
 /*
     SERVER REPLY
 */
@@ -89,6 +89,6 @@ enum T_flag
 #endif
 
 # define NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
-# define REPLYPASS(a) std:: cout << BOLDGREEN << "Reply(650) : PASS <password>" << RESET << std::endl; 
+# define REPLYPASS(a)   "\033[1m\033[32mReply(650) : PASS <password>\n\033[0m"
 # define KNOWNAS(a)  std::cout << BOLDCYAN  << "You are known as " + a << RESET << std::endl;
 # define REPLYACCESS std::cout <<  BOLDGREEN << "Reply(650) : You dont have privilege " << RESET << std::endl; 

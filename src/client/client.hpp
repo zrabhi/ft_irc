@@ -15,15 +15,10 @@
 
 #include <iostream>
 
-// enum T_flag
-// {   
-//     REGISTERD = 1,
-//     NOT_REGISTERED,
-// };
-// server needs to know client id's thats why were creating a Client class
+
 class Client
 {
-    public:
+    private:
         int         _port;
         int         _fd;
         int         _auth;
@@ -34,27 +29,35 @@ class Client
         std::string _nickname;
         std::string _username;
         std::string _realname;
+    public:
         Client();
-        
+        Client(int newFd, std::string _serverPass, std::string hostName, int port, int newStatus);
         ~Client();
 
         /// @brief getters 
-        int     getPort() const;
-
+        int         getPort() const;
+        int         getAuth()  const;
+        int         getStatus() const;
+        int         getFd() const;
+        std::string getPassWord() const;
+        std::string getHostName() const;
+        std::string getServerPass() const;
+        std::string getRealName()   const;
         std::string getNickName() const;
-      
         std::string getUserName() const;
      
         /// @brief Setters
 
-        void  setPort(int __port);
+        void   setPort(int __port);
+        void   setNickName(std::string NickName);
+        void   setPassWord(std::string _password);
+        void   setServerPass(std::string _serverpass);
+        void   setAuth(int newAuth);
+        void   setStatus(int newStatus);
+        void   setFd(int newFd);
+        void   setRealName(std::string _realname);
+        void   setUserName(std::string UserName);
     
-
-        void setNickName(std::string &NickName);
-     
-        void   setUserName(std::string &UserName);
-    
-
 };
 
 
