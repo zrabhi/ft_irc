@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/01 05:00:18 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/01 19:49:22 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,12 @@ class Commands
         void    commandsErrors(std::string cmd, int fd, size_t index);
         bool    checkParams(std::string params);
         void    appendToParams(std::vector<std::string> params, std::string &tmp, size_t index);
-        void    validateParam(std::string param);
+        bool    validateParam(std::string param);
+        bool    isSpecial(char _c);
+        bool    isNumber(char _c);
+        
+        
+        // bool    isLetter(char c)
     public:
         Commands();
         ~Commands();

@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/01 05:08:21 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/01 19:52:08 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,12 +180,25 @@ void    Commands::appendToParams(std::vector<std::string> params, std::string &t
     }
 }
 
-void    Commands::validateParam(std::string param)
+
+bool    Commands::isSpecial(char _c)
 {
-    (void)param;
-    /*
-        TODO: validate param here 
-    */
+    return (_c == '-' || _c == '[' || _c == ']' || _c == '\/' \
+            || _c == '`\'' || _c == '^'  || _c == '{' || _c == '}');
+}
+
+bool   Commands::validateParam(std::string param)
+{
+    std::string::iterator _it = param.begin() + 1;
+    std::string::iterator _it_end = param.end(); 
+    if (!isalpha(*(param.begin())) || !isSpecial(*(param.begin())))
+        return (false);   
+    for (; _it != _it_end; _it++)
+    {
+        if (!iswalpha(*_it) || !isSpecial(*_it) ||  !isalnum(*_it))
+            return false;
+    }
+    return (true);
 }
 
 bool    Commands::USER( std::vector<std::string> params, std::map<int , Client>::iterator &_client)
