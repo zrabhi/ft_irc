@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 18:57:03 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/28 05:56:18 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/02/28 23:14:04 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,28 @@
 
 // initialize data memebers
 Client::Client() : _port(), 
-                _fd(-1), 
-                _auth(NOT_REGISTERED),
-                _status(GUEST),
+    _fd(-1), 
+        _auth(NOT_REGISTERED),
+            _status(GUEST),
                 _hostname(""),
-                passWord(""),
-                _nickname(""),
-                _username(),
-                _realname()
+                    passWord(""),
+                        _nickname(""),
+                            _username(""),
+                                _realname("")
 {
 
 }
 
 Client::Client(int newFd, std::string _serverPass, std::string hostName, int port, int newStatus) :_port(port),
-                                                                                   _fd(newFd),
-                                                                                   _status(newStatus),
-                                                                                    _hostname(hostName),
-                                                                                    serverPass(_serverPass)
+    _fd(newFd),
+        _auth(NOT_REGISTERED),
+             _status(newStatus),
+                 _hostname(hostName),
+                    serverPass(_serverPass),
+                        passWord(""),
+                            _nickname(""),
+                                _username(""),
+                                     _realname("")
 {
     
 }
@@ -105,6 +110,11 @@ void    Client::setPassWord(std::string _password)
 void    Client::setServerPass(std::string _serverpass)
 {
     serverPass = _serverpass;
+}
+
+void    Client::setRealName(std::string realName)
+{
+    _realname = realName;
 }
 
 void    Client::setFd(int newFd)

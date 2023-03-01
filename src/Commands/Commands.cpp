@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/28 05:55:05 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/01 05:08:21 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,20 +97,19 @@ void    Commands::authentification(std::string &string, std::map<int, Client> &_
                     replyto(ERR_NICKNAMEINUSE(tmp[1]), fd);
                     return ;
                 }
-            (this->*_commands[i])(tmp[1], _it);
+            (this->*_commands[i])(tmp, _it);
             break ;
         case 1:
-            (this->*_commands[i])(tmp[1], _it);
+            (this->*_commands[i])(tmp, _it);
             break ;
         case 2:
-            (this->*_commands[i])(tmp[1], _it);
+            (this->*_commands[i])(tmp, _it);
             break ;
         default :
-            message = ERR_UNKNOWNCOMMAND(tmp[0]); 
             replyto(ERR_UNKNOWNCOMMAND(tmp[0]), _it->first);
     }
     if (_it->second.getPassWord() != "" && _it->second.getNickName() != "" \
-        &&  _it->second.getStatus() == GUEST)
+            && _it->second.getUserName() != "" &&  _it->second.getStatus() == GUEST)
     {
         _it->second.setStatus(CLIENT);
         Welcome(_it);
@@ -129,42 +128,103 @@ bool    Commands::validateNick(std::string nickName, std::map<int ,Client> _user
 {
     for(std::map<int ,Client>::iterator _it = _user.begin(); _it != _user.end(); _it++)
     {
-        if (_it->second.getNickName() == nickName && _it->first != fd)
+        if (_it->second.getNickName() != "" && \
+            _it->second.getNickName() == nickName && _it->first != fd)
             return (false);   
     }
     return (true);
 }
 
-bool    Commands::NICK(std::string nickName, std::map<int , Client>::iterator &_client)
+bool    Commands::NICK(std::vector<std::string> params, std::map<int , Client>::iterator &_client)
 {
-    if (!isalpha(nickName[0]) || nickName.size() > 9)
-        return (replyto(ERR_ERRONEUSNICKNAME(nickName), _client->first), false);
-    _client->second.setNickName(nickName);
-    replyto(NICKNAMEMESG(nickName), _client->first);
+    if (!isalpha(params[1][0]) || params[1].size() > 9)
+        return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);
+    if (_client->second.getNickName() != "" )
+        KNOWNNOWAS(_client->second.getNickName(), params[1]);
+    _client->second.setNickName(params[1]);
+    replyto(NICKNAMEMESG(params[1]), _client->first);
     return (true);
 }
 
-bool    Commands::USER( std::string userName, std::map<int , Client>::iterator &_client)
+bool  Commands::checkParams(std::string params)
 {
-    (void)userName;
-    (void)_client;
+   return (params[0] ==':' && isalpha(params[1]) ? true : false);
+}
+
+bool     Commands::validateUserName(std::string userName, std::map<int ,Client> _user, int fd)
+{
+    for(std::map<int ,Client>::iterator _it = _user.begin(); _it != _user.end(); _it++)
+    {
+        if (_it->second.getUserName() != "" && \
+                _it->second.getUserName() == userName && _it->first != fd)
+            return (false);   
+    }
     return (true);
 }
 
-bool    Commands::PASS(std::string passWord, std::map<int , Client>::iterator &_client)
+void    Commands::appendToParams(std::vector<std::string> params, std::string &tmp, size_t index)
+{
+    size_t position;
+    if (params[index][0] != ':')
+    {
+        tmp = params[index];
+        return;
+    }
+    tmp = params[index].substr(1, params[index].size());
+    for (size_t i = ++index; i < params.size(); i++)
+    {
+        tmp += " ";
+        if ((position = params[i].find("\n")))
+            params[i] = params[i].substr(0, position);
+        tmp += params[i];
+    }
+}
+
+void    Commands::validateParam(std::string param)
+{
+    (void)param;
+    /*
+        TODO: validate param here 
+    */
+}
+
+bool    Commands::USER( std::vector<std::string> params, std::map<int , Client>::iterator &_client)
+{
+    if (params.size() < 5)
+        return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first) \
+                ,replyto(REPLYUSER(params[0]), _client->first), false);
+    else if (!validateUserName(params[1], _users, _client->first))
+            return (replyto(ERR_ALREADYUSED, _client->first), false);
+    else 
+    { 
+        std::string tmp;
+        if (params.size() == 5)
+            params[4] = params[4].substr(0, params[4].find("\n"));
+        if (params[4] == "")
+            return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first) \
+                ,replyto(REPLYUSER(params[0]), _client->first), false);
+        appendToParams(params, tmp, 4);
+        _client->second.setUserName(params[1]);
+        replyto(NEWUSERNAME(params[1]), _client->first);
+        _client->second.setRealName(tmp);
+        replyto(NEWREALNAME(tmp), _client->first);
+    }
+    return (true); 
+}
+
+bool    Commands::PASS(std::vector<std::string> params, std::map<int , Client>::iterator &_client)
 {
     if (_client->second.getAuth() == REGISTERD)
     {
         replyto(ERR_ALREADYREGISTRED, _client->first);
         return(false);
     }
-    if (passWord != _client->second.getServerPass())
+    if (params[1] != _client->second.getServerPass())
     {
         replyto(ERR_PASSWDMISMATCH, _client->first);
         return(false);
     }
-    _client->second.setPassWord(passWord);
+    _client->second.setPassWord(params[1]);
     _client->second.setAuth(REGISTERD);
     return (true);
-   
 }

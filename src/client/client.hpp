@@ -55,7 +55,7 @@ class Client
         void   setAuth(int newAuth);
         void   setStatus(int newStatus);
         void   setFd(int newFd);
-        void   setRealName(std::string _realname);
+        void   setRealName(std::string realName);
         void   setUserName(std::string UserName);
     
 };
