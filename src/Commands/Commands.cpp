@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/01 19:52:08 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 03:05:41 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,16 +135,6 @@ bool    Commands::validateNick(std::string nickName, std::map<int ,Client> _user
     return (true);
 }
 
-bool    Commands::NICK(std::vector<std::string> params, std::map<int , Client>::iterator &_client)
-{
-    if (!isalpha(params[1][0]) || params[1].size() > 9)
-        return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);
-    if (_client->second.getNickName() != "" )
-        KNOWNNOWAS(_client->second.getNickName(), params[1]);
-    _client->second.setNickName(params[1]);
-    replyto(NICKNAMEMESG(params[1]), _client->first);
-    return (true);
-}
 
 bool  Commands::checkParams(std::string params)
 {
@@ -183,20 +173,61 @@ void    Commands::appendToParams(std::vector<std::string> params, std::string &t
 
 bool    Commands::isSpecial(char _c)
 {
-    return (_c == '-' || _c == '[' || _c == ']' || _c == '\/' \
-            || _c == '`\'' || _c == '^'  || _c == '{' || _c == '}');
+    return (_c == '-' || _c == '[' || _c == ']' || _c == '\\' \
+            || _c == '`' || _c == '^'  || _c == '{' || _c == '}');
 }
 
-bool   Commands::validateParam(std::string param)
+bool Commands::isAlphaOrSpecial(char _c)
+{
+    if (iswalpha(_c) || isSpecial(_c))
+        return (true);
+    return (false); 
+}
+
+bool   Commands::validateParam(std::string param, bool priv)
 {
     std::string::iterator _it = param.begin() + 1;
+    size_t checker(1);
     std::string::iterator _it_end = param.end(); 
-    if (!isalpha(*(param.begin())) || !isSpecial(*(param.begin())))
-        return (false);   
-    for (; _it != _it_end; _it++)
+    if (priv)
     {
-        if (!iswalpha(*_it) || !isSpecial(*_it) ||  !isalnum(*_it))
-            return false;
+        if (!isAlphaOrSpecial(*(param.begin())))
+            return (false);   
+    }
+    for (; _it != _it_end && (iswalpha(*_it)  || isSpecial(*_it)  || isalnum(*_it)); _it++ )
+        checker++;
+    if (checker != param.size())
+        return (false);
+    return (true);
+}
+
+bool    Commands::NICK(std::vector<std::string> params, std::map<int , Client>::iterator &_client)
+{
+    if (!validateParam(params[1], true) || params[1].size() > 9)
+        return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);
+    if (_client->second.getNickName() != "" )
+        KNOWNNOWAS(_client->second.getNickName(), params[1]);
+    _client->second.setNickName(params[1]);
+    replyto(NICKNAMEMESG(params[1]), _client->first);
+    return (true);
+}
+
+bool Commands::isNonWhite(char _c, bool priv)
+{
+    if (priv)
+        if (_c == 0x20)
+            return (true); 
+    return (_c == 0x0 || _c == 0xd || _c == 0xa);
+}
+
+bool Commands::validateUser(std::string param, bool priv)
+{
+    std::string::iterator _it = param.begin();
+    std::string::iterator _it_end = param.end(); 
+    for (; _it != _it_end ; _it++ )
+    {
+        if (isNonWhite(*_it, priv))
+            return (false);
     }
     return (true);
 }
@@ -208,15 +239,19 @@ bool    Commands::USER( std::vector<std::string> params, std::map<int , Client>:
                 ,replyto(REPLYUSER(params[0]), _client->first), false);
     else if (!validateUserName(params[1], _users, _client->first))
             return (replyto(ERR_ALREADYUSED, _client->first), false);
+    else if (!validateUser(params[1], true))
+            return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);
     else 
     { 
         std::string tmp;
-        if (params.size() == 5)
-            params[4] = params[4].substr(0, params[4].find("\n"));
+        params[params.size() - 1] = params[params.size() -1].\
+        substr(0, params[params.size() -1].find("\n"));
         if (params[4] == "")
             return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first) \
                 ,replyto(REPLYUSER(params[0]), _client->first), false);
         appendToParams(params, tmp, 4);
+        if (!validateUser(tmp, false))
+            return (replyto(ERR_ERRONEUSNICKNAME(tmp), _client->first), false);
         _client->second.setUserName(params[1]);
         replyto(NEWUSERNAME(params[1]), _client->first);
         _client->second.setRealName(tmp);
