@@ -141,6 +141,8 @@ void	Server::addClientSockettoFdSet()
 	_fds.push_back(newGuestFd);
 	std::cout << "Welcome Client #" << _fds.at(_fds.size() - 1).fd << std::endl;
 	_clients.insert(std::make_pair(_newSocketFd, _new_client));
+	_cmd.Welcome(_clients.find(_newSocketFd));
+	_cmd.AuthCommands(_newSocketFd);
 }
 
 bool	Server::incomingConnectionRequest()

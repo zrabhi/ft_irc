@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/02 03:05:41 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 03:55:29 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,17 +112,30 @@ void    Commands::authentification(std::string &string, std::map<int, Client> &_
             && _it->second.getUserName() != "" &&  _it->second.getStatus() == GUEST)
     {
         _it->second.setStatus(CLIENT);
-        Welcome(_it);
+        NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
+        // Welcome(_it);
     }   
     
 }
 
 void    Commands::Welcome(std::map<int ,Client>::iterator _it)
 {
-    NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
+    // NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
     message = "┬ ┬┌─┐┬  ┌─┐┌─┐┌┬┐┌─┐  ┌┬┐┌─┐  ┬┬─┐┌─┐  ┌─┐┌─┐┬─┐┬  ┬┌─┐┬─┐\n│││├┤ │  │  │ ││││├┤    │ │ │  │├┬┘│    └─┐├┤ ├┬┘└┐┌┘├┤ ├┬┘\n└┴┘└─┘┴─┘└─┘└─┘┴ ┴└─┘   ┴ └─┘  ┴┴└─└─┘  └─┘└─┘┴└─ └┘ └─┘┴└─\n"   ;
     replyto(message, _it->first);
 }
+
+void      Commands::AuthCommands(int fd)
+{
+    message = "\033[1m\033[37mYou are now connected to the server as `Guest`\nIf you want to be an irc 'CLIENT' you have to register\n";
+    message += "Available commands for resgistration: \n          \033[1m\033[33mNICK: <nickname>\n          USER: username> <unused> <unused> <realname>\n          PASS: <password>\n\033[0m";
+    replyto(message, fd);
+}
+
+// void    Commands::AvailableCommands(std::map<int ,Client>::iterator _it)
+// {
+//     message = "NICK\nUSER\nPASS"
+// }
 
 bool    Commands::validateNick(std::string nickName, std::map<int ,Client> _user, int fd)
 {
@@ -201,7 +214,7 @@ bool   Commands::validateParam(std::string param, bool priv)
     return (true);
 }
 
-bool    Commands::NICK(std::vector<std::string> params, std::map<int , Client>::iterator &_client)
+bool  Commands::NICK(std::vector<std::string> params, std::map<int , Client>::iterator &_client)
 {
     if (!validateParam(params[1], true) || params[1].size() > 9)
         return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);
