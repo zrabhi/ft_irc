@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/02 03:55:29 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/03 05:28:00 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,18 @@ Commands::Commands()
     authCommands.push_back("NICK");
     authCommands.push_back("PASS");
     authCommands.push_back("USER");
+    authCommands.push_back("PRIVMSG");
 }
 
 Commands::~Commands()
 {
 }
 
-std::vector<std::string> Commands::splite(std::string &parametrs, std::string delemiter)
+Vector Commands::splite(String &parametrs, String delemiter)
 {
-    std::vector<std::string> vals;
+    Vector vals;
     size_t position;
-	while ((position = parametrs.find(delemiter)) != std::string::npos)
+	while ((position = parametrs.find(delemiter)) != String::npos)
 	{
 		vals.push_back(parametrs.substr(0, position));
 		parametrs.erase(0, position + delemiter.length());
@@ -38,21 +39,21 @@ std::vector<std::string> Commands::splite(std::string &parametrs, std::string de
 	return vals;
 }
 
-void    Commands::replyto(std::string _message, int fd)
+void    Commands::replyto(String _message, int fd)
 {
     message = _message;
     send(fd, message.c_str(), message.size(), 0);
 } 
 
-void    Commands::makeUpper(std::string &param)
+void    Commands::makeUpper(String &param)
 {
-    for(std::string::iterator _it = param.begin(); _it != param.end(); _it++ )
+    for(String::iterator _it = param.begin(); _it != param.end(); _it++ )
     {
         *_it = toupper(*_it);    
     }  
 }
 
-void    Commands::commandsErrors(std::string cmd, int fd, size_t index)
+void    Commands::commandsErrors(String cmd, int fd, size_t index)
 {
     switch(index)
     {
@@ -71,14 +72,45 @@ void    Commands::commandsErrors(std::string cmd, int fd, size_t index)
     }
 }
 
-void    Commands::authentification(std::string &string, std::map<int, Client> &_clients, int fd)
+
+bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BMemFunGuest _commands[])
 {
-    std::vector<std::string> tmp = splite(string, " ");
+    switch(index)
+    {
+        case 0:
+             if (!validateNick(params[1], _users,  _it->first))
+                {
+                    replyto(ERR_NICKNAMEINUSE(params[1]), _it->first);
+                    return (false);
+                }
+            return((this->*_commands[index])(params, _it));
+            // return (true);
+        case 1:
+            return((this->*_commands[index])(params, _it));
+            // return (true);
+        case 2:
+            return((this->*_commands[index])(params, _it));
+        //    return (true);
+        case 3:
+                if (_it->second.getStatus() != GUEST)
+                    return((this->*_commands[index])(params, _it));
+        default:
+            // return (false);
+            replyto(ERR_UNKNOWNCOMMAND(params[0]), _it->first);
+            return (false);
+    }
+    return (true);
+}
+
+void    Commands::authentification(String &string, Map &_clients, int fd)
+{
+    Vector tmp = splite(string, " ");
     makeUpper(tmp[0]);
     tmp[0] = tmp[0].substr(0, tmp[0].find("\n"));
     size_t i = 0;
-    BMemFun _commands[] = {&Commands::NICK, &Commands::PASS, &Commands::USER};
-    for(i = 0;  i < 3 && tmp[0].compare(authCommands[i]); i++)
+    BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS, &Commands::USER, &Commands::PRIVMSG};
+    // BMemFunClient  _clientCommands[] = {&Commands::PRIVMSG};
+    for(i = 0;  i < 4 && tmp[0].compare(authCommands[i]); i++)
     {    
     }
     if (tmp.size() == 1)
@@ -86,41 +118,21 @@ void    Commands::authentification(std::string &string, std::map<int, Client> &_
         commandsErrors(tmp[0], fd, i);
         return;
     }
-    std::map<int, Client>::iterator _it = _clients.find(fd); 
+    Iterator _it = _clients.find(fd); 
     _users = _clients;
     tmp[1] = tmp[1].substr(0, tmp[1].find("\n"));
-    switch(i)
-    {
-        case 0:                                                
-            if (!validateNick(tmp[1], _clients,  fd))
-                {
-                    replyto(ERR_NICKNAMEINUSE(tmp[1]), fd);
-                    return ;
-                }
-            (this->*_commands[i])(tmp, _it);
-            break ;
-        case 1:
-            (this->*_commands[i])(tmp, _it);
-            break ;
-        case 2:
-            (this->*_commands[i])(tmp, _it);
-            break ;
-        default :
-            replyto(ERR_UNKNOWNCOMMAND(tmp[0]), _it->first);
-    }
+    authCommandCheck(tmp, i,_it, _commands);
     if (_it->second.getPassWord() != "" && _it->second.getNickName() != "" \
             && _it->second.getUserName() != "" &&  _it->second.getStatus() == GUEST)
     {
         _it->second.setStatus(CLIENT);
         NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
         // Welcome(_it);
-    }   
-    
+    }
 }
 
-void    Commands::Welcome(std::map<int ,Client>::iterator _it)
+void    Commands::Welcome(Iterator _it)
 {
-    // NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
     message = "┬ ┬┌─┐┬  ┌─┐┌─┐┌┬┐┌─┐  ┌┬┐┌─┐  ┬┬─┐┌─┐  ┌─┐┌─┐┬─┐┬  ┬┌─┐┬─┐\n│││├┤ │  │  │ ││││├┤    │ │ │  │├┬┘│    └─┐├┤ ├┬┘└┐┌┘├┤ ├┬┘\n└┴┘└─┘┴─┘└─┘└─┘┴ ┴└─┘   ┴ └─┘  ┴┴└─└─┘  └─┘└─┘┴└─ └┘ └─┘┴└─\n"   ;
     replyto(message, _it->first);
 }
@@ -132,14 +144,14 @@ void      Commands::AuthCommands(int fd)
     replyto(message, fd);
 }
 
-// void    Commands::AvailableCommands(std::map<int ,Client>::iterator _it)
+// void    Commands::AvailableCommands(Iterator _it)
 // {
 //     message = "NICK\nUSER\nPASS"
 // }
 
-bool    Commands::validateNick(std::string nickName, std::map<int ,Client> _user, int fd)
+bool    Commands::validateNick(String nickName, Map _user, int fd)
 {
-    for(std::map<int ,Client>::iterator _it = _user.begin(); _it != _user.end(); _it++)
+    for(Iterator _it = _user.begin(); _it != _user.end(); _it++)
     {
         if (_it->second.getNickName() != "" && \
             _it->second.getNickName() == nickName && _it->first != fd)
@@ -149,14 +161,14 @@ bool    Commands::validateNick(std::string nickName, std::map<int ,Client> _user
 }
 
 
-bool  Commands::checkParams(std::string params)
+bool  Commands::checkParams(String params)
 {
    return (params[0] ==':' && isalpha(params[1]) ? true : false);
 }
 
-bool     Commands::validateUserName(std::string userName, std::map<int ,Client> _user, int fd)
+bool     Commands::validateUserName(String userName, Map _user, int fd)
 {
-    for(std::map<int ,Client>::iterator _it = _user.begin(); _it != _user.end(); _it++)
+    for(Iterator _it = _user.begin(); _it != _user.end(); _it++)
     {
         if (_it->second.getUserName() != "" && \
                 _it->second.getUserName() == userName && _it->first != fd)
@@ -165,7 +177,7 @@ bool     Commands::validateUserName(std::string userName, std::map<int ,Client> 
     return (true);
 }
 
-void    Commands::appendToParams(std::vector<std::string> params, std::string &tmp, size_t index)
+void    Commands::appendToParams(Vector params, String &tmp, size_t index)
 {
     size_t position;
     if (params[index][0] != ':')
@@ -197,11 +209,11 @@ bool Commands::isAlphaOrSpecial(char _c)
     return (false); 
 }
 
-bool   Commands::validateParam(std::string param, bool priv)
+bool   Commands::validateParam(String param, bool priv)
 {
-    std::string::iterator _it = param.begin() + 1;
+    String::iterator _it = param.begin() + 1;
     size_t checker(1);
-    std::string::iterator _it_end = param.end(); 
+    String::iterator _it_end = param.end(); 
     if (priv)
     {
         if (!isAlphaOrSpecial(*(param.begin())))
@@ -214,7 +226,7 @@ bool   Commands::validateParam(std::string param, bool priv)
     return (true);
 }
 
-bool  Commands::NICK(std::vector<std::string> params, std::map<int , Client>::iterator &_client)
+bool  Commands::NICK(Vector params, Iterator &_client)
 {
     if (!validateParam(params[1], true) || params[1].size() > 9)
         return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);
@@ -233,10 +245,10 @@ bool Commands::isNonWhite(char _c, bool priv)
     return (_c == 0x0 || _c == 0xd || _c == 0xa);
 }
 
-bool Commands::validateUser(std::string param, bool priv)
+bool Commands::validateUser(String param, bool priv)
 {
-    std::string::iterator _it = param.begin();
-    std::string::iterator _it_end = param.end(); 
+    String::iterator _it = param.begin();
+    String::iterator _it_end = param.end(); 
     for (; _it != _it_end ; _it++ )
     {
         if (isNonWhite(*_it, priv))
@@ -245,7 +257,7 @@ bool Commands::validateUser(std::string param, bool priv)
     return (true);
 }
 
-bool    Commands::USER( std::vector<std::string> params, std::map<int , Client>::iterator &_client)
+bool    Commands::USER(Vector params, Iterator &_client)
 {
     if (params.size() < 5)
         return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first) \
@@ -256,7 +268,7 @@ bool    Commands::USER( std::vector<std::string> params, std::map<int , Client>:
             return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);
     else 
     { 
-        std::string tmp;
+        String tmp;
         params[params.size() - 1] = params[params.size() -1].\
         substr(0, params[params.size() -1].find("\n"));
         if (params[4] == "")
@@ -273,7 +285,7 @@ bool    Commands::USER( std::vector<std::string> params, std::map<int , Client>:
     return (true); 
 }
 
-bool    Commands::PASS(std::vector<std::string> params, std::map<int , Client>::iterator &_client)
+bool    Commands::PASS(Vector params, Iterator &_client)
 {
     if (_client->second.getAuth() == REGISTERD)
     {
@@ -289,3 +301,37 @@ bool    Commands::PASS(std::vector<std::string> params, std::map<int , Client>::
     _client->second.setAuth(REGISTERD);
     return (true);
 }
+
+Iterator    Commands::FindUser(String nickName, int fd)
+{
+    for(Iterator _it = _users.begin(); _it != _users.end(); _it++)
+    {
+        if (_it->second.getNickName() == nickName && _it->first != fd)
+            return (_it);   
+    }
+    return (_users.end());
+}
+
+bool    Commands::PRIVMSG(Vector params,  Iterator &_client)
+{
+    if (params.size() < 3)
+         return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first),false);
+    Iterator   reciever = FindUser(params[1], _client->first);
+    if (reciever == _users.end())
+           return (replyto(ERR_NOSUCHNICK, _client->first),false);
+
+    else
+        {
+            String tmp;
+            params[params.size() - 1] = params[params.size() -1].\
+            substr(0, params[params.size() -1].find("\n"));
+            // if (params[2] == "")
+            //     return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
+            appendToParams(params, tmp, 2);
+            tmp += "\n";
+            replyto(tmp, reciever->first);
+            std::cout << "Message is sent !" << std::endl;
+        }
+    return (true);
+}
+

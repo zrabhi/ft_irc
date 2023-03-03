@@ -73,7 +73,10 @@ enum T_flag
 # define   ERR_UNKNOWNCOMMAND(a)  BOLDYELLOW  + a + " Unknown command." + RESET +"\n"
 # define   ERR_NONICKNAMEGIVEN  "\033[1m\033[33m:No nickname given.\n\033[0m" 
 # define   ERR_NEEDMOREPARAMS(a) "\033[1m\033[33mError(461): " +  a + " Not enough parameters." +RESET +"\n"
-/*
+# define   ERR_NORECIPIENT     "\033[1m\033[33m:No recipient given n.\n\033[0m"
+# define   ERR_NOTEXTTOSEND    "\033[1m\033[33m:No text to send.\n\033[0m"
+# define   ERR_NOSUCHNICK      "\033[1m\033[33m:<nickname> :No such nick/channel.\n\033[0m"
+/* 
     SERVER REPLY
 */
 # define  NICKNAMEMESG(a)  "\033[1m\033[33myou are known as " +  a  +  RESET + "\n"
@@ -86,6 +89,7 @@ enum T_flag
 # define ERR_ALREADYUSED  "\033[1m\033[33m:Username is already in use \033[0m\n" 
 # define NEWUSERNAME(a)  BOLDYELLOW + a + " is your username" + RESET + "\n"
 # define NEWREALNAME(a)  BOLDYELLOW + a + " is your realname" + RESET + "\n"
+# define REPLYPRIVMSG   "\033[1m\033[33m<receiver> <text to be sent>\n\033[1m"
 #if a 
     {
         # define REPLY_PASS(a) std:: cout << BOLDGREEN << "Reply(650) : PASS <password>" 
