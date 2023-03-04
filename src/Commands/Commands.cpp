@@ -21,6 +21,7 @@ Commands::Commands()
     authCommands.push_back("PASS");
     authCommands.push_back("USER");
     authCommands.push_back("PRIVMSG");
+    authCommands.push_back("JOIN");
 }
 
 Commands::~Commands()
@@ -111,9 +112,11 @@ void    Commands::authentification(String &string, Map &_clients, int fd)
     makeUpper(tmp[0]);
     tmp[0] = tmp[0].substr(0, tmp[0].find("\n"));
     size_t i = 0;
-    BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS, &Commands::USER, &Commands::PRIVMSG};
+    BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
+                            &Commands::USER, &Commands::PRIVMSG,
+                            &Commands::JOIN};
     // BMemFunClient  _clientCommands[] = {&Commands::PRIVMSG};
-    for(i = 0;  i < 4 && tmp[0].compare(authCommands[i]); i++)
+    for(i = 0;  i < 5 && tmp[0].compare(authCommands[i]); i++)
     {    
     }
     if (tmp.size() == 1)
@@ -367,3 +370,25 @@ bool    Commands::PRIVMSG(Vector params,  Iterator &_client)
     return (true);
 }
 
+bool    Commands::JOIN(Vector params, Iterator &_client)
+{
+    if (params.size() - 1 >= 2)
+    {
+        Vector channelNames = splite(params.at(1), ",");
+        // Vector::iterator itNames = channelNames.begin();
+        Vector channelKeys = splite(params.at(2), ",");
+        // Vector::iterator itKeys = channelKeys.begin();
+        // for (; itKeys != params.end(); ++itKeys)
+        // to-do: check if channel exists and add it to channel map with password
+    }
+    else if (params.size() - 1 == 1 && params.at(params.size() - 1) == "")
+    {
+        replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first);
+    }
+    else
+    {
+        // to-do: check if channel exists and add it to channel map without password
+    }
+    // Channel channel(channelName, "", _client->second);
+    return (true);
+}

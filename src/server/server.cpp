@@ -1,6 +1,7 @@
 # include "../Commands/Commands.hpp"
 #include "server.hpp"
 #include <sys/_types/_size_t.h>
+#include <sys/errno.h>
 #include <sys/socket.h>
 #include <vector>
 // #include "../header.hpp"
@@ -179,10 +180,11 @@ void	Server::incomingClientData()
 			} 
 			else if (result == -1) 
 			{
-				char msg[19] = "Wait a little bit\n";
-				send(_fds.at(i).fd, msg, sizeof(msg), 0);
-				close(_fds.at(i).fd);
-				_fds.erase(_fds.begin() + i);
+				if (errno != EAGAIN)
+				{
+					close(_fds.at(i).fd);
+					_fds.erase(_fds.begin() + i);
+				}
 			}
 		}
 	}

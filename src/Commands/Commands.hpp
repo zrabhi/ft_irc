@@ -64,6 +64,7 @@ class Commands
         bool    PASS(Vector params,  Iterator &_client);
         bool    USER(Vector params,  Iterator &_client);  
         bool    PRIVMSG(Vector params,  Iterator &_client);
+        bool    JOIN(Vector params, Iterator &_client);
         bool    authCommandCheck(Vector params, size_t index, Iterator _it, BMemFunGuest _commands[]);
 };
 
