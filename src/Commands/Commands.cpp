@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/04 05:47:58 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/04 22:00:49 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ Commands::~Commands()
 {
 }
 
-Vector Commands::splite(String &parametrs, String delemiter)
+Vector Commands::splite(String &parametrs, String delemiter) 
 {
     Vector vals;
     size_t position;
