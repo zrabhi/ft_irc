@@ -11,12 +11,13 @@ INC = ./src/header.hpp ./src/server/server.hpp ./src/Commands/Commands.hpp ./src
 OBJ = $(SRC:.cpp=.o)
 
 %.o : %.cpp $(INC)
-	$(CPP) $(CPPFLAGS) -o $@  -c $<
+	@$(CPP) $(CPPFLAGS) -o $@  -c $<
 
 all : $(NAME)
 
 $(NAME) : $(OBJ)
-	$(CPP) $(CPPFLAGS) $(OBJ) -o $(NAME)
+	@$(CPP) $(CPPFLAGS) $(OBJ) -o $(NAME)
+	@echo server started
 
 clean :
 	@rm -rf $(OBJ)
