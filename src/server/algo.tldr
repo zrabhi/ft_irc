@@ -47069,6 +47069,38 @@
               ]
             ],
             "isComplete": true
+          },
+          "4a3669eb-5528-4705-26f6-0606d09548f9": {
+            "id": "4a3669eb-5528-4705-26f6-0606d09548f9",
+            "type": "draw",
+            "name": "Draw",
+            "parentId": "page",
+            "childIndex": 329,
+            "point": [
+              -865.9,
+              8131.61
+            ],
+            "rotation": 0,
+            "style": {
+              "color": "black",
+              "size": "large",
+              "isFilled": false,
+              "dash": "draw",
+              "scale": 1
+            },
+            "points": [
+              [
+                0,
+                0,
+                0.5
+              ],
+              [
+                0,
+                0,
+                0.5
+              ]
+            ],
+            "isComplete": true
           }
         },
         "bindings": {}

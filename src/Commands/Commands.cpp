@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/04 04:48:23 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/04 05:47:58 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ Vector Commands::splite(String &parametrs, String delemiter)
 		    vals.push_back(parametrs.substr(0, position));
 		parametrs.erase(0, position + delemiter.length());
 	}
-	vals.push_back(parametrs);
+	vals.push_back(parametrs.substr(0, parametrs.find("\n")));
 	return vals;
 }
 
