@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/03 04:50:40 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/04 04:40:53 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,10 @@ class Commands
         typedef std::map<int , Client>  Map;
         typedef std::string             String;
         typedef std::vector<String>     Vector;
-        typedef  Map::iterator          Iterator;
+        typedef Map::iterator          Iterator;
         typedef bool(Commands::*BMemFunGuest) (Vector param, Iterator &_client);
         typedef bool(Commands::*BMemFunClient) (Vector param, Iterator &_client);
+        typedef std::vector<Iterator>              Vector_it;
     private:
         Map     _users;
         Vector   authCommands;
@@ -45,9 +46,11 @@ class Commands
         bool    validateUserName(String userName, Map _user, int fd);
         bool    validateUser(String param, bool priv);
         bool    isSpecial(char _c);
+        bool    isComma(char _c);
+        bool    isHash(char _c);
         bool    isAlphaOrSpecial(char _c);
         bool    isNonWhite(char _c, bool priv);
-        
+        bool  checkUsers(Vector param, Vector_it &parameters, size_t index, int fd);
     public:
         Commands();
         ~Commands();
@@ -68,6 +71,6 @@ typedef Commands::Vector    Vector;
 typedef Commands::Map       Map;
 typedef Commands::String    String;
 typedef Commands::Iterator  Iterator;
-
+typedef Commands::Vector_it  Vector_it;
 
 #endif

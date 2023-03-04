@@ -6,13 +6,14 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/03 05:28:00 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/04 04:48:23 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 #include "../header.hpp"
 # include <ctype.h>  
+#include <sstream>
 
 Commands::Commands()
 {
@@ -32,7 +33,8 @@ Vector Commands::splite(String &parametrs, String delemiter)
     size_t position;
 	while ((position = parametrs.find(delemiter)) != String::npos)
 	{
-		vals.push_back(parametrs.substr(0, position));
+        if (position)
+		    vals.push_back(parametrs.substr(0, position));
 		parametrs.erase(0, position + delemiter.length());
 	}
 	vals.push_back(parametrs);
@@ -84,18 +86,19 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
                     return (false);
                 }
             return((this->*_commands[index])(params, _it));
-            // return (true);
         case 1:
             return((this->*_commands[index])(params, _it));
-            // return (true);
         case 2:
             return((this->*_commands[index])(params, _it));
-        //    return (true);
         case 3:
                 if (_it->second.getStatus() != GUEST)
                     return((this->*_commands[index])(params, _it));
+                std::cout << BOLDRED <<"`GUEST` dont have privillege\n" << RESET << std::endl;
+        case 4:
+                if (_it->second.getStatus() != GUEST)
+                    return((this->*_commands[index])(params, _it));
+                std::cout << BOLDRED <<"`GUEST` dont have privillege\n" << RESET << std::endl;
         default:
-            // return (false);
             replyto(ERR_UNKNOWNCOMMAND(params[0]), _it->first);
             return (false);
     }
@@ -168,7 +171,7 @@ bool  Commands::checkParams(String params)
 
 bool     Commands::validateUserName(String userName, Map _user, int fd)
 {
-    for(Iterator _it = _user.begin(); _it != _user.end(); _it++)
+    for (Iterator _it = _user.begin(); _it != _user.end(); _it++)
     {
         if (_it->second.getUserName() != "" && \
                 _it->second.getUserName() == userName && _it->first != fd)
@@ -185,6 +188,8 @@ void    Commands::appendToParams(Vector params, String &tmp, size_t index)
         tmp = params[index];
         return;
     }
+    if (params[index].size() > 2 && params[index][0] == ':' &&  params[index][1] == ':')
+        return ;
     tmp = params[index].substr(1, params[index].size());
     for (size_t i = ++index; i < params.size(); i++)
     {
@@ -268,13 +273,15 @@ bool    Commands::USER(Vector params, Iterator &_client)
             return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);
     else 
     { 
-        String tmp;
+        String tmp("");
         params[params.size() - 1] = params[params.size() -1].\
         substr(0, params[params.size() -1].find("\n"));
         if (params[4] == "")
             return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first) \
                 ,replyto(REPLYUSER(params[0]), _client->first), false);
         appendToParams(params, tmp, 4);
+        if (tmp == "")
+             return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
         if (!validateUser(tmp, false))
             return (replyto(ERR_ERRONEUSNICKNAME(tmp), _client->first), false);
         _client->second.setUserName(params[1]);
@@ -302,9 +309,19 @@ bool    Commands::PASS(Vector params, Iterator &_client)
     return (true);
 }
 
+bool    Commands::isComma(char _c)
+{
+    return (_c == ',');
+}
+
+bool Commands::isHash(char _c)
+{
+    return (_c == '#');    
+}
+
 Iterator    Commands::FindUser(String nickName, int fd)
 {
-    for(Iterator _it = _users.begin(); _it != _users.end(); _it++)
+    for (Iterator _it = _users.begin(); _it != _users.end(); _it++)
     {
         if (_it->second.getNickName() == nickName && _it->first != fd)
             return (_it);   
@@ -312,24 +329,39 @@ Iterator    Commands::FindUser(String nickName, int fd)
     return (_users.end());
 }
 
+bool    Commands::checkUsers(Vector param, Vector_it &parameters, size_t index, int fd)
+{
+        Iterator value;
+        Vector    splited = splite(param[index], ",");
+ 
+        for (Vector::iterator _it = splited.begin(); _it != splited.end(); _it++)
+        {
+            value = FindUser(*_it, fd);
+            if (value == _users.end())
+                return (false);
+            parameters.push_back(value);
+        }
+        return (true);
+}
+
 bool    Commands::PRIVMSG(Vector params,  Iterator &_client)
 {
     if (params.size() < 3)
          return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first),false);
-    Iterator   reciever = FindUser(params[1], _client->first);
-    if (reciever == _users.end())
+    Vector_it recievers;
+    if (!checkUsers(params, recievers, 1, _client->first))
            return (replyto(ERR_NOSUCHNICK, _client->first),false);
-
     else
         {
-            String tmp;
+            String tmp("");
             params[params.size() - 1] = params[params.size() -1].\
             substr(0, params[params.size() -1].find("\n"));
-            // if (params[2] == "")
-            //     return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
             appendToParams(params, tmp, 2);
+            if (tmp == "")
+                return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
             tmp += "\n";
-            replyto(tmp, reciever->first);
+            for(Vector_it::iterator _it = recievers.begin(); _it != recievers.end(); _it++)
+                        replyto(tmp, (*_it)->first);
             std::cout << "Message is sent !" << std::endl;
         }
     return (true);

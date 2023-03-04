@@ -29,6 +29,7 @@ class Client
         std::string _nickname;
         std::string _username;
         std::string _realname;
+        
     public:
         Client();
         Client(int newFd, std::string _serverPass, std::string hostName, int port, int newStatus);

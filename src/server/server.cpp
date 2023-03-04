@@ -121,7 +121,7 @@ bool	Server::monitorEvents()
 bool	Server::acceptNewConnection()
 {
 	int addrlen = sizeof(_address);
-	_newSocketFd = accept(_serverFd, (struct sockaddr*)&_address, (socklen_t*)&addrlen);
+	_newSocketFd = accept(_serverFd, (struct sockaddr*) &_address, (socklen_t*)&addrlen);
 	if (_newSocketFd == -1) 
 	{
 		std::cerr << "accept() failed: " << strerror(errno) << std::endl;
