@@ -6,15 +6,15 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/04 22:00:49 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/05 19:25:00 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Commands.hpp"
-#include "../header.hpp"
-# include <ctype.h>  
-#include <sstream>
-
+# include "Commands.hpp"
+# include "../header.hpp"
+# include <ctype.h>
+# include <sstream>
+// # include "NICK"
 Commands::Commands()
 {
     authCommands.push_back("NICK");
@@ -28,19 +28,28 @@ Commands::~Commands()
 {
 }
 
-Vector Commands::splite(String &parametrs, String delemiter) 
+Vector Commands::splite(String &parametrs,  String delemiter)
 {
-    Vector vals;
-    size_t position;
-	while ((position = parametrs.find(delemiter)) != String::npos)
-	{
-        if (position)
-		    vals.push_back(parametrs.substr(0, position));
-		parametrs.erase(0, position + delemiter.length());
-	}
-	vals.push_back(parametrs.substr(0, parametrs.find("\n")));
-	return vals;
+	std::vector<std::string> splited;
+	for (char *token = std::strtok(const_cast<char *>(parametrs.c_str()), delemiter.c_str()); token != NULL; token = std::strtok(nullptr, delemiter.c_str()))
+		splited.push_back(token);
+	return (splited);
 }
+
+// Vector Commands::splite(String &parametrs, String delemiter) 
+// {
+//     Vector vals;
+//     size_t position;
+// 	while ((position = parametrs.find(delemiter)) != String::npos)
+// 	{
+//         if (position)
+// 		    vals.push_back(parametrs.substr(0, position));
+// 		parametrs.erase(0, position + delemiter.length());
+// 	}
+//     // if (parametrs != "")
+// 	    vals.push_back(parametrs.substr(0, parametrs.find("\n")));
+// 	return vals;
+// }
 
 void    Commands::replyto(String _message, int fd)
 {
@@ -65,7 +74,7 @@ void    Commands::commandsErrors(String cmd, int fd, size_t index)
             return;
         case 1:
             replyto(ERR_NEEDMOREPARAMS(cmd), fd);
-            replyto(REPLYPASS(cmd), fd);
+            // replyto(REPLYPASS(cmd), fd);
             return;
         case 2:
             replyto(ERR_NEEDMOREPARAMS(cmd), fd);
@@ -106,34 +115,57 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
     return (true);
 }
 
+String Commands::currentTime()
+{
+    time_t now = time(0);
+   char* dt = ctime(&now);
+
+   std::cout << "The local date and time is: " << dt << std::endl;
+
+  
+   tm *gmtm = gmtime(&now);
+   dt = asctime(gmtm);
+   std::string value(dt);
+   std::cout << "The UTC date and time is:"<< dt << std::endl;
+   return (value.substr(0, value.find("\n")));
+}
+
 void    Commands::authentification(String &string, Map &_clients, int fd)
 {
-    Vector tmp = splite(string, " ");
-    makeUpper(tmp[0]);
-    tmp[0] = tmp[0].substr(0, tmp[0].find("\n"));
-    size_t i = 0;
-    BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
-                            &Commands::USER, &Commands::PRIVMSG,
-                            &Commands::JOIN};
-    // BMemFunClient  _clientCommands[] = {&Commands::PRIVMSG};
-    for(i = 0;  i < 5 && tmp[0].compare(authCommands[i]); i++)
-    {    
-    }
-    if (tmp.size() == 1)
-    {   
-        commandsErrors(tmp[0], fd, i);
-        return;
-    }
-    Iterator _it = _clients.find(fd); 
-    _users = _clients;
-    tmp[1] = tmp[1].substr(0, tmp[1].find("\n"));
-    authCommandCheck(tmp, i,_it, _commands);
-    if (_it->second.getPassWord() != "" && _it->second.getNickName() != "" \
-            && _it->second.getUserName() != "" &&  _it->second.getStatus() == GUEST)
+    Vector tmp1 = splite(string, "\r\n");
+    
+    for(size_t j = 0; j < tmp1.size(); j++)
     {
-        _it->second.setStatus(CLIENT);
-        NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
-        // Welcome(_it);
+        std::cout << "______" << tmp1[j] << std::endl; 
+        Vector tmp = splite(tmp1[j], " ");
+        makeUpper(tmp[0]);
+        tmp[0] = tmp[0].substr(0, tmp[0].find("\n"));
+        size_t i = 0;
+        BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
+                                &Commands::USER, &Commands::PRIVMSG,
+                                &Commands::JOIN};
+        for(i = 0;  i < 5 && tmp[0].compare(authCommands[i]); i++)
+        {    
+        }
+        if (tmp.size() == 1)
+        {   
+            commandsErrors(tmp[0], fd, i);
+            return;
+        }
+        Iterator _it = _clients.find(fd); 
+        _users = _clients;
+        tmp[1] = tmp[1].substr(0, tmp[1].find("\n"));
+        authCommandCheck(tmp, i,_it, _commands);
+        if (_it->second.getPassWord() != "" && _it->second.getNickName() != "" \
+                && _it->second.getUserName() != "" &&  _it->second.getStatus() == GUEST)
+        {
+            _it->second.setStatus(CLIENT);
+            replyto(RPL_WELCOME(_it->second.getNickName(), _it->second.getUserName(), _it->second.getHostName()), \
+                    _it->first);
+           replyto(RPL_YOURHOST, _it->first);
+           replyto(RPL_CREATED(currentTime()), _it->first);
+           NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
+        }
     }
 }
 
@@ -234,17 +266,6 @@ bool   Commands::validateParam(String param, bool priv)
     return (true);
 }
 
-bool  Commands::NICK(Vector params, Iterator &_client)
-{
-    if (!validateParam(params[1], true) || params[1].size() > 9)
-        return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);
-    if (_client->second.getNickName() != "" )
-        KNOWNNOWAS(_client->second.getNickName(), params[1]);
-    _client->second.setNickName(params[1]);
-    replyto(NICKNAMEMESG(params[1]), _client->first);
-    return (true);
-}
-
 bool Commands::isNonWhite(char _c, bool priv)
 {
     if (priv)
@@ -265,52 +286,6 @@ bool Commands::validateUser(String param, bool priv)
     return (true);
 }
 
-bool    Commands::USER(Vector params, Iterator &_client)
-{
-    if (params.size() < 5)
-        return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first) \
-                ,replyto(REPLYUSER(params[0]), _client->first), false);
-    else if (!validateUserName(params[1], _users, _client->first))
-            return (replyto(ERR_ALREADYUSED, _client->first), false);
-    else if (!validateUser(params[1], true))
-            return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);
-    else 
-    { 
-        String tmp("");
-        params[params.size() - 1] = params[params.size() -1].\
-        substr(0, params[params.size() -1].find("\n"));
-        if (params[4] == "")
-            return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first) \
-                ,replyto(REPLYUSER(params[0]), _client->first), false);
-        appendToParams(params, tmp, 4);
-        if (tmp == "")
-             return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
-        if (!validateUser(tmp, false))
-            return (replyto(ERR_ERRONEUSNICKNAME(tmp), _client->first), false);
-        _client->second.setUserName(params[1]);
-        replyto(NEWUSERNAME(params[1]), _client->first);
-        _client->second.setRealName(tmp);
-        replyto(NEWREALNAME(tmp), _client->first);
-    }
-    return (true); 
-}
-
-bool    Commands::PASS(Vector params, Iterator &_client)
-{
-    if (_client->second.getAuth() == REGISTERD)
-    {
-        replyto(ERR_ALREADYREGISTRED, _client->first);
-        return(false);
-    }
-    if (params[1] != _client->second.getServerPass())
-    {
-        replyto(ERR_PASSWDMISMATCH, _client->first);
-        return(false);
-    }
-    _client->second.setPassWord(params[1]);
-    _client->second.setAuth(REGISTERD);
-    return (true);
-}
 
 bool    Commands::isComma(char _c)
 {
@@ -347,28 +322,6 @@ bool    Commands::checkUsers(Vector param, Vector_it &parameters, size_t index, 
         return (true);
 }
 
-bool    Commands::PRIVMSG(Vector params,  Iterator &_client)
-{
-    if (params.size() < 3)
-         return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first),false);
-    Vector_it recievers;
-    if (!checkUsers(params, recievers, 1, _client->first))
-           return (replyto(ERR_NOSUCHNICK, _client->first),false);
-    else
-        {
-            String tmp("");
-            params[params.size() - 1] = params[params.size() -1].\
-            substr(0, params[params.size() -1].find("\n"));
-            appendToParams(params, tmp, 2);
-            if (tmp == "")
-                return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
-            tmp += "\n";
-            for(Vector_it::iterator _it = recievers.begin(); _it != recievers.end(); _it++)
-                        replyto(tmp, (*_it)->first);
-            std::cout << "Message is sent !" << std::endl;
-        }
-    return (true);
-}
 
 bool    Commands::JOIN(Vector params, Iterator &_client)
 {

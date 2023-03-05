@@ -55,41 +55,45 @@ enum T_flag
 
 # define   ARGS_ERR "Usage: ./ircserv <port> <password>\nport: A number between 1025 and 65536\npassword: a sequence of characeters"
 # define   INVALID_ARGS() std::cerr << ARGS_ERR << std::endl
-# define   ERR_NICKNAMEINUSE(a)  "\033[1m\033[33m:Nickname is already in use\n\033[0m"
 # define   ERR_USERNOTINCHANNEL(a, b) std::cout << a << " :They aren't on that channel" << b << std::endl;
 # define   ERR_NOTONCHANNEL(a) std::cout << a << " :You're not on that channel" << std::endl;
 # define   ERR_USERONCHANNEL(a, b) std::cout << a << " " << b << " :is already on channel" << std::endl;
 # define   ERR_SUMMONDISABLED(a)  std::cout << a << " has been disabled" << std::endl;
 # define   ERR_NOTREGISTERED   std::cout << " You have not registered" << std::endl;
-# define   ERR_PASSWDMISMATCH   "\033[1m\033[33m:Password incorrect\n\033[0m"
 # define   ERR_YOUREBANNEDCREEP std::cout << " You are banned from this server" << std::endl;
 # define   ERR_INVITEONLYCHAN(a) std::cout << a << " :Cannot join channel (+i)" << std::endl;
 # define   ERR_CHANNELISFULL(a) std::cout << a << " :Cannot join channel (+l)" << std::endl;
 # define   ERR_BANNEDFROMCHAN(a) std::cout << a << "  :Cannot join channel (+b)" << std::endl;
 # define   ERR_NOPRIVILEGES  std::cout << " :Permission Denied- You're not an IRC operator" << std::endl;
 # define   ERR_CANTKILLSERVER std::cout << " You cant kill a server!" << std::endl;
-# define   ERR_ERRONEUSNICKNAME(a)  BOLDYELLOW  + a + " :Erroneus nickname." + RESET + "\n"
-# define   ERR_ALREADYREGISTRED     "\033[1m\033[33mError(462): You may not reregister\n\033[0m" 
-# define   ERR_UNKNOWNCOMMAND(a)  BOLDYELLOW  + a + " Unknown command." + RESET +"\n"
-# define   ERR_NONICKNAMEGIVEN  "\033[1m\033[33m:No nickname given.\n\033[0m" 
-# define   ERR_NEEDMOREPARAMS(a) "\033[1m\033[33mError(461): " +  a + " Not enough parameters." +RESET +"\n"
 # define   ERR_NORECIPIENT     "\033[1m\033[33m:No recipient given n.\n\033[0m"
 # define   ERR_NOTEXTTOSEND    "\033[1m\033[33m:No text to send.\n\033[0m"
-# define   ERR_NOSUCHNICK      "\033[1m\033[33m:<nickname> :No such nick/channel.\n\033[0m"
+# define   ERR_ALREADYREGISTRED  "451 ERR_NOTREGISTERED :You have not registered\r\n" 
+# define   ERR_NEEDMOREPARAMS(a) "461 ERR_NEEDMOREPARAMS <" + a +">:Not enough parameters\r\n"
+# define   ERR_PASSWDMISMATCH    "464 ERR_PASSWDMISMATCH:Password incorrect\r\n"
+# define   ERR_NONICKNAMEGIVEN   "431 ERR_NONICKNAMEGIVEN :No nickname given\r\n" 
+# define   ERR_ERRONEUSNICKNAME(a) "432 ERR_ERRONEUSNICKNAME <"+a+"> :Erroneus nickname\r\n"
+# define   ERR_NICKNAMEINUSE(a)  "433 ERR_NICKNAMEINUSE <"+a+"> :Nickname is already in use\r\n"
+# define   ERR_NOSUCHNICK(a)      "401 ERR_NOSUCHNICK<" + a +"> :No such nick/channel\r\n"
+# define   ERR_UNKNOWNCOMMAND(a)   "421 ERR_UNKNOWNCOMMAND <" + a +"> :Unknown command\r\n"
 /* 
     SERVER REPLY
 */
 # define  NICKNAMEMESG(a)  "\033[1m\033[33myou are known as " +  a  +  RESET + "\n"
 # define  KNOWNNOWAS(a, b) std::cout << "\033[1m\033[32m" + a + " is now known as " + b + RESET << std::endl;
-# define NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
-# define REPLYPASS(a)   "\033[1m\033[32mReply(650) : PASS <password>\n\033[0m"
-# define REPLYUSER(a)   BOLDGREEN + a + " <username> <unused> <unused> :<realname> " + RESET + "\n"
-# define KNOWNAS(a)  std::cout << BOLDCYAN  << "You are known as " + a << RESET << std::endl;
-# define REPLYACCESS std::cout <<  BOLDGREEN << "Reply(650) : You dont have privilege " << RESET << std::endl; 
-# define ERR_ALREADYUSED  "\033[1m\033[33m:Username is already in use \033[0m\n" 
-# define NEWUSERNAME(a)  BOLDYELLOW + a + " is your username" + RESET + "\n"
-# define NEWREALNAME(a)  BOLDYELLOW + a + " is your realname" + RESET + "\n"
-# define REPLYPRIVMSG   "\033[1m\033[33m<receiver> <text to be sent>\n\033[1m"
+# define  NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
+# define  REPLYPASS(a)   "\033[1m\033[32mReply(650) : PASS <password>\n\033[0m"
+# define  REPLYUSER(a)   BOLDGREEN + a + " <username> <unused> <unused> :<realname> " + RESET + "\n"
+# define  KNOWNAS(a)  std::cout << BOLDCYAN  << "You are known as " + a << RESET << std::endl;
+# define  REPLYACCESS std::cout <<  BOLDGREEN << "Reply(650) : You dont have privilege " << RESET << std::endl; 
+# define  ERR_ALREADYUSED  "\033[1m\033[33m:Username is already in use \033[0m\n" 
+# define  NEWUSERNAME(a)  BOLDYELLOW + a + " is your username" + RESET + "\n"
+# define  NEWREALNAME(a)  BOLDYELLOW + a + " is your realname" + RESET + "\n"
+# define  REPLYPRIVMSG   "\033[1m\033[33m<receiver> <text to be sent>\n\033[1m"
+# define RPL_YOURHOST   "002 RPL_YOURHOST Your host is <ft_irc_server>, running version <1.1.2>\r\n"
+# define  RPL_CREATED(a) "003 RPL_CREATED This server was created<" + a + ">\r\n"  
+
+# define  RPL_WELCOME(a,b,c) "001 RPL_WELCOME  Welcome to the Internet Relay Network <" + a + ">!<"+ b +">@<" + c + ">\r\n"
 #if a 
     {
         # define REPLY_PASS(a) std:: cout << BOLDGREEN << "Reply(650) : PASS <password>" 

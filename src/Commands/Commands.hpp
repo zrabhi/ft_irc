@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/04 04:40:53 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/05 18:03:20 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ class Commands
         bool    isAlphaOrSpecial(char _c);
         bool    isNonWhite(char _c, bool priv);
         bool  checkUsers(Vector param, Vector_it &parameters, size_t index, int fd);
+        String   currentTime();
+
     public:
         Commands();
         ~Commands();
