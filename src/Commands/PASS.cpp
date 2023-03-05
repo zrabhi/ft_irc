@@ -4,15 +4,9 @@
 bool    Commands::PASS(Vector params, Iterator &_client)
 {
     if (_client->second.getAuth() == REGISTERD)
-    {
-        replyto(ERR_ALREADYREGISTRED, _client->first);
-        return(false);
-    }
+        return (replyto(ERR_ALREADYREGISTRED, _client->first), false);
     if (params[1] != _client->second.getServerPass())
-    {
-        replyto(ERR_PASSWDMISMATCH, _client->first);
-        return(false);
-    }
+        return (replyto(ERR_PASSWDMISMATCH, _client->first), false);
     _client->second.setPassWord(params[1]);
     _client->second.setAuth(REGISTERD);
     return (true);

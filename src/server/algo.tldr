@@ -47070,37 +47070,26 @@
             ],
             "isComplete": true
           },
-          "4a3669eb-5528-4705-26f6-0606d09548f9": {
-            "id": "4a3669eb-5528-4705-26f6-0606d09548f9",
-            "type": "draw",
-            "name": "Draw",
+          "7ff1fd55-44b4-43b4-1fd7-8bf7ba93f60c": {
+            "id": "7ff1fd55-44b4-43b4-1fd7-8bf7ba93f60c",
+            "type": "text",
+            "name": "Text",
             "parentId": "page",
-            "childIndex": 329,
+            "childIndex": 1,
             "point": [
-              -865.9,
-              8131.61
+              -542.83,
+              9793.95
             ],
             "rotation": 0,
+            "text": "nc punch.wa.us.dal.net 6666",
             "style": {
               "color": "black",
               "size": "large",
               "isFilled": false,
               "dash": "draw",
-              "scale": 1
-            },
-            "points": [
-              [
-                0,
-                0,
-                0.5
-              ],
-              [
-                0,
-                0,
-                0.5
-              ]
-            ],
-            "isComplete": true
+              "scale": 1.7120754716981093,
+              "font": "script"
+            }
           }
         },
         "bindings": {}
