@@ -29,6 +29,7 @@ class Channel {
         std::string    getName() const;
         std::string    getKey() const;
         short          getType() const;
+        std::map<int, Client> getUsers();
 
         void    setName(const std::string&);
         void    setKey(const std::string&);

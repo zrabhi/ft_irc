@@ -92,7 +92,7 @@ enum T_flag
 # define  REPLYPRIVMSG   "\033[1m\033[33m<receiver> <text to be sent>\n\033[1m"
 # define  RPL_YOURHOST   "002 RPL_YOURHOST Your host is <ft_irc_server>, running version <1.1.2>\r\n"
 # define  RPL_CREATED(a) "003 RPL_CREATED This server was created<" + a + ">\r\n"  
-
+# define  RFEPLY_CHANNEL(a, b) ":" + a + " JOIN " + b + "\r\n"
 # define REPLY_PIVMSG(a, b, c) ":" + a + " PRIVMSG " + b + " :" + c + "\r\n" 
 # define  RPL_WELCOME(a,b,c) "001 RPL_WELCOME  Welcome to the Internet Relay Network <" + a + ">!<"+ b +">@<" + c + ">\r\n"
 #if a 

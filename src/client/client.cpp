@@ -6,14 +6,14 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 18:57:03 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/02/28 23:14:04 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/07 00:15:14 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "client.hpp"
 #include "../header.hpp"
-#include "../Channel/channel.hpp"
+#include "../channel/channel.hpp"
 #include <utility>
 
 // initialize data memebers

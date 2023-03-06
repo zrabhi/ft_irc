@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/06 01:56:53 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/07 00:40:27 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <vector>
 # include "../client/client.hpp"
-# include "../Channel/channel.hpp"
+# include "../channel/channel.hpp"
 # include <map> 
 
 class Commands
@@ -54,6 +54,7 @@ class Commands
         bool        isAlphaOrSpecial(char _c);
         bool        isNonWhite(char _c, bool priv);
         bool        checkUsers(Vector param, Vector_it &parameters, size_t index, int fd);
+        Iterator    FindUser(Channel channel, int fd);
         String      currentTime();
         ChannelMap  _channels;
 

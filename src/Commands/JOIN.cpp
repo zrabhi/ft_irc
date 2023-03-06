@@ -27,14 +27,18 @@ bool Commands::JOIN(Vector params, Iterator &_client)
         {
             Channel channel(channelName, channelKey, _client->second);
             _channels.insert(std::make_pair(channelName, channel));
+            replyto(RFEPLY_CHANNEL(_client->second.getNickName(), channelName), _client->first);
+            channel.addUser(_client->second);
         }
         else
         {
             Channel& channel = it->second;
             if (!channel.checkKey(channelKey))
                 return (replyto(ERR_BADCHANNELKEY(channelName), _client->first), false);
+            replyto(RFEPLY_CHANNEL(_client->second.getNickName(), channelName), _client->first);
             channel.addUser(_client->second);
         }
+
     }
     return true;
 }
