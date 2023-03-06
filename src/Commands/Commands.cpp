@@ -309,27 +309,3 @@ bool  Commands::checkUsers(Vector param, Vector_it &parameters, size_t index, in
     }
     return (true);
 }
-
-
-bool  Commands::JOIN(Vector params, Iterator &_client)
-{
-    if (params.size() - 1 >= 2)
-    {
-        Vector channelNames = splite(params.at(1), ",");
-        // Vector::iterator itNames = channelNames.begin();
-        Vector channelKeys = splite(params.at(2), ",");
-        // Vector::iterator itKeys = channelKeys.begin();
-        // for (; itKeys != params.end(); ++itKeys)
-        // to-do: check if channel exists and add it to channel map with password
-    }
-    else if (params.size() - 1 == 1 && params.at(params.size() - 1) == "")
-    {
-        replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first);
-    }
-    else
-    {
-        // to-do: check if channel exists and add it to channel map without password
-    }
-    // Channel channel(channelName, "", _client->second);
-    return (true);
-}

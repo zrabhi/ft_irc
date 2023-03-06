@@ -49,6 +49,11 @@ Client::~Client()
 
 }
 
+int     Client::getFd() const
+{
+    return _fd;
+}
+
 std::string Client::getNickName() const
 {
     return (_nickname);

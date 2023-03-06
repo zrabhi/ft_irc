@@ -4,20 +4,19 @@ bool Commands::JOIN(Vector params, Iterator &_client)
 {
     if (params.size() < 2)
         return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
-    
     Vector channelNames = splite(params.at(1), ",");
     Vector channelKeys;
     if (params.size() > 2)
-    {
         channelKeys = splite(params.at(2), ",");
-        if (channelNames.size() != channelKeys.size())
-            return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
-    }
     for (Vector::iterator it = channelNames.begin(); it != channelNames.end(); ++it)
     {
         String  channelName = *it;
         if (channelName.empty() || channelName[0] != '#')
+        {
             replyto(ERR_NOSUCHCHANNEL(channelName), _client->first);
+            it = channelNames.erase(it);
+            --it;
+        }
     }
     for (size_t i = 0; i < channelNames.size(); i++)
     {
@@ -34,13 +33,8 @@ bool Commands::JOIN(Vector params, Iterator &_client)
             Channel& channel = it->second;
             if (!channel.checkKey(channelKey))
                 return (replyto(ERR_BADCHANNELKEY(channelName), _client->first), false);
-            channel.addUser(_client->second, _client->first);
+            channel.addUser(_client->second);
         }
-    }
-    ChannelMap::iterator it = _channels.begin();
-    for (; it != _channels.end(); ++it)
-    {
-        std::cout << it->first << std::endl;
     }
     return true;
 }

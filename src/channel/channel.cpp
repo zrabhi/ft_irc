@@ -40,9 +40,9 @@ bool Channel::checkKey(const std::string& key) const
     return (key == _key);
 }
 
-void Channel::addUser(Client& client, int fd)
+void Channel::addUser(Client& client)
 {
-    _users.insert(std::make_pair(fd, client));
+    _users.insert(std::make_pair(client.getFd(), client));
     client.joinChannel(*this);
 }
 

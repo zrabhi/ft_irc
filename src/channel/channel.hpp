@@ -35,5 +35,5 @@ class Channel {
         void    setType(short);
 
         bool    checkKey(const std::string& key) const;
-        void    addUser(Client& client, int fd);
+        void    addUser(Client& client);
 } ;
