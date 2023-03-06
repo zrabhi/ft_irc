@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/05 23:55:17 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/06 01:56:53 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class Commands
         void        appendToParams(Vector params, String &tmp, size_t index);
         Iterator    FindUser(String nickName, int fd);
         bool        checkParams(String params);
+        void        setPrivelege(Iterator &_it);
        
         bool        validateParam(String param,bool priv);
         bool        validateNick(String nickName, Map _user, int fd);
@@ -60,9 +61,6 @@ class Commands
         Commands();
         ~Commands();
         void        authentification(String &string, Map &_clients, int fd);
-        void        Welcome(Iterator _it);
-        void        AvailableCommands(Map _it);
-        void        AuthCommands(int fd);
         void        replyto(String message, int fd);
         
         bool        NICK(Vector params,  Iterator &_client);      
