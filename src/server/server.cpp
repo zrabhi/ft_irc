@@ -142,8 +142,6 @@ void	Server::addClientSockettoFdSet()
 	_fds.push_back(newGuestFd);
 	std::cout << "Welcome Client #" << _fds.at(_fds.size() - 1).fd << std::endl;
 	_clients.insert(std::make_pair(_newSocketFd, _new_client));
-	// _cmd.Welcome(_clients.find(_newSocketFd));
-	// _cmd.AuthCommands(_newSocketFd);
 }
 
 bool	Server::incomingConnectionRequest()
@@ -165,7 +163,7 @@ void	Server::incomingClientData()
 		{
 			char buffer[1024] = {0};
 			int result = recv(_fds.at(i).fd, &buffer, sizeof(buffer), 0);
-			// std::cout << "___"
+			std::cout << "buffer__" << buffer << std::endl;
 			if (buffer[0] != '\n' && buffer[0] != 0)
 			{
 				std::string buf(buffer);

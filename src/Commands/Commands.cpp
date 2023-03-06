@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/05 23:58:20 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/06 01:56:43 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 # include <ctype.h>
 # include <sstream>
 // # include "NICK"
+Commands::BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
+                                &Commands::USER, &Commands::PRIVMSG,
+                                &Commands::JOIN};
 Commands::Commands()
 {
     authCommands.push_back("NICK");
@@ -30,8 +33,9 @@ Commands::~Commands()
 
 Vector Commands::splite(String &parametrs,  String delemiter)
 {
-	std::vector<std::string> splited;
-	for (char *token = std::strtok(const_cast<char *>(parametrs.c_str()), delemiter.c_str()); token != NULL; token = std::strtok(nullptr, delemiter.c_str()))
+	Vector splited;
+	for (char *token = std::strtok(const_cast<char *>(parametrs.c_str()), delemiter.c_str());\
+         token != NULL; token = std::strtok(nullptr, delemiter.c_str()))
 		splited.push_back(token);
 	return (splited);
 }
@@ -44,10 +48,15 @@ void    Commands::replyto(String _message, int fd)
 
 void    Commands::makeUpper(String &param)
 {
-    for(String::iterator _it = param.begin(); _it != param.end(); _it++ )
-    {
+    String::iterator _it;
+    String::iterator _it_end; 
+
+    _it = param.begin();
+    _it_end = param.end();
+    if (_it == _it_end)
+        return ;
+    for(; _it != _it_end; _it++)
         *_it = toupper(*_it);    
-    }  
 }
 
 bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
@@ -61,13 +70,15 @@ bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
         case 2:
             return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
         case 3:
-            if (_it->second.getStatus() != GUEST)
-                return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
+            if (_it->second.getStatus() == CLIENT)
+                return (replyto(ERR_NORECIPIENT(cmd), _it->first), false);
+            return (replyto(ERR_UNKNOWNCOMMAND(cmd), _it->first), false);
         case 4:
-            if (_it->second.getStatus() != GUEST)
+            if (_it->second.getStatus() == CLIENT)
                 return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
+            return (replyto(ERR_UNKNOWNCOMMAND(cmd), _it->first), false);
      default:
-            replyto(ERR_UNKNOWNCOMMAND(cmd), _it->first);
+            return (replyto(ERR_UNKNOWNCOMMAND(cmd), _it->first), false);
     }
     return (false);
 }
@@ -99,73 +110,55 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
 
 String Commands::currentTime()
 {
-   time_t now = time(0);
-   char* dt = ctime(&now);
-
-   std::cout << "The local date and time is: " << dt << std::endl;
-
-  
-   tm *gmtm = gmtime(&now);
-   dt = asctime(gmtm);
+   time_t now(time(0));
+   char* dt(ctime(&now));
    std::string value(dt);
-   std::cout << "The UTC date and time is:"<< dt << std::endl;
+   
    return (value.substr(0, value.find("\n")));
+}
+
+void    Commands::setPrivelege(Iterator &_it)
+{
+    if (_it->second.getPassWord() != "" && _it->second.getNickName() != "" \
+                && _it->second.getUserName() != "" &&  _it->second.getStatus() == GUEST)
+    {
+       _it->second.setStatus(CLIENT);
+       replyto(RPL_YOURHOST, _it->first);
+       replyto(RPL_CREATED(currentTime()), _it->first);
+       NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
+    }
 }
 
 void    Commands::authentification(String &string, Map &_clients, int fd)
 {
     Vector tmp1 = splite(string, "\r\n");
-    for(size_t j = 0; j < tmp1.size(); j++)
+    for (size_t j = 0; j < tmp1.size(); j++)
     {
         Vector tmp = splite(tmp1[j], " ");
         makeUpper(tmp[0]);
         size_t i = 0;
-        for(i = 0;  i < 5 && tmp[0].compare(authCommands[i]); i++)
-        {    
-        }
+        for(i = 0;  i < 5 && tmp[0].compare(authCommands[i]); i++);
         if (tmp.size() == 1 || tmp[1] == ":")
         {   
             commandsErrors(tmp[0], _clients.find(fd), i);
             return;
         }
-        BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
-                                &Commands::USER, &Commands::PRIVMSG,
-                                &Commands::JOIN};
         Iterator _it = _clients.find(fd); 
         _users = _clients;
-        authCommandCheck(tmp, i,_it, _commands);
-        if (_it->second.getPassWord() != "" && _it->second.getNickName() != "" \
-                && _it->second.getUserName() != "" &&  _it->second.getStatus() == GUEST)
-        {
-            _it->second.setStatus(CLIENT);
-           replyto(RPL_YOURHOST, _it->first);
-           replyto(RPL_CREATED(currentTime()), _it->first);
-           NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
-        }
+        if (!authCommandCheck(tmp, i,_it, _commands))
+            return ;
+        setPrivelege(_it);
     }
 }
 
-void    Commands::Welcome(Iterator _it)
-{
-    message = "┬ ┬┌─┐┬  ┌─┐┌─┐┌┬┐┌─┐  ┌┬┐┌─┐  ┬┬─┐┌─┐  ┌─┐┌─┐┬─┐┬  ┬┌─┐┬─┐\n│││├┤ │  │  │ ││││├┤    │ │ │  │├┬┘│    └─┐├┤ ├┬┘└┐┌┘├┤ ├┬┘\n└┴┘└─┘┴─┘└─┘└─┘┴ ┴└─┘   ┴ └─┘  ┴┴└─└─┘  └─┘└─┘┴└─ └┘ └─┘┴└─\n"   ;
-    replyto(message, _it->first);
-}
-
-void      Commands::AuthCommands(int fd)
-{
-    message = "\033[1m\033[37mYou are now connected to the server as `Guest`\nIf you want to be an irc 'CLIENT' you have to register\n";
-    message += "Available commands for resgistration: \n          \033[1m\033[33mNICK: <nickname>\n          USER: username> <unused> <unused> <realname>\n          PASS: <password>\n\033[0m";
-    replyto(message, fd);
-}
-
-// void    Commands::AvailableCommands(Iterator _it)
-// {
-//     message = "NICK\nUSER\nPASS"
-// }
-
 bool  Commands::validateNick(String nickName, Map _user, int fd)
 {
-    for(Iterator _it = _user.begin(); _it != _user.end(); _it++)
+    Iterator _it;
+    Iterator _it_end; 
+    
+    _it = _user.begin();
+    _it_end = _user.end();
+    for(; _it != _it_end; _it++)
     {
         if (_it->second.getNickName() != "" && \
             _it->second.getNickName() == nickName && _it->first != fd)
@@ -182,7 +175,12 @@ bool  Commands::checkParams(String params)
 
 bool Commands::validateUserName(String userName, Map _user, int fd)
 {
-    for (Iterator _it = _user.begin(); _it != _user.end(); _it++)
+    Iterator _it;
+    Iterator _it_end; 
+    
+    _it = _user.begin();
+    _it_end = _user.end();
+    for (; _it != _it_end; _it++)
     {
         if (_it->second.getUserName() != "" && \
                 _it->second.getUserName() == userName && _it->first != fd)
@@ -194,6 +192,7 @@ bool Commands::validateUserName(String userName, Map _user, int fd)
 void    Commands::appendToParams(Vector params, String &tmp, size_t index)
 {
     size_t position;
+   
     if (params[index][0] != ':')
     {
         tmp = params[index];
@@ -227,9 +226,13 @@ bool Commands::isAlphaOrSpecial(char _c)
 
 bool   Commands::validateParam(String param, bool priv)
 {
-    String::iterator _it = param.begin() + 1;
-    size_t checker(1);
-    String::iterator _it_end = param.end(); 
+    String::iterator _it;
+    String::iterator _it_end; 
+    size_t checker;
+  
+    checker = 1;
+    _it = param.begin() + 1;
+    _it_end = param.end();
     if (priv)
     {
         if (!isAlphaOrSpecial(*(param.begin())))
@@ -252,9 +255,11 @@ bool Commands::isNonWhite(char _c, bool priv)
 
 bool Commands::validateUser(String param, bool priv)
 {
-    String::iterator _it = param.begin();
-    String::iterator _it_end = param.end(); 
+    String::iterator _it;
+    String::iterator _it_end; 
     
+    _it = param.begin();
+    _it_end = param.end();
     for (; _it != _it_end ; _it++ )
     {
         if (isNonWhite(*_it, priv))
@@ -271,24 +276,30 @@ bool  Commands::isComma(char _c)
 
 bool Commands::isHash(char _c)
 {
-    return (_c == '#');    
+    return (_c == '#');
 }
 
 Iterator Commands::FindUser(String nickName, int fd)
 {
-    for (Iterator _it = _users.begin(); _it != _users.end(); _it++)
+    Iterator _it;
+    Iterator _it_end; 
+    
+    _it = _users.begin();
+    _it_end = _users.end();
+    for (; _it != _it_end; _it++)
     {
         if (_it->second.getNickName() == nickName && _it->first != fd)
             return (_it);
     }
-    return (_users.end());
+    return (_it_end);
 }
 
 bool  Commands::checkUsers(Vector param, Vector_it &parameters, size_t index, int fd)
 {
-    Iterator value;
-    Vector    splited = splite(param[index], ",");
+    Iterator  value;
+    Vector    splited;
 
+    splited = splite(param[index], ",");
     for (Vector::iterator _it = splited.begin(); _it != splited.end(); _it++)
     {
         value = FindUser(*_it, fd);

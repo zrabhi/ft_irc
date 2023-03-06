@@ -11,7 +11,7 @@ bool    Commands::PRIVMSG(Vector params,  Iterator &_client)
     String tmp("");
     appendToParams(params, tmp, 2);
     if (tmp == "")
-        return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
+        return (replyto(ERR_NOTEXTTOSEND, _client->first), false);
     for (Vector_it::iterator _it = recievers.begin(); _it != recievers.end(); _it++)
         replyto(REPLY_PIVMSG(_client->second.getNickName(), (*_it)->second.getNickName() ,\
              tmp), (*_it)->first);

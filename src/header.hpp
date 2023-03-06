@@ -31,10 +31,6 @@ enum T_flag
     CLIENT,
 };
 
-/*
-    COLORS
-*/
-
 # define RESET       "\033[0m"
 # define RED         "\033[30m"
 # define GREEN       "\033[32m"
@@ -66,16 +62,16 @@ enum T_flag
 # define   ERR_BANNEDFROMCHAN(a) std::cout << a << "  :Cannot join channel (+b)" << std::endl;
 # define   ERR_NOPRIVILEGES  std::cout << " :Permission Denied- You're not an IRC operator" << std::endl;
 # define   ERR_CANTKILLSERVER std::cout << " You cant kill a server!" << std::endl;
-# define   ERR_NORECIPIENT     "\033[1m\033[33m:No recipient given n.\n\033[0m"
-# define   ERR_NOTEXTTOSEND    "\033[1m\033[33m:No text to send.\n\033[0m"
-# define   ERR_ALREADYREGISTRED  "451 ERR_NOTREGISTERED :You have not registered\r\n" 
-# define   ERR_NEEDMOREPARAMS(a) "461 ERR_NEEDMOREPARAMS <" + a +">:Not enough parameters\r\n"
-# define   ERR_PASSWDMISMATCH    "464 ERR_PASSWDMISMATCH:Password incorrect\r\n"
-# define   ERR_NONICKNAMEGIVEN   "431 ERR_NONICKNAMEGIVEN :No nickname given\r\n" 
+# define   ERR_ALREADYREGISTRED    "451 ERR_NOTREGISTERED :You have not registered\r\n" 
+# define   ERR_NEEDMOREPARAMS(a)   "461 ERR_NEEDMOREPARAMS <" + a +">:Not enough parameters\r\n"
+# define   ERR_NORECIPIENT(a)      "411 ERR_NORECIPIENT :No recipient given("+ a+ ")\r\n"
+# define   ERR_PASSWDMISMATCH      "464 ERR_PASSWDMISMATCH:Password incorrect\r\n"
+# define   ERR_NONICKNAMEGIVEN     "431 ERR_NONICKNAMEGIVEN :No nickname given\r\n" 
 # define   ERR_ERRONEUSNICKNAME(a) "432 ERR_ERRONEUSNICKNAME <"+a+"> :Erroneus nickname\r\n"
-# define   ERR_NICKNAMEINUSE(a)  "433 ERR_NICKNAMEINUSE <"+a+"> :Nickname is already in use\r\n"
-# define   ERR_NOSUCHNICK(a)      "401 ERR_NOSUCHNICK<" + a +"> :No such nick/channel\r\n"
+# define   ERR_NICKNAMEINUSE(a)    "433 ERR_NICKNAMEINUSE <"+a+"> :Nickname is already in use\r\n"
+# define   ERR_NOSUCHNICK(a)       "401 ERR_NOSUCHNICK<" + a +"> :No such nick/channel\r\n"
 # define   ERR_UNKNOWNCOMMAND(a)   "421 ERR_UNKNOWNCOMMAND <" + a +"> :Unknown command\r\n"
+# define   ERR_NOTEXTTOSEND        "412 ERR_NOTEXTTOSEND:No text to send\r\n"
 /* 
     SERVER REPLY
 */
