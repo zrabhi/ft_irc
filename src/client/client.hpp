@@ -14,21 +14,25 @@
 # define    CLIENT_HPP
 
 #include <iostream>
+#include <vector>
+#include <map>
 
+class Channel;
 
 class Client
 {
     private:
-        int         _port;
-        int         _fd;
-        int         _auth;
-        int         _status;
-        std::string _hostname;
-        std::string serverPass;         
-        std::string passWord;
-        std::string _nickname;
-        std::string _username;
-        std::string _realname;
+        int                     _port;
+        int                     _fd;
+        int                     _auth;
+        int                     _status;
+        std::string             _hostname;
+        std::string             serverPass;         
+        std::string             passWord;
+        std::string             _nickname;
+        std::string             _username;
+        std::string             _realname;
+        std::map<std::string, Channel>    _joinedChannels;
         
     public:
         Client();
@@ -58,7 +62,9 @@ class Client
         void   setFd(int newFd);
         void   setRealName(std::string realName);
         void   setUserName(std::string UserName);
-    
+
+        void    joinChannel(Channel& channel);
+
 };
 
 

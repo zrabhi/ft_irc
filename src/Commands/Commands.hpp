@@ -15,6 +15,7 @@
 
 # include <vector>
 # include "../client/client.hpp"
+# include "../Channel/channel.hpp"
 # include <map> 
 
 class Commands
@@ -28,6 +29,7 @@ class Commands
         typedef bool(Commands::*BMemFunGuest) (Vector param, Iterator &_client);
         typedef bool(Commands::*BMemFunClient) (Vector param, Iterator &_client);
         typedef std::vector<Iterator>    Vector_it;
+        typedef std::map<String, Channel>ChannelMap;
     private:
         Map     _users;
         Vector   authCommands;
@@ -52,6 +54,7 @@ class Commands
         bool        isNonWhite(char _c, bool priv);
         bool        checkUsers(Vector param, Vector_it &parameters, size_t index, int fd);
         String      currentTime();
+        ChannelMap  _channels;
 
     public:
         Commands();

@@ -1,4 +1,5 @@
-#include "Channel.hpp"
+#include "channel.hpp"
+#include <utility>
 
 Channel::Channel() :
 _name(""), _topic(""), _key("")
@@ -9,7 +10,10 @@ _name(name), _topic(""), _key(key), _creator(creator)
 {
 }
 
-Channel::~Channel() {}
+Channel::~Channel() 
+{
+
+}
 
 std::string    Channel::getName() const 
 {
@@ -30,3 +34,15 @@ void    Channel::setKey(const std::string& key)
 {
     _key = key;
 }
+
+bool Channel::checkKey(const std::string& key) const
+{
+    return (key == _key);
+}
+
+void Channel::addUser(Client& client, int fd)
+{
+    _users.insert(std::make_pair(fd, client));
+    client.joinChannel(*this);
+}
+

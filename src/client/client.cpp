@@ -13,6 +13,8 @@
 
 #include "client.hpp"
 #include "../header.hpp"
+#include "../Channel/channel.hpp"
+#include <utility>
 
 // initialize data memebers
 Client::Client() : _port(), 
@@ -136,3 +138,9 @@ void    Client::setUserName(std::string UserName)
 {
     _username = UserName;
 }
+
+void Client::joinChannel(Channel& channel)
+{
+    _joinedChannels.insert(std::make_pair(channel.getName(), channel));
+}
+

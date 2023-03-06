@@ -76,6 +76,10 @@ enum T_flag
 # define   ERR_NICKNAMEINUSE(a)  "433 ERR_NICKNAMEINUSE <"+a+"> :Nickname is already in use\r\n"
 # define   ERR_NOSUCHNICK(a)      "401 ERR_NOSUCHNICK<" + a +"> :No such nick/channel\r\n"
 # define   ERR_UNKNOWNCOMMAND(a)   "421 ERR_UNKNOWNCOMMAND <" + a +"> :Unknown command\r\n"
+# define   ERR_BADCHANNELKEY(a)     "475 ERR_BADCHANNELKEY <" + a + "> :Cannot join channel (+k)\r\n"
+# define   ERR_NOSUCHCHANNEL(a)     "403 ERR_NOSUCHCHANNEL <" + a + "> :No such channel\r\n"
+# define   ERR_TOOMANYCHANNELS(a)   "405 ERR_TOOMANYCHANNELS <" + a +  "> :You have joined too many channels\r\n"
+
 /* 
     SERVER REPLY
 */

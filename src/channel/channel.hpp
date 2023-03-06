@@ -33,4 +33,7 @@ class Channel {
         void    setName(const std::string&);
         void    setKey(const std::string&);
         void    setType(short);
+
+        bool    checkKey(const std::string& key) const;
+        void    addUser(Client& client, int fd);
 } ;
