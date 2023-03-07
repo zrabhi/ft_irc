@@ -22,17 +22,18 @@ class Channel;
 class Client
 {
     private:
-        int                     _port;
-        int                     _fd;
-        int                     _auth;
-        int                     _status;
-        std::string             _hostname;
-        std::string             serverPass;         
-        std::string             passWord;
-        std::string             _nickname;
-        std::string             _username;
-        std::string             _realname;
-        std::map<std::string, Channel>    _joinedChannels;
+        int                         _port;
+        int                         _fd;
+        int                         _auth;
+        int                         _status;
+        std::string                 _hostname;
+        std::string                 serverPass;         
+        std::string                 passWord;
+        std::string                 _nickname;
+        std::string                 _username;
+        std::string                 _realname;
+        std::vector<std::string>    _joinedChannels;
+        // std::map<std::string, Channel>    _joinedChannels;
         
     public:
         Client();
@@ -50,6 +51,7 @@ class Client
         std::string getRealName()   const;
         std::string getNickName() const;
         std::string getUserName() const;
+        std::vector<std::string> getJoinedChannels() const;
      
         /// @brief Setters
 
@@ -63,7 +65,7 @@ class Client
         void   setRealName(std::string realName);
         void   setUserName(std::string UserName);
 
-        void    joinChannel(Channel& channel);
+        void    joinChannel(std::string channelName);
 
 };
 

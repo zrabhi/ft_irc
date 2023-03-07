@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/07 00:44:16 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/07 05:57:13 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,10 +279,46 @@ bool Commands::isHash(char _c)
     return (_c == '#');
 }
 
+
+Vector_it Commands::channelUsers(String channelName)
+{
+    Vector_it Users;
+    
+    std::cout << "in channelusers\n";
+    Iterator _it = _users.begin();
+    for(; _it != _users.end(); _it++)
+    {
+        Vector tmp = _it->second.getJoinedChannels();
+        for (size_t j = 0; j < tmp.size(); j++)
+        {
+            if (!channelName.compare(tmp[j]))
+            {
+                std::cout << "user name" << _it->second.getNickName() << std::endl;
+                Users.push_back(_it);
+            }
+        }
+    }
+    return (Users);
+}
+
+
+Vector_it Commands::FindUsers(std::string ChannelName, Iterator _client)
+{
+    Vector_it tmp;
+    std::cout << "in find users\n";
+    Vector test = _client->second.getJoinedChannels();
+    for(size_t i = 0 ; i < test.size() ; i++)
+    {
+        if (ChannelName == test[i])
+            return (channelUsers(ChannelName));
+    }
+    return (tmp);
+}
+
 Iterator Commands::FindUser(String nickName, int fd)
 {
     Iterator _it;
-    Iterator _it_end; 
+    Iterator _it_end;
     
     _it = _users.begin();
     _it_end = _users.end();
@@ -294,14 +330,25 @@ Iterator Commands::FindUser(String nickName, int fd)
     return (_it_end);
 }
 
-bool  Commands::checkUsers(Vector param, Vector_it &parameters, size_t index, int fd)
+bool  Commands::checkUsers(Vector param, Vector_it &parameters, Vector_it &channelRecievers, std::string &channelName, size_t index, int fd)
 {
-    Iterator  value;
+    Iterator  value; 
+    Vector_it channelUsers; 
     Vector    splited;
 
     splited = splite(param[index], ",");
     for (Vector::iterator _it = splited.begin(); _it != splited.end(); _it++)
     {
+        if (isHash((*_it)[0]))
+            channelUsers = FindUsers(*_it, _users.find(fd));
+        if (channelUsers.size() != 0)
+        {
+            channelName = *_it;
+            for(size_t i = 0 ; i < channelUsers.size(); i++)
+                channelRecievers.push_back(channelUsers[i]);
+            continue;
+        }
+        //     value +=channelUsers;
         value = FindUser(*_it, fd);
         if (value == _users.end())
             return (false);

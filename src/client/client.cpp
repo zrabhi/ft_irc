@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 18:57:03 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/07 00:15:14 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/07 04:38:41 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ Client::Client(int newFd, std::string _serverPass, std::string hostName, int por
                         passWord(""),
                             _nickname(""),
                                 _username(""),
-                                     _realname("")
+                                     _realname(""),
+                                        _joinedChannels()
 {
     
 }
@@ -99,6 +100,11 @@ int Client::getPort() const
     return (_port);
 }
 
+std::vector<std::string> Client::getJoinedChannels() const
+{
+    return _joinedChannels;
+}
+
 void    Client::setNickName(std::string NickName)
 {
     _nickname = NickName;
@@ -144,8 +150,9 @@ void    Client::setUserName(std::string UserName)
     _username = UserName;
 }
 
-void Client::joinChannel(Channel& channel)
+void Client::joinChannel(std::string channelName)
 {
-    _joinedChannels.insert(std::make_pair(channel.getName(), channel));
+    _joinedChannels.push_back(channelName);
+    // _joinedChannels.insert(std::make_pair(channel.getName(), channel));
 }
 

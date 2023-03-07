@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/07 00:40:27 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/07 05:51:33 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Commands
         typedef bool(Commands::*BMemFunGuest) (Vector param, Iterator &_client);
         typedef bool(Commands::*BMemFunClient) (Vector param, Iterator &_client);
         typedef std::vector<Iterator>    Vector_it;
-        typedef std::map<String, Channel>ChannelMap;
+        typedef std::map<String, Channel> ChannelMap;
     private:
         Map     _users;
         Vector   authCommands;
@@ -43,7 +43,8 @@ class Commands
         Iterator    FindUser(String nickName, int fd);
         bool        checkParams(String params);
         void        setPrivelege(Iterator &_it);
-       
+        
+        Vector_it   channelUsers(String channelName);
         bool        validateParam(String param,bool priv);
         bool        validateNick(String nickName, Map _user, int fd);
         bool        validateUserName(String userName, Map _user, int fd);
@@ -53,8 +54,8 @@ class Commands
         bool        isHash(char _c);
         bool        isAlphaOrSpecial(char _c);
         bool        isNonWhite(char _c, bool priv);
-        bool        checkUsers(Vector param, Vector_it &parameters, size_t index, int fd);
-        Iterator    FindUser(Channel channel, int fd);
+        bool        checkUsers(Vector param, Vector_it &parameters,Vector_it &channelRecievers, std::string &channelName,  size_t index, int fd);
+        Vector_it   FindUsers(std::string ChannelName, Iterator _client);
         String      currentTime();
         ChannelMap  _channels;
 

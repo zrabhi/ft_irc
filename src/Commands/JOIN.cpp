@@ -28,7 +28,9 @@ bool Commands::JOIN(Vector params, Iterator &_client)
             Channel channel(channelName, channelKey, _client->second);
             _channels.insert(std::make_pair(channelName, channel));
             replyto(RFEPLY_CHANNEL(_client->second.getNickName(), channelName), _client->first);
-            channel.addUser(_client->second);
+            _users.insert(std::make_pair(_client->first, _client->second));
+            _client->second.joinChannel(channelName);
+            // channel.addUser(_client->second);
         }
         else
         {
@@ -36,9 +38,18 @@ bool Commands::JOIN(Vector params, Iterator &_client)
             if (!channel.checkKey(channelKey))
                 return (replyto(ERR_BADCHANNELKEY(channelName), _client->first), false);
             replyto(RFEPLY_CHANNEL(_client->second.getNickName(), channelName), _client->first);
-            channel.addUser(_client->second);
+            _users.insert(std::make_pair(_client->first, _client->second));
+            _client->second.joinChannel(channelName);
+            // channel.addUser(_client->second);
         }
-
     }
     return true;
 }
+
+
+// bool Commands::JOIN(Vector params, Iterator &_client)
+// {
+//     if (params.size() < 2)
+//         return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
+
+// }
