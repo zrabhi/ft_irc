@@ -74,8 +74,9 @@ enum T_flag
 # define   ERR_BADCHANNELKEY(a)     "475 ERR_BADCHANNELKEY <" + a + "> :Cannot join channel (+k)\r\n"
 # define   ERR_NOSUCHCHANNEL(a)     "403 ERR_NOSUCHCHANNEL <" + a + "> :No such channel\r\n"
 # define   ERR_TOOMANYCHANNELS(a)   "405 ERR_TOOMANYCHANNELS <" + a +  "> :You have joined too many channels\r\n"
-
-# define   ERR_NOTEXTTOSEND        "412 ERR_NOTEXTTOSEND:No text to send\r\n"
+# define    LISTUSERS(a,b)  ":localhost 353 " + a + " = "  + b + " "
+# define    ENDLIST(a,b) ":localhost 366 " + a + " " + b + " :End of /NAMES list.\r\n"
+# define    ERR_NOTEXTTOSEND        "412 ERR_NOTEXTTOSEND:No text to send\r\n"
 /* 
     SERVER REPLY
 */

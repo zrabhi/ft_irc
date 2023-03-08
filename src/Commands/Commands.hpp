@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/07 05:51:33 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/08 07:03:21 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class Commands
         typedef bool(Commands::*BMemFunClient) (Vector param, Iterator &_client);
         typedef std::vector<Iterator>    Vector_it;
         typedef std::map<String, Channel> ChannelMap;
+        typedef std::map<String, std::map<int, Client> > Vector_map;
     private:
         Map     _users;
         Vector   authCommands;
@@ -41,11 +42,14 @@ class Commands
         void        makeUpper(String &param);
         void        appendToParams(Vector params, String &tmp, size_t index);
         Iterator    FindUser(String nickName, int fd);
+        bool        FindUsersInChannel(String channelName,Vector_map &Users, int fd);
         bool        checkParams(String params);
         void        setPrivelege(Iterator &_it);
-        
-        Vector_it   channelUsers(String channelName);
+        void        NewUser(Channel &channel, Iterator _client);
+        void        noticeClient(Iterator client, Channel channel);
+        void        broadcastMessage(Iterator _client, Channel &channel);
         bool        validateParam(String param,bool priv);
+
         bool        validateNick(String nickName, Map _user, int fd);
         bool        validateUserName(String userName, Map _user, int fd);
         bool        validateUser(String param, bool priv);
@@ -54,8 +58,7 @@ class Commands
         bool        isHash(char _c);
         bool        isAlphaOrSpecial(char _c);
         bool        isNonWhite(char _c, bool priv);
-        bool        checkUsers(Vector param, Vector_it &parameters,Vector_it &channelRecievers, std::string &channelName,  size_t index, int fd);
-        Vector_it   FindUsers(std::string ChannelName, Iterator _client);
+        bool        checkUsers(Vector param, Vector_it &parameters,Vector_map &Users, size_t index, int fd);
         String      currentTime();
         ChannelMap  _channels;
 
@@ -73,7 +76,9 @@ class Commands
         bool        authCommandCheck(Vector params, size_t index, Iterator _it, BMemFunGuest _commands[]);
 };
 
+typedef Commands::ChannelMap ChannelMap;
 typedef Commands::Vector    Vector;
+typedef Commands::Vector_map    Vector_map;
 typedef Commands::Map       Map;
 typedef Commands::String    String;
 typedef Commands::Iterator  Iterator;
