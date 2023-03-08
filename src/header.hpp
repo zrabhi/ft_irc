@@ -21,17 +21,9 @@
 # include <netinet/in.h>
 # include <sys/_endian.h>
 # include <sys/_types/_socklen_t.h>
-// #include "Commands/Commands.hpp"
-// # include "./server/server.hpp"
+# include "Commands/Commands.hpp"
 
 
-typedef Commands::ChannelMap ChannelMap;
-typedef Commands::Vector    Vector;
-typedef Commands::Vector_map    Vector_map;
-typedef Commands::Map       Map;
-typedef Commands::String    String;
-typedef Commands::Iterator  Iterator;
-typedef Commands::Vector_it  Vector_it;
 
 
 enum T_flag
@@ -60,34 +52,39 @@ enum T_flag
 # define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
 
 
-# define   ARGS_ERR "Usage: ./ircserv <port> <password>\nport: A number between 1025 and 65536\npassword: a sequence of characeters"
-# define   INVALID_ARGS() std::cerr << ARGS_ERR << std::endl
-# define   ERR_USERNOTINCHANNEL(a, b) std::cout << a << " :They aren't on that channel" << b << std::endl;
-# define   ERR_NOTONCHANNEL(a) std::cout << a << " :You're not on that channel" << std::endl;
-# define   ERR_USERONCHANNEL(a, b) std::cout << a << " " << b << " :is already on channel" << std::endl;
-# define   ERR_SUMMONDISABLED(a)  std::cout << a << " has been disabled" << std::endl;
-# define   ERR_NOTREGISTERED   std::cout << " You have not registered" << std::endl;
-# define   ERR_YOUREBANNEDCREEP std::cout << " You are banned from this server" << std::endl;
-# define   ERR_INVITEONLYCHAN(a) std::cout << a << " :Cannot join channel (+i)" << std::endl;
-# define   ERR_CHANNELISFULL(a) std::cout << a << " :Cannot join channel (+l)" << std::endl;
-# define   ERR_BANNEDFROMCHAN(a) std::cout << a << "  :Cannot join channel (+b)" << std::endl;
-# define   ERR_NOPRIVILEGES  std::cout << " :Permission Denied- You're not an IRC operator" << std::endl;
-# define   ERR_CANTKILLSERVER std::cout << " You cant kill a server!" << std::endl;
-# define   ERR_ALREADYREGISTRED    "451 ERR_NOTREGISTERED :You have not registered\r\n" 
-# define   ERR_NEEDMOREPARAMS(a)   "461 ERR_NEEDMOREPARAMS <" + a +">:Not enough parameters\r\n"
-# define   ERR_NORECIPIENT(a)      "411 ERR_NORECIPIENT :No recipient given("+ a+ ")\r\n"
-# define   ERR_PASSWDMISMATCH      "464 ERR_PASSWDMISMATCH:Password incorrect\r\n"
-# define   ERR_NONICKNAMEGIVEN     "431 ERR_NONICKNAMEGIVEN :No nickname given\r\n" 
-# define   ERR_ERRONEUSNICKNAME(a) "432 ERR_ERRONEUSNICKNAME <"+a+"> :Erroneus nickname\r\n"
-# define   ERR_NICKNAMEINUSE(a)    "433 ERR_NICKNAMEINUSE <"+a+"> :Nickname is already in use\r\n"
-# define   ERR_NOSUCHNICK(a)       "401 ERR_NOSUCHNICK<" + a +"> :No such nick/channel\r\n"
-# define   ERR_UNKNOWNCOMMAND(a)   "421 ERR_UNKNOWNCOMMAND <" + a +"> :Unknown command\r\n"
-# define   ERR_BADCHANNELKEY(a)     "475 ERR_BADCHANNELKEY <" + a + "> :Cannot join channel (+k)\r\n"
-# define   ERR_NOSUCHCHANNEL(a)     "403 ERR_NOSUCHCHANNEL <" + a + "> :No such channel\r\n"
-# define   ERR_TOOMANYCHANNELS(a)   "405 ERR_TOOMANYCHANNELS <" + a +  "> :You have joined too many channels\r\n"
-# define    LISTUSERS(a,b)  ":localhost 353 " + a + " = "  + b + " "
-# define    ENDLIST(a,b) ":localhost 366 " + a + " " + b + " :End of /NAMES list.\r\n"
-# define    ERR_NOTEXTTOSEND        "412 ERR_NOTEXTTOSEND:No text to send\r\n"
+# define   ARGS_ERR                         "Usage: ./ircserv <port> <password>\nport: A number between 1025 and 65536\npassword: a sequence of characeters"
+# define   INVALID_ARGS()                   std::cerr << ARGS_ERR << std::endl
+# define   ERR_USERNOTINCHANNEL(a, b)       std::cout << a << " :They aren't on that channel" << b << std::endl;
+# define   ERR_NOTONCHANNEL(a)              std::cout << a << " :You're not on that channel" << std::endl;
+# define   ERR_USERONCHANNEL(a, b)          std::cout << a << " " << b << " :is already on channel" << std::endl;
+# define   ERR_SUMMONDISABLED(a)            std::cout << a << " has been disabled" << std::endl;
+# define   ERR_NOTREGISTERED                std::cout << " You have not registered" << std::endl;
+# define   ERR_YOUREBANNEDCREEP             std::cout << " You are banned from this server" << std::endl;
+# define   ERR_INVITEONLYCHAN(a)            std::cout << a << " :Cannot join channel (+i)" << std::endl;
+# define   ERR_CHANNELISFULL(a)             std::cout << a << " :Cannot join channel (+l)" << std::endl;
+# define   ERR_BANNEDFROMCHAN(a)            std::cout << a << "  :Cannot join channel (+b)" << std::endl;
+# define   ERR_NOPRIVILEGES                 std::cout << " :Permission Denied- You're not an IRC operator" << std::endl;
+# define   ERR_CANTKILLSERVER               std::cout << " You cant kill a server!" << std::endl;
+
+# define   ERR_ALREADYREGISTRED             "451 ERR_NOTREGISTERED :You have not registered\r\n" 
+# define   ERR_NEEDMOREPARAMS(a)            "461 ERR_NEEDMOREPARAMS <" + a +">:Not enough parameters\r\n"
+# define   ERR_NORECIPIENT(a)               "411 ERR_NORECIPIENT :No recipient given("+ a+ ")\r\n"
+# define   ERR_PASSWDMISMATCH               "464 ERR_PASSWDMISMATCH:Password incorrect\r\n"
+# define   ERR_NONICKNAMEGIVEN              "431 ERR_NONICKNAMEGIVEN :No nickname given\r\n" 
+# define   ERR_ERRONEUSNICKNAME(a)          "432 ERR_ERRONEUSNICKNAME <"+a+"> :Erroneus nickname\r\n"
+# define   ERR_NICKNAMEINUSE(a)             "433 ERR_NICKNAMEINUSE <"+a+"> :Nickname is already in use\r\n"
+# define   ERR_NOSUCHNICK(a)                "401 ERR_NOSUCHNICK<" + a +"> :No such nick/channel\r\n"
+# define   ERR_UNKNOWNCOMMAND(a)            "421 ERR_UNKNOWNCOMMAND <" + a +"> :Unknown command\r\n"
+# define   ERR_BADCHANNELKEY(a)             "475 ERR_BADCHANNELKEY <" + a + "> :Cannot join channel (+k)\r\n"
+# define   ERR_NOSUCHCHANNEL(a)             "403 ERR_NOSUCHCHANNEL <" + a + "> :No such channel\r\n"
+# define   ERR_TOOMANYCHANNELS(a)           "405 ERR_TOOMANYCHANNELS <" + a +  "> :You have joined too many channels\r\n"
+# define    RFEPLY_CHANNEL(a, b)            ":" + a + " JOIN " + b + "\r\n"
+# define    REPLY_PIVMSG(a, b, c)           ":" + a + " PRIVMSG " + b + " :" + c + "\r\n" 
+
+# define    LISTUSERS(a,b)                  ":localhost 353 " + a + " = "  + b + " "
+# define    ENDLIST(a,b)                    ":localhost 366 " + a + " " + b + " :End of /NAMES list.\r\n"
+# define    ERR_NOTEXTTOSEND                "412 ERR_NOTEXTTOSEND:No text to send\r\n"
+# define    NOTICE_MSG(a, b, c)             ":" + a + " NOTICE " + b + " :" + c + "\r\n" 
 /* 
     SERVER REPLY
 */
@@ -101,11 +98,10 @@ enum T_flag
 # define  ERR_ALREADYUSED  "\033[1m\033[33m:Username is already in use \033[0m\n" 
 # define  NEWUSERNAME(a)  BOLDYELLOW + a + " is your username" + RESET + "\n"
 # define  NEWREALNAME(a)  BOLDYELLOW + a + " is your realname" + RESET + "\n"
+
 # define  REPLYPRIVMSG   "\033[1m\033[33m<receiver> <text to be sent>\n\033[1m"
 # define  RPL_YOURHOST   "002 RPL_YOURHOST Your host is <ft_irc_server>, running version <1.1.2>\r\n"
 # define  RPL_CREATED(a) "003 RPL_CREATED This server was created<" + a + ">\r\n"  
-# define  RFEPLY_CHANNEL(a, b) ":" + a + " JOIN " + b + "\r\n"
-# define REPLY_PIVMSG(a, b, c) ":" + a + " PRIVMSG " + b + " :" + c + "\r\n" 
 # define  RPL_WELCOME(a,b,c) "001 RPL_WELCOME  Welcome to the Internet Relay Network <" + a + ">!<"+ b +">@<" + c + ">\r\n"
 #if a 
     {

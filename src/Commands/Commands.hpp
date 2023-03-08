@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/08 07:23:59 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/08 19:35:59 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,16 @@ class Commands
         bool        USER(Vector params,  Iterator &_client);  
         bool        PRIVMSG(Vector params,  Iterator &_client);
         bool        JOIN(Vector params, Iterator &_client);
+        bool        NOTICE(Vector params, Iterator &_client);
 };
+
+typedef Commands::ChannelMap ChannelMap;
+typedef Commands::Vector    Vector;
+typedef Commands::Vector_map    Vector_map;
+typedef Commands::Map       Map;
+typedef Commands::String    String;
+typedef Commands::Iterator  Iterator;
+typedef Commands::Vector_it  Vector_it;
 
 
 #endif

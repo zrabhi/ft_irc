@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/08 07:34:10 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/08 19:52:57 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 Commands::BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
                                 &Commands::USER, &Commands::PRIVMSG,
-                                &Commands::JOIN};
+                                &Commands::JOIN, &Commands::NOTICE};
 Commands::Commands()
 {
     authCommands.push_back("NICK");
@@ -109,6 +109,9 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
         case 4:
             if (_it->second.getStatus() != GUEST)
                 return((this->*_commands[index])(params, _it));
+        case 5:
+             if (_it->second.getStatus() != GUEST)
+                return((this->*_commands[index])(params, _it));
         default:
             return(replyto(ERR_UNKNOWNCOMMAND(params[0]), _it->first), false);
     }
@@ -142,10 +145,12 @@ void    Commands::authentification(String &string, Map &_clients, int fd)
     for (size_t j = 0; j < tmp1.size(); j++)
     {
         Vector tmp = splite(tmp1[j], " ");
+        if (tmp.size() == 0)
+            return ;
         makeUpper(tmp[0]);
         size_t i = 0;
         /*Notice */
-        for(i = 0;  i < 5 && tmp[0].compare(authCommands[i]); i++);
+        for (i = 0;  i < 6 && tmp[0].compare(authCommands[i]); i++);
         if (tmp.size() == 1 || tmp[1] == ":")
         {   
             commandsErrors(tmp[0], _clients.find(fd), i);
