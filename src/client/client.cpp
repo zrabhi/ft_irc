@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 18:57:03 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/08 07:10:43 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/08 22:10:42 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,5 +153,21 @@ void    Client::setUserName(std::string UserName)
 void Client::joinChannel(Channel& channel)
 {
     _joinedChannels.insert(std::make_pair(channel.getName(), channel));
+}
+
+void    Client::partFromChannel(Channel &channel)
+{
+    _joinedChannels.erase(channel.getName());
+}
+
+bool Client::isInChannel(std::string channelName)
+{
+    std::map<std::string, Channel>::iterator _it = _joinedChannels.begin();
+    for(; _it !=  _joinedChannels.end(); _it++)
+    {
+        if (channelName == _it->first)
+            return (true);
+    }
+    return (false);
 }
 

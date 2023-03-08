@@ -54,6 +54,7 @@ class Client
      
         /// @brief Setters
 
+        bool   isInChannel(std::string channelName);
         void   setPort(int __port);
         void   setNickName(std::string NickName);
         void   setPassWord(std::string _password);
@@ -64,6 +65,7 @@ class Client
         void   setRealName(std::string realName);
         void   setUserName(std::string UserName);
 
+        void    partFromChannel(Channel &channel);
         void    joinChannel(Channel& channel);
 
 };

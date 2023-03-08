@@ -75,11 +75,3 @@ bool Commands::JOIN(Vector params, Iterator &_client)
     }
     return true;
 }
-
-
-// bool Commands::JOIN(Vector params, Iterator &_client)
-// {
-//     if (params.size() < 2)
-//         return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first), false);
-
-// }

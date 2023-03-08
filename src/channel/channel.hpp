@@ -11,7 +11,8 @@ enum {
     PRIVATE = 3
 } ;
 
-class Channel {
+class Channel
+{
     private:
         std::string           _name; // contains up to 50 characters, doesnt have spaces or comma (,) in the name.
         std::string           _topic; // contains up to 200 characters
@@ -36,6 +37,7 @@ class Channel {
         void    setKey(const std::string&);
         void    setType(short);
 
+        void    RemoveUser(Client &client);
         bool    checkKey(const std::string& key) const;
         void    addUser(Client& client);
 } ;

@@ -55,10 +55,8 @@ enum T_flag
 # define   ARGS_ERR                         "Usage: ./ircserv <port> <password>\nport: A number between 1025 and 65536\npassword: a sequence of characeters"
 # define   INVALID_ARGS()                   std::cerr << ARGS_ERR << std::endl
 # define   ERR_USERNOTINCHANNEL(a, b)       std::cout << a << " :They aren't on that channel" << b << std::endl;
-# define   ERR_NOTONCHANNEL(a)              std::cout << a << " :You're not on that channel" << std::endl;
 # define   ERR_USERONCHANNEL(a, b)          std::cout << a << " " << b << " :is already on channel" << std::endl;
 # define   ERR_SUMMONDISABLED(a)            std::cout << a << " has been disabled" << std::endl;
-# define   ERR_NOTREGISTERED                std::cout << " You have not registered" << std::endl;
 # define   ERR_YOUREBANNEDCREEP             std::cout << " You are banned from this server" << std::endl;
 # define   ERR_INVITEONLYCHAN(a)            std::cout << a << " :Cannot join channel (+i)" << std::endl;
 # define   ERR_CHANNELISFULL(a)             std::cout << a << " :Cannot join channel (+l)" << std::endl;
@@ -78,13 +76,16 @@ enum T_flag
 # define   ERR_BADCHANNELKEY(a)             "475 ERR_BADCHANNELKEY <" + a + "> :Cannot join channel (+k)\r\n"
 # define   ERR_NOSUCHCHANNEL(a)             "403 ERR_NOSUCHCHANNEL <" + a + "> :No such channel\r\n"
 # define   ERR_TOOMANYCHANNELS(a)           "405 ERR_TOOMANYCHANNELS <" + a +  "> :You have joined too many channels\r\n"
-# define    RFEPLY_CHANNEL(a, b)            ":" + a + " JOIN " + b + "\r\n"
-# define    REPLY_PIVMSG(a, b, c)           ":" + a + " PRIVMSG " + b + " :" + c + "\r\n" 
-
-# define    LISTUSERS(a,b)                  ":localhost 353 " + a + " = "  + b + " "
-# define    ENDLIST(a,b)                    ":localhost 366 " + a + " " + b + " :End of /NAMES list.\r\n"
-# define    ERR_NOTEXTTOSEND                "412 ERR_NOTEXTTOSEND:No text to send\r\n"
-# define    NOTICE_MSG(a, b, c)             ":" + a + " NOTICE " + b + " :" + c + "\r\n" 
+# define   RFEPLY_CHANNEL(a, b)            ":" + a + " JOIN " + b + "\r\n"
+# define   REPLY_PIVMSG(a, b, c)           ":" + a + " PRIVMSG " + b + " :" + c + "\r\n" 
+# define   ERR_NOTONCHANNEL(a)              "442 ERR_NOTONCHANNEL " + a + " :You're not on that channel\r\n"
+# define   REPLY_PART(a,c, d)                   ":" + a + "!" + c + "@localhost PART " + d + "\r\n"
+# define   ERR_NOTREGISTERED               "451 ERR_NOTREGISTERED:You have not registered\r\n"
+# define   LISTUSERS(a,b)                  ":localhost 353 " + a + " = "  + b + " "
+# define   ENDLIST(a,b)                    ":localhost 366 " + a + " " + b + " :End of /NAMES list.\r\n"
+# define   ERR_NOTEXTTOSEND                "412 ERR_NOTEXTTOSEND:No text to send\r\n"
+# define   NOTICE_MSG(a, b, c)             ":" + a + " NOTICE " + b + " :" + c + "\r\n" 
+// # define   IDENTIFIED()
 /* 
     SERVER REPLY
 */

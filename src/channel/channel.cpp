@@ -66,6 +66,11 @@ void Channel::addUser(Client& client)
 {
     _users.insert(std::make_pair(client.getFd(), client));
     client.joinChannel(*this);
-    // client.joinChannel(*this);
+}
+
+void    Channel::RemoveUser(Client &client)
+{
+    _users.erase(client.getFd());  
+    client.partFromChannel(*this);
 }
 
