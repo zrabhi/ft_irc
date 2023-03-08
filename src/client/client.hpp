@@ -32,8 +32,7 @@ class Client
         std::string                 _nickname;
         std::string                 _username;
         std::string                 _realname;
-        std::vector<std::string>    _joinedChannels;
-        // std::map<std::string, Channel>    _joinedChannels;
+        std::map<std::string, Channel>    _joinedChannels;
         
     public:
         Client();
@@ -51,7 +50,7 @@ class Client
         std::string getRealName()   const;
         std::string getNickName() const;
         std::string getUserName() const;
-        std::vector<std::string> getJoinedChannels() const;
+        std::map<std::string, Channel> getJoinedChannels() const;
      
         /// @brief Setters
 
@@ -65,7 +64,7 @@ class Client
         void   setRealName(std::string realName);
         void   setUserName(std::string UserName);
 
-        void    joinChannel(std::string channelName);
+        void    joinChannel(Channel& channel);
 
 };
 

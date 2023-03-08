@@ -56,21 +56,16 @@ void    Channel::setKey(const std::string& key)
     _key = key;
 }
 
-std::map<int, Client> Channel::getUsers()
-{
-    return _users;
-}
-
 
 bool Channel::checkKey(const std::string& key) const
 {
     return (key == _key);
 }
 
-// void Channel::addUser(Client& client)
-// {
-//     _users.insert(std::make_pair(client.getFd(), client));
-//     client.joinChannel("dsdsd")
-//     // client.joinChannel(*this);
-// }
+void Channel::addUser(Client& client)
+{
+    _users.insert(std::make_pair(client.getFd(), client));
+    client.joinChannel(*this);
+    // client.joinChannel(*this);
+}
 
