@@ -1,5 +1,43 @@
 #include "Commands.hpp"
 
+
+
+void   Commands::NewUser(Channel &channel, Iterator _client)
+{
+    channel.addUser(_client->second);
+    replyto(RFEPLY_CHANNEL(_client->second.getNickName(), channel.getName()), _client->first);
+    replyto( LISTUSERS(_client->second.getNickName(), channel.getName()) + channel.getUsersList(), _client->first);
+    replyto(ENDLIST(_client->second.getNickName(), channel.getName()), _client->first);
+    _channels.insert(std::make_pair(channel.getName(), channel));
+}
+
+void Commands::noticeClient(Iterator client, Channel channel)
+{
+    replyto(LISTUSERS(client->second.getNickName(), channel.getName()) + channel.getUsersList(), client->first);
+    replyto(ENDLIST(client->second.getNickName(), channel.getName()), client->first);
+}
+
+
+void    Commands::broadcastMessage(Iterator _client, Channel &channel)
+{
+    Vector_map users;
+    
+    channel.addUser(_client->second);
+    FindUsersInChannel(channel.getName(), users, _client->first);
+    for (Vector_map::iterator _it = users.begin(); _it != users.end(); _it++)
+    {
+        Iterator clients = _it->second.begin();
+        for (; clients != _it->second.end() ; clients++)
+        {
+            replyto(RFEPLY_CHANNEL(_client->second.getNickName(), _it->first), clients->first);
+            if (_client->first == clients->first)
+                    noticeClient(_client, channel);
+        }
+    }
+}
+
+
+
 bool Commands::JOIN(Vector params, Iterator &_client)
 {
     if (params.size() < 2)
@@ -10,10 +48,9 @@ bool Commands::JOIN(Vector params, Iterator &_client)
         channelKeys = splite(params.at(2), ",");
     for (Vector::iterator it = channelNames.begin(); it != channelNames.end(); ++it)
     {
-        String  channelName = *it;
-        if (channelName.empty() || channelName[0] != '#')
+        if ((*it).empty() || (*it)[0] != '#')
         {
-            replyto(ERR_NOSUCHCHANNEL(channelName), _client->first);
+            replyto(ERR_NOSUCHCHANNEL(*it), _client->first);
             it = channelNames.erase(it);
             --it;
         }
@@ -26,14 +63,14 @@ bool Commands::JOIN(Vector params, Iterator &_client)
         if (it == _channels.end())
         {
             Channel channel(channelName, channelKey, _client->second);
-            _channels.insert(std::make_pair(channelName, channel));
+            NewUser(channel, _client);
         }
         else
         {
             Channel& channel = it->second;
             if (!channel.checkKey(channelKey))
                 return (replyto(ERR_BADCHANNELKEY(channelName), _client->first), false);
-            channel.addUser(_client->second);
+            broadcastMessage(_client, channel);
         }
     }
     return true;

@@ -74,8 +74,9 @@ enum T_flag
 # define   ERR_BADCHANNELKEY(a)     "475 ERR_BADCHANNELKEY <" + a + "> :Cannot join channel (+k)\r\n"
 # define   ERR_NOSUCHCHANNEL(a)     "403 ERR_NOSUCHCHANNEL <" + a + "> :No such channel\r\n"
 # define   ERR_TOOMANYCHANNELS(a)   "405 ERR_TOOMANYCHANNELS <" + a +  "> :You have joined too many channels\r\n"
-
-# define   ERR_NOTEXTTOSEND        "412 ERR_NOTEXTTOSEND:No text to send\r\n"
+# define    LISTUSERS(a,b)  ":localhost 353 " + a + " = "  + b + " "
+# define    ENDLIST(a,b) ":localhost 366 " + a + " " + b + " :End of /NAMES list.\r\n"
+# define    ERR_NOTEXTTOSEND        "412 ERR_NOTEXTTOSEND:No text to send\r\n"
 /* 
     SERVER REPLY
 */
@@ -92,7 +93,7 @@ enum T_flag
 # define  REPLYPRIVMSG   "\033[1m\033[33m<receiver> <text to be sent>\n\033[1m"
 # define  RPL_YOURHOST   "002 RPL_YOURHOST Your host is <ft_irc_server>, running version <1.1.2>\r\n"
 # define  RPL_CREATED(a) "003 RPL_CREATED This server was created<" + a + ">\r\n"  
-
+# define  RFEPLY_CHANNEL(a, b) ":" + a + " JOIN " + b + "\r\n"
 # define REPLY_PIVMSG(a, b, c) ":" + a + " PRIVMSG " + b + " :" + c + "\r\n" 
 # define  RPL_WELCOME(a,b,c) "001 RPL_WELCOME  Welcome to the Internet Relay Network <" + a + ">!<"+ b +">@<" + c + ">\r\n"
 #if a 

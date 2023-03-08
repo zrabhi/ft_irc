@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/06 01:56:43 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/08 04:47:12 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,6 +279,17 @@ bool Commands::isHash(char _c)
     return (_c == '#');
 }
 
+bool Commands::FindUsersInChannel(String channelName,Vector_map &Users, int fd)
+{
+    (void)fd;
+    ChannelMap::iterator _it =  _channels.find(channelName);
+    
+    if (_it == _channels.end())
+        return (false);
+    return (Users.insert(std::make_pair(channelName, _it->second.getUsers())), true);
+}
+
+
 Iterator Commands::FindUser(String nickName, int fd)
 {
     Iterator _it;
@@ -294,14 +305,20 @@ Iterator Commands::FindUser(String nickName, int fd)
     return (_it_end);
 }
 
-bool  Commands::checkUsers(Vector param, Vector_it &parameters, size_t index, int fd)
+bool  Commands::checkUsers(Vector param, Vector_it &parameters,Vector_map &Users,size_t index, int fd)
 {
     Iterator  value;
     Vector    splited;
 
     splited = splite(param[index], ",");
     for (Vector::iterator _it = splited.begin(); _it != splited.end(); _it++)
-    {
+    { 
+        if (isHash((*_it)[0]))
+        {
+            if (!FindUsersInChannel(*_it, Users, fd))
+                return (false);
+            continue;
+        }
         value = FindUser(*_it, fd);
         if (value == _users.end())
             return (false);
