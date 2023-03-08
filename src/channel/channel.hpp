@@ -19,8 +19,8 @@ class Channel {
         std::map<int, Client> _operators; //
         std::map<int, Client> _users; //
         bool                  _hasKey; //
-        Client                _creator; // 
-
+        Client                _creator; //
+        
     public:
         Channel();
         Channel(std::string name, std::string key, Client creator);

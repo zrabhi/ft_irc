@@ -23,6 +23,17 @@
 # include <sys/_types/_socklen_t.h>
 // #include "Commands/Commands.hpp"
 // # include "./server/server.hpp"
+
+
+typedef Commands::ChannelMap ChannelMap;
+typedef Commands::Vector    Vector;
+typedef Commands::Vector_map    Vector_map;
+typedef Commands::Map       Map;
+typedef Commands::String    String;
+typedef Commands::Iterator  Iterator;
+typedef Commands::Vector_it  Vector_it;
+
+
 enum T_flag
 {   
     NOT_REGISTERED = 0,

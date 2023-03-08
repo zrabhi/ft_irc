@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/08 07:03:11 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/08 07:34:10 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # include "../header.hpp"
 # include <ctype.h>
 # include <sstream>
-// # include "NICK"
+
 Commands::BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
                                 &Commands::USER, &Commands::PRIVMSG,
                                 &Commands::JOIN};
@@ -25,6 +25,13 @@ Commands::Commands()
     authCommands.push_back("USER");
     authCommands.push_back("PRIVMSG");
     authCommands.push_back("JOIN");
+    authCommands.push_back("NOTICE");
+    // authCommands.push_back("PART");
+    // authCommands.push_back("QUIT");
+    // authCommands.push_back("BOT");
+    // authCommands.push_back("FILE");
+    
+    
 }
 
 Commands::~Commands()
@@ -137,6 +144,7 @@ void    Commands::authentification(String &string, Map &_clients, int fd)
         Vector tmp = splite(tmp1[j], " ");
         makeUpper(tmp[0]);
         size_t i = 0;
+        /*Notice */
         for(i = 0;  i < 5 && tmp[0].compare(authCommands[i]); i++);
         if (tmp.size() == 1 || tmp[1] == ":")
         {   
@@ -289,7 +297,6 @@ bool Commands::FindUsersInChannel(String channelName,Vector_map &Users, int fd)
     return (Users.insert(std::make_pair(channelName, _it->second.getUsers())), true);
 }
 
-
 Iterator Commands::FindUser(String nickName, int fd)
 {
     Iterator _it;
@@ -305,7 +312,7 @@ Iterator Commands::FindUser(String nickName, int fd)
     return (_it_end);
 }
 
-bool  Commands::checkUsers(Vector param, Vector_it &parameters,Vector_map &Users,size_t index, int fd)
+bool  Commands::checkUsers(Vector param, Vector_it &parameters, Vector_map &Users, size_t index, int fd)
 {
     Iterator  value; 
     Vector_it channelUsers; 
