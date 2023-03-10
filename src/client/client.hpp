@@ -22,17 +22,19 @@ class Channel;
 class Client
 {
     private:
-        int                         _port;
-        int                         _fd;
-        int                         _auth;
-        int                         _status;
-        std::string                 _hostname;
-        std::string                 serverPass;         
-        std::string                 passWord;
-        std::string                 _nickname;
-        std::string                 _username;
-        std::string                 _realname;
+        int                               _port;
+        int                               _fd;
+        int                               _auth;
+        int                               _status;
+        int                               opreatorPrivilege;
+        std::string                       _hostname;
+        std::string                       serverPass;         
+        std::string                       passWord;
+        std::string                       _nickname;
+        std::string                       _username;
+        std::string                       _realname;
         std::map<std::string, Channel>    _joinedChannels;
+        
         
     public:
         Client();
@@ -44,12 +46,14 @@ class Client
         int         getAuth()  const;
         int         getStatus() const;
         int         getFd() const;
+        int         getOperatorPrivilege() const;
         std::string getPassWord() const;
         std::string getHostName() const;
         std::string getServerPass() const;
         std::string getRealName()   const;
         std::string getNickName() const;
         std::string getUserName() const;
+
         std::map<std::string, Channel> getJoinedChannels() const;
      
         /// @brief Setters
@@ -64,6 +68,7 @@ class Client
         void   setFd(int newFd);
         void   setRealName(std::string realName);
         void   setUserName(std::string UserName);
+        void   setOperatorPrivilege(int Privilege);
 
         void    partFromChannel(Channel &channel);
         void    joinChannel(Channel& channel);

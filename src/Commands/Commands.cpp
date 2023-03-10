@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/08 23:12:16 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/10 06:17:28 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 
 Commands::BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
                                 &Commands::USER, &Commands::PRIVMSG,
-                                &Commands::JOIN, &Commands::NOTICE, &Commands::PART};
+                                &Commands::JOIN, &Commands::NOTICE, &Commands::PART,
+                                &Commands::KICK};
 Commands::Commands()
 {
     authCommands.push_back("NICK");
@@ -27,12 +28,8 @@ Commands::Commands()
     authCommands.push_back("JOIN");
     authCommands.push_back("NOTICE");
     authCommands.push_back("PART");
-    // authCommands.push_back("MODE");
-    // authCommands.push_back("QUIT");
-    // authCommands.push_back("BOT");
-    // authCommands.push_back("FILE");
-    
-    
+    authCommands.push_back("MODE");
+    authCommands.push_back("KICK");    
 }
 
 Commands::~Commands()
@@ -89,6 +86,16 @@ bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
             if (_it->second.getStatus() == CLIENT)
                 return (false);
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
+        case 6 :
+             if (_it->second.getStatus() == CLIENT)    
+                return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
+            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+        case 7:
+                break ;
+        case 8:
+            if (_it->second.getStatus() == CLIENT)    
+                return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
+            return (replyto(ERR_NOTREGISTERED, _it->first), false);
      default:
             return (replyto(ERR_UNKNOWNCOMMAND(cmd), _it->first), false);
     }
@@ -122,6 +129,12 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
         case 6:
               if (_it->second.getStatus() != GUEST)
                 return((this->*_commands[index])(params, _it));
+            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+          case 7:
+                break ;
+           case 8:
+                if (_it->second.getStatus() != GUEST)
+                    return((this->*_commands[--index])(params, _it));
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
         default:
             return(replyto(ERR_UNKNOWNCOMMAND(params[0]), _it->first), false);
@@ -161,7 +174,7 @@ void    Commands::authentification(String &string, Map &_clients, int fd)
         makeUpper(tmp[0]);
         size_t i = 0;
         /*Notice */
-        for (i = 0;  i < 7 && tmp[0].compare(authCommands[i]); i++);
+        for (i = 0;  i < 9 && tmp[0].compare(authCommands[i]); i++);
         if (tmp.size() == 1 || tmp[1] == ":")
         {   
             commandsErrors(tmp[0], _clients.find(fd), i);

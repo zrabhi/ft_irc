@@ -32,6 +32,8 @@ enum T_flag
     REGISTERD = 1,
     GUEST,
     CLIENT,
+    O,
+    o,
 };
 
 # define RESET       "\033[0m"
@@ -80,11 +82,13 @@ enum T_flag
 # define   REPLY_PIVMSG(a, b, c)           ":" + a + " PRIVMSG " + b + " :" + c + "\r\n" 
 # define   ERR_NOTONCHANNEL(a)              "442 ERR_NOTONCHANNEL " + a + " :You're not on that channel\r\n"
 # define   REPLY_PART(a,c, d)                   ":" + a + "!" + c + "@localhost PART " + d + "\r\n"
+# define   REPLY_KICK(a,b,c)                   ":" + a + " KICK " + b + " " + c + "\r\n"
 # define   ERR_NOTREGISTERED               "451 ERR_NOTREGISTERED:You have not registered\r\n"
 # define   LISTUSERS(a,b)                  ":localhost 353 " + a + " = "  + b + " "
 # define   ENDLIST(a,b)                    ":localhost 366 " + a + " " + b + " :End of /NAMES list.\r\n"
 # define   ERR_NOTEXTTOSEND                "412 ERR_NOTEXTTOSEND:No text to send\r\n"
 # define   NOTICE_MSG(a, b, c)             ":" + a + " NOTICE " + b + " :" + c + "\r\n" 
+# define   ERR_CHANOPRIVSNEEDED(a)     "482 ERR_CHANOPRIVSNEEDED <" + a + ">:You're not channel operator\r\n"
 // # define   IDENTIFIED()
 /* 
     SERVER REPLY
@@ -100,10 +104,10 @@ enum T_flag
 # define  NEWUSERNAME(a)  BOLDYELLOW + a + " is your username" + RESET + "\n"
 # define  NEWREALNAME(a)  BOLDYELLOW + a + " is your realname" + RESET + "\n"
 
-# define  REPLYPRIVMSG   "\033[1m\033[33m<receiver> <text to be sent>\n\033[1m"
-# define  RPL_YOURHOST   "002 RPL_YOURHOST Your host is <ft_irc_server>, running version <1.1.2>\r\n"
-# define  RPL_CREATED(a) "003 RPL_CREATED This server was created<" + a + ">\r\n"  
-# define  RPL_WELCOME(a,b,c) "001 RPL_WELCOME  Welcome to the Internet Relay Network <" + a + ">!<"+ b +">@<" + c + ">\r\n"
+# define  REPLYPRIVMSG       "\033[1m\033[33m<receiver> <text to be sent>\n\033[1m"
+# define  RPL_YOURHOST       "002 RPL_YOURHOST Your host is ft_irc_server, running version 1.1.2\r\n"
+# define  RPL_CREATED(a)     "003 RPL_CREATED This server was created " + a + "\r\n"  
+# define  RPL_WELCOME(a,b,c) "001 RPL_WELCOME Welcome to the Internet Relay Network " + a + "!"+ b +"@" + c + "\r\n"
 #if a 
     {
         # define REPLY_PASS(a) std:: cout << BOLDGREEN << "Reply(650) : PASS <password>" 

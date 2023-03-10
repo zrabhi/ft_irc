@@ -11,8 +11,6 @@ bool    Commands::USER(Vector params, Iterator &_client)
     else if (!validateUser(params[1], true))
             return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);  
     String tmp("");
-    // params[params.size() - 1] = params[params.size() -1].\
-    // substr(0, params[params.size() -1].find("\n"));
     if (params[4] == "")
         return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first)\
             ,replyto(REPLYUSER(params[0]), _client->first), false);

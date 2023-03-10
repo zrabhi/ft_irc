@@ -21,6 +21,8 @@ class Channel
         std::map<int, Client> _users; //
         bool                  _hasKey; //
         Client                _creator; //
+        // std::map<int, Client> _operators;
+        // to add clients map here for operators;
         
     public:
         Channel();
@@ -39,5 +41,5 @@ class Channel
 
         void    RemoveUser(Client &client);
         bool    checkKey(const std::string& key) const;
-        void    addUser(Client& client);
+        void    addUser(Client& client,bool PrivilegeSetter);
 } ;

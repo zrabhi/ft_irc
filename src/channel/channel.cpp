@@ -62,10 +62,14 @@ bool Channel::checkKey(const std::string& key) const
     return (key == _key);
 }
 
-void Channel::addUser(Client& client)
+void Channel::addUser(Client& client, bool PrivilegeSetter)
 {
     _users.insert(std::make_pair(client.getFd(), client));
     client.joinChannel(*this);
+    if (PrivilegeSetter)
+        client.setOperatorPrivilege(O);
+    else 
+        client.setOperatorPrivilege(CLIENT);
 }
 
 void    Channel::RemoveUser(Client &client)

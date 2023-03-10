@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/08 23:09:35 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/10 02:53:13 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ class Commands
         bool        checkUsers(Vector param, Vector_it &parameters,Vector_map &Users, size_t index, int fd);
         String      currentTime();
    
+        void        broadcasKickMessage(Iterator _client, Iterator User, Channel &channel);
         void        broadcasParttMessage(Iterator _client, Channel &channel);
         void        broadcastMessage(Iterator _client, Channel &channel);
     public:
@@ -80,6 +81,7 @@ class Commands
         bool        JOIN(Vector params, Iterator &_client);
         bool        NOTICE(Vector params, Iterator &_client);
         bool        PART(Vector params, Iterator &_client);
+        bool        KICK(Vector params, Iterator &_client);
 };
 
 typedef Commands::ChannelMap ChannelMap;

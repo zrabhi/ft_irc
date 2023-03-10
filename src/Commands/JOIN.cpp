@@ -4,7 +4,7 @@
 
 void   Commands::NewUser(Channel &channel, Iterator _client)
 {
-    channel.addUser(_client->second);
+    channel.addUser(_client->second, true);
     replyto(RFEPLY_CHANNEL(_client->second.getNickName(), channel.getName()), _client->first);
     replyto( LISTUSERS(_client->second.getNickName(), channel.getName()) + channel.getUsersList(), _client->first);
     replyto(ENDLIST(_client->second.getNickName(), channel.getName()), _client->first);
@@ -22,7 +22,7 @@ void    Commands::broadcastMessage(Iterator _client, Channel &channel)
 {
     Vector_map users;
     
-    channel.addUser(_client->second);
+    channel.addUser(_client->second, false);
     FindUsersInChannel(channel.getName(), users, _client->first);
     for (Vector_map::iterator _it = users.begin(); _it != users.end(); _it++)
     {

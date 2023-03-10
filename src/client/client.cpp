@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 18:57:03 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/08 22:10:42 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/10 00:31:55 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,16 @@ int Client::getStatus() const
 int Client::getPort() const
 {
     return (_port);
+}
+
+void Client::setOperatorPrivilege(int Privilege)
+{
+    opreatorPrivilege = Privilege;
+}
+
+int Client::getOperatorPrivilege() const
+{
+    return opreatorPrivilege;
 }
 
 std::map<std::string, Channel> Client::getJoinedChannels() const
