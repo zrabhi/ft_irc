@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/10 06:17:28 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/11 05:40:26 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 Commands::BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
                                 &Commands::USER, &Commands::PRIVMSG,
                                 &Commands::JOIN, &Commands::NOTICE, &Commands::PART,
-                                &Commands::KICK};
+                                &Commands::KICK, &Commands::TOPIC};
 Commands::Commands()
 {
     authCommands.push_back("NICK");
@@ -28,8 +28,9 @@ Commands::Commands()
     authCommands.push_back("JOIN");
     authCommands.push_back("NOTICE");
     authCommands.push_back("PART");
-    authCommands.push_back("MODE");
     authCommands.push_back("KICK");    
+    authCommands.push_back("TOPIC");
+    authCommands.push_back("MODE");
 }
 
 Commands::~Commands()
@@ -108,8 +109,8 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
     switch(index)
     {
         case 0:
-             if (!validateNick(params[1], _users,  _it->first))
-                    return (replyto(ERR_NICKNAMEINUSE(params[1]), _it->first), false);
+            if (!validateNick(params[1], _users,  _it->first))
+                return (replyto(ERR_NICKNAMEINUSE(params[1]), _it->first), false);
             return((this->*_commands[index])(params, _it));
         case 1:
             return((this->*_commands[index])(params, _it));
@@ -123,19 +124,23 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
                 return((this->*_commands[index])(params, _it));
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
         case 5:
-             if (_it->second.getStatus() != GUEST)
+            if (_it->second.getStatus() != GUEST)
                 return((this->*_commands[index])(params, _it));
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
         case 6:
-              if (_it->second.getStatus() != GUEST)
+            if (_it->second.getStatus() != GUEST)
                 return((this->*_commands[index])(params, _it));
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
-          case 7:
-                break ;
-           case 8:
-                if (_it->second.getStatus() != GUEST)
-                    return((this->*_commands[--index])(params, _it));
+        case 7:
+            if (_it->second.getStatus() != GUEST)
+                return((this->*_commands[index])(params, _it));
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
+        case 8:
+            if (_it->second.getStatus() != GUEST)
+                return((this->*_commands[index])(params, _it));
+            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+        //   case 9:
+        //         break ;
         default:
             return(replyto(ERR_UNKNOWNCOMMAND(params[0]), _it->first), false);
     }
@@ -232,7 +237,7 @@ void    Commands::appendToParams(Vector params, String &tmp, size_t index)
    
     if (params[index][0] != ':')
     {
-        tmp = params[index];
+        tmp += params[index];
         return;
     }
     if (params[index].size() > 2 && params[index][0] == ':' &&  params[index][1] == ':' )

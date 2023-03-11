@@ -51,6 +51,16 @@ void    Channel::setName(const std::string& name)
     _name = name;
 }
 
+void    Channel::setTopic(const std::string topic)
+{
+    _topic = topic;
+}
+
+std::string Channel::geTopic() const
+{
+    return _topic;
+}
+
 void    Channel::setKey(const std::string& key) 
 {
     _key = key;

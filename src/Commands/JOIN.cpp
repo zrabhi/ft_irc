@@ -1,11 +1,9 @@
 #include "Commands.hpp"
 
-
-
 void   Commands::NewUser(Channel &channel, Iterator _client)
 {
     channel.addUser(_client->second, true);
-    replyto(RFEPLY_CHANNEL(_client->second.getNickName(), channel.getName()), _client->first);
+    replyto(RFEPLY_CHANNEL(_client->second.getNickName(),_client->second.getNickName()[0], channel.getName()), _client->first);
     replyto( LISTUSERS(_client->second.getNickName(), channel.getName()) + channel.getUsersList(), _client->first);
     replyto(ENDLIST(_client->second.getNickName(), channel.getName()), _client->first);
     _channels.insert(std::make_pair(channel.getName(), channel));
@@ -29,7 +27,7 @@ void    Commands::broadcastMessage(Iterator _client, Channel &channel)
         Iterator clients = _it->second.begin();
         for (; clients != _it->second.end() ; clients++)
         {
-            replyto(RFEPLY_CHANNEL(_client->second.getNickName(), _it->first), clients->first);
+            replyto(RFEPLY_CHANNEL(_client->second.getNickName(), _client->second.getNickName()[0],  _it->first), clients->first);
             if (_client->first == clients->first)
                     noticeClient(_client, channel);
         }

@@ -33,11 +33,13 @@ class Channel
         std::string    getKey() const;
         std::map<int, Client> getUsers() const;
         std::string     getUsersList() const;
-        short  getType() const;
+        short           getType() const;
+        std::string     geTopic() const;   
 
         void    setName(const std::string&);
         void    setKey(const std::string&);
         void    setType(short);
+        void    setTopic(const std::string topic);
 
         void    RemoveUser(Client &client);
         bool    checkKey(const std::string& key) const;

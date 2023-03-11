@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/10 02:53:13 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/11 05:35:14 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class Commands
         typedef Map::iterator                                                               Iterator;
         typedef bool(Commands::*BMemFunGuest) (Vector param, Iterator &_client);
         typedef bool(Commands::*BMemFunClient) (Vector param, Iterator &_client);
-        typedef std::vector<Iterator>                   Vector_it;
+        typedef std::vector<Iterator>                                                       Vector_it;
         typedef std::map<String, Channel>                                                   ChannelMap;
         typedef std::map<String, std::map<int, Client> >                                    Vector_map;
     
@@ -63,9 +63,10 @@ class Commands
         bool        checkUsers(Vector param, Vector_it &parameters,Vector_map &Users, size_t index, int fd);
         String      currentTime();
    
-        void        broadcasKickMessage(Iterator _client, Iterator User, Channel &channel);
-        void        broadcasParttMessage(Iterator _client, Channel &channel);
+        void        broadcasKickMessage(Iterator _client, Iterator User, Channel &channel, String message);
+        void        broadcasParttMessage(Iterator _client, Channel &channel, String message);
         void        broadcastMessage(Iterator _client, Channel &channel);
+        void        broadcastTopicMessage(Iterator _client, Channel &channel, String message);
     public:
         Commands();
         ~Commands();
@@ -82,15 +83,17 @@ class Commands
         bool        NOTICE(Vector params, Iterator &_client);
         bool        PART(Vector params, Iterator &_client);
         bool        KICK(Vector params, Iterator &_client);
+        bool        INVITE(Vector params, Iterator &_client);
+        bool        TOPIC(Vector params, Iterator &_client);
 };
 
-typedef Commands::ChannelMap ChannelMap;
-typedef Commands::Vector    Vector;
+typedef Commands::ChannelMap    ChannelMap;
+typedef Commands::Vector        Vector;
 typedef Commands::Vector_map    Vector_map;
-typedef Commands::Map       Map;
-typedef Commands::String    String;
-typedef Commands::Iterator  Iterator;
-typedef Commands::Vector_it  Vector_it;
+typedef Commands::Map           Map;
+typedef Commands::String        String;
+typedef Commands::Iterator      Iterator;
+typedef Commands::Vector_it      Vector_it;
 
 
 #endif
