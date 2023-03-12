@@ -5,7 +5,7 @@ CPP = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
 SRC = ./src/main.cpp ./src/server/server.cpp ./src/Commands/NICK.cpp ./src/Commands/USER.cpp ./src/Commands/PASS.cpp \
-		./src/Commands/PRIVMSG.cpp ./src/Commands/JOIN.cpp ./src/Commands/PART.cpp ./src/Commands/KICK.cpp ./src/Commands/NOTICE.cpp \
+		./src/Commands/PRIVMSG.cpp ./src/Commands/JOIN.cpp ./src/Commands/PART.cpp  ./src/Commands/QUIT.cpp ./src/Commands/KICK.cpp ./src/Commands/NOTICE.cpp \
 		./src/Commands/Commands.cpp ./src/client/client.cpp ./src/Commands/TOPIC.cpp ./src/Channel/channel.cpp 
 		
 

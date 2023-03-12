@@ -91,7 +91,7 @@ enum T_flag
 # define   RPL_TOPIC(a,c,b)                 ":" + a + "!" + c + "@localhost TOPIC " + b + " :"
 # define   REPLY_PIVMSG(a, b, c, d)         ":" + a + "!" + b + "@localhost PRIVMSG " + c +  " :" + d + "\r\n" 
 # define   RFEPLY_CHANNEL(a, c, b)          ":" + a + "!" + c + "@localhost JOIN " + b + "\r\n"
-
+# define   CLOSINGLINK(a)                    "ERROR :Closing Link: localhost (Quit: " + a +")\r\n"
 
 
 # define  NICKNAMEMESG(a)  "\033[1m\033[33myou are known as " +  a  +  RESET + "\n"
@@ -104,6 +104,8 @@ enum T_flag
 # define  ERR_ALREADYUSED  "\033[1m\033[33m:Username is already in use \033[0m\n" 
 # define  NEWUSERNAME(a)  BOLDYELLOW + a + " is your username" + RESET + "\n"
 # define  NEWREALNAME(a)  BOLDYELLOW + a + " is your realname" + RESET + "\n"
+
+# define RPL_LUSERCLIENT(a)  "251 RPL_LUSERCLIENT :There are " + a[0] + " users and 1 server"
 
 # define  REPLYPRIVMSG       "\033[1m\033[33m<receiver> <text to be sent>\n\033[1m"
 # define  RPL_YOURHOST       "002 RPL_YOURHOST Your host is ft_irc_server, running version 1.1.2\r\n"

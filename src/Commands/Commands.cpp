@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/11 05:40:26 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/12 06:45:33 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void    Commands::makeUpper(String &param)
 
 bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
 {
+    /// to fix mode command later
     switch(index)
     {
         case 0:
@@ -95,7 +96,7 @@ bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
                 break ;
         case 8:
             if (_it->second.getStatus() == CLIENT)    
-                return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
+                return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false); 
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
      default:
             return (replyto(ERR_UNKNOWNCOMMAND(cmd), _it->first), false);
@@ -156,8 +157,16 @@ String Commands::currentTime()
    return (value.substr(0, value.find("\n")));
 }
 
+void    Commands::countUsers (int &numbers)
+{
+    Iterator _it = _users.begin();
+    for(;_it != _users.end();_it++)
+        numbers++;
+}
+
 void    Commands::setPrivelege(Iterator &_it)
 {
+   
     if (_it->second.getPassWord() != "" && _it->second.getNickName() != "" \
                 && _it->second.getUserName() != "" &&  _it->second.getStatus() == GUEST)
     {
@@ -171,6 +180,10 @@ void    Commands::setPrivelege(Iterator &_it)
 void    Commands::authentification(String &string, Map &_clients, int fd)
 {
     Vector tmp1 = splite(string, "\r\n");
+    _users = _clients;
+    Iterator _it = _clients.find(fd); 
+    size_t i = 0;
+    
     for (size_t j = 0; j < tmp1.size(); j++)
     {
         Vector tmp = splite(tmp1[j], " ");
@@ -178,15 +191,12 @@ void    Commands::authentification(String &string, Map &_clients, int fd)
             return ;
         makeUpper(tmp[0]);
         size_t i = 0;
-        /*Notice */
         for (i = 0;  i < 9 && tmp[0].compare(authCommands[i]); i++);
         if (tmp.size() == 1 || tmp[1] == ":")
         {   
             commandsErrors(tmp[0], _clients.find(fd), i);
             return;
         }
-        Iterator _it = _clients.find(fd); 
-        _users = _clients;
         if (!authCommandCheck(tmp, i,_it, _commands))
             return ;
         setPrivelege(_it);

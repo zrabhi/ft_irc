@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/11 05:35:14 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/12 06:39:40 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ class Commands
         typedef std::map<String, std::map<int, Client> >                                    Vector_map;
     
     private:
-        Map         _users;
-        Vector      authCommands;
         ChannelMap  _channels;
         String      message;
+        Vector      authCommands;
+        Map         _users;
                                
         bool        commandsErrors(String cmd, Iterator _it, size_t index);
-       
+        void        countUsers(int &number);
         Vector      splite(String &parametrs, String delemiter);
         void        makeUpper(String &param);
         void        appendToParams(Vector params, String &tmp, size_t index);
@@ -67,6 +67,7 @@ class Commands
         void        broadcasParttMessage(Iterator _client, Channel &channel, String message);
         void        broadcastMessage(Iterator _client, Channel &channel);
         void        broadcastTopicMessage(Iterator _client, Channel &channel, String message);
+    
     public:
         Commands();
         ~Commands();
@@ -85,6 +86,8 @@ class Commands
         bool        KICK(Vector params, Iterator &_client);
         bool        INVITE(Vector params, Iterator &_client);
         bool        TOPIC(Vector params, Iterator &_client);
+        bool        QUIT(Vector params, Iterator &_client);
+        // bool        LIST(Vector params, Iterator &_client);
 };
 
 typedef Commands::ChannelMap    ChannelMap;

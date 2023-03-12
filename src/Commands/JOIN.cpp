@@ -34,8 +34,6 @@ void    Commands::broadcastMessage(Iterator _client, Channel &channel)
     }
 }
 
-
-
 bool Commands::JOIN(Vector params, Iterator &_client)
 {
     if (params.size() < 2)

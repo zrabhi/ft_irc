@@ -12,13 +12,13 @@
 class Server {
 
 	private:
-		int					_port;
-		std::string 		_password;
-		int					_serverFd;
-		int					_newSocketFd;
-		struct sockaddr_in	_address;
-		std::vector<pollfd>	_fds;
-		Commands			_cmd;
+		int					  _port;
+		std::string 		  _password;
+		int					  _serverFd;
+		int					  _newSocketFd;
+		struct sockaddr_in	  _address;
+		std::vector<pollfd>	  _fds;
+		Commands			  _cmd;
 		std::map<int, Client> _clients;
 
 		Server();
