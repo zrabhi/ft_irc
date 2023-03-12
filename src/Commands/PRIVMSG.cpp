@@ -14,7 +14,7 @@ bool    Commands::PRIVMSG(Vector params,  Iterator &_client)
     if (tmp == "")
         return (replyto(ERR_NOTEXTTOSEND, _client->first), false);
     for (Vector_it::iterator _it = recievers.begin(); _it != recievers.end(); _it++)
-        replyto(REPLY_PIVMSG(_client->second.getNickName(), (*_it)->second.getNickName() ,\
+        replyto(REPLY_PIVMSG(_client->second.getNickName(), _client->second.getNickName()[0], (*_it)->second.getNickName() ,\
              tmp), (*_it)->first);
     if (channelUsers.size() != 0)
     {
@@ -24,7 +24,7 @@ bool    Commands::PRIVMSG(Vector params,  Iterator &_client)
                 for (; clients != _it->second.end() ; clients++)
                 {
                     if (_client->first != clients->first)
-                        replyto(REPLY_PIVMSG(_client->second.getNickName(), _it->first ,tmp), clients->first);
+                        replyto(REPLY_PIVMSG(_client->second.getNickName(),_client->second.getNickName()[0],  _it->first ,tmp), clients->first);
                 }
             }
     }

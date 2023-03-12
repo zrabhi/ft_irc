@@ -78,24 +78,22 @@ enum T_flag
 # define   ERR_BADCHANNELKEY(a)             "475 ERR_BADCHANNELKEY <" + a + "> :Cannot join channel (+k)\r\n"
 # define   ERR_NOSUCHCHANNEL(a)             "403 ERR_NOSUCHCHANNEL <" + a + "> :No such channel\r\n"
 # define   ERR_TOOMANYCHANNELS(a)           "405 ERR_TOOMANYCHANNELS <" + a +  "> :You have joined too many channels\r\n"
-# define   REPLY_PIVMSG(a, b, c)           ":" + a + " PRIVMSG " + b + " :" + c + "\r\n" 
 # define   ERR_NOTONCHANNEL(a)              "442 ERR_NOTONCHANNEL " + a + " :You're not on that channel\r\n"
-# define   REPLY_PART(a,c, d)                   ":" + a + "!" + c + "@localhost PART " + d + " "
-# define   REPLY_KICK(a,b,c)                   ":" + a + " KICK " + b + " " + c + " "
-# define   ERR_NOTREGISTERED               "451 ERR_NOTREGISTERED:You have not registered\r\n"
-# define   LISTUSERS(a,b)                  ":localhost 353 " + a + " = "  + b + " "
-# define   ENDLIST(a,b)                    ":localhost 366 " + a + " " + b + " :End of /NAMES list.\r\n"
-# define   ERR_NOTEXTTOSEND                "412 ERR_NOTEXTTOSEND:No text to send\r\n"
-# define   NOTICE_MSG(a, b, c)             ":" + a + " NOTICE " + b + " :" + c + "\r\n" 
-# define   ERR_CHANOPRIVSNEEDED(a)         "482 ERR_CHANOPRIVSNEEDED <" + a + ">:You're not channel operator\r\n"
-# define   RPL_NOTOPIC(a)                  "331 RPL_NOTOPIC " + a + " :No topic is set\r\n"
-# define   RPL_TOPIC(a,c,b)                  ":" + a + "!" + c + "@localhost TOPIC " + b + " "
-// # define   RFEPLY_CHANNEL(a, c, b)            ":" + a + " JOIN " + b + "\r\n"
-# define   RFEPLY_CHANNEL(a, c, b)              ":" + a + "!" + c + "@localhost JOIN " + b + "\r\n"
-// # define   IDENTIFIED()
-/* 
-    SERVER REPLY
-*/
+# define   REPLY_PART(a,c, d)               ":" + a + "!" + c + "@localhost PART " + d + " "
+# define   REPLY_KICK(a,b,c)                ":" + a + " KICK " + b + " " + c + " "
+# define   ERR_NOTREGISTERED                "451 ERR_NOTREGISTERED:You have not registered\r\n"
+# define   LISTUSERS(a,b)                   ":localhost 353 " + a + " = "  + b + " "
+# define   ENDLIST(a,b)                     ":localhost 366 " + a + " " + b + " :End of /NAMES list.\r\n"
+# define   ERR_NOTEXTTOSEND                 "412 ERR_NOTEXTTOSEND:No text to send\r\n"
+# define   NOTICE_MSG(a, b, c)              ":" + a + " NOTICE " + b + " :" + c + "\r\n" 
+# define   ERR_CHANOPRIVSNEEDED(a)          "482 ERR_CHANOPRIVSNEEDED <" + a + ">:You're not channel operator\r\n"
+# define   RPL_NOTOPIC(a)                   "331 RPL_NOTOPIC " + a + " :No topic is set\r\n"
+# define   RPL_TOPIC(a,c,b)                 ":" + a + "!" + c + "@localhost TOPIC " + b + " :"
+# define   REPLY_PIVMSG(a, b, c, d)         ":" + a + "!" + b + "@localhost PRIVMSG " + c +  " :" + d + "\r\n" 
+# define   RFEPLY_CHANNEL(a, c, b)          ":" + a + "!" + c + "@localhost JOIN " + b + "\r\n"
+
+
+
 # define  NICKNAMEMESG(a)  "\033[1m\033[33myou are known as " +  a  +  RESET + "\n"
 # define  KNOWNNOWAS(a, b) std::cout << "\033[1m\033[32m" + a + " is now known as " + b + RESET << std::endl;
 # define  NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
