@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/12 06:39:40 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/13 05:06:57 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,25 @@ class Commands
         Vector      authCommands;
         Map         _users;
                                
-        bool        commandsErrors(String cmd, Iterator _it, size_t index);
-        void        countUsers(int &number);
+        Iterator    FindUser(String nickName, int fd);
+        
         Vector      splite(String &parametrs, String delemiter);
+        
+        void        countUsers(int &number);
         void        makeUpper(String &param);
         void        appendToParams(Vector params, String &tmp, size_t index);
-        Iterator    FindUser(String nickName, int fd);
+        void        setPrivelege(Iterator &_it);
+        void        NewUser(Channel &channel, Iterator _client);
+        void        broadcasKickMessage(Iterator _client, Iterator User, Channel &channel, String message);
+        void        broadcasParttMessage(Iterator _client, Channel &channel, String message);
+        void        broadcastMessage(Iterator _client, Channel &channel);
+        void        broadcastTopicMessage(Iterator _client, Channel &channel, String message);
+        void        noticeClient(Iterator client, Channel channel);
+        void        Welcome(String nickName, String userName, String hostName, int reciever);
+        
         bool        FindUsersInChannel(String channelName,Vector_map &Users, int fd);
         bool        checkParams(String params);
-        void        setPrivelege(Iterator &_it);
-        
-        void        NewUser(Channel &channel, Iterator _client);
-        void        noticeClient(Iterator client, Channel channel);
+        bool        commandsErrors(String cmd, Iterator _it, size_t index);
         bool        validateParam(String param,bool priv);
         bool        validateChannel(String channelName);
         bool        validateNick(String nickName, Map _user, int fd);
@@ -61,13 +68,10 @@ class Commands
         bool        isAlphaOrSpecial(char _c);
         bool        isNonWhite(char _c, bool priv);
         bool        checkUsers(Vector param, Vector_it &parameters,Vector_map &Users, size_t index, int fd);
+        bool        ignoredCommands(String cmd);
+        
         String      currentTime();
-   
-        void        broadcasKickMessage(Iterator _client, Iterator User, Channel &channel, String message);
-        void        broadcasParttMessage(Iterator _client, Channel &channel, String message);
-        void        broadcastMessage(Iterator _client, Channel &channel);
-        void        broadcastTopicMessage(Iterator _client, Channel &channel, String message);
-    
+        
     public:
         Commands();
         ~Commands();
