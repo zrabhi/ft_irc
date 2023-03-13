@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/12 06:45:33 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/13 06:19:23 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ Commands::Commands()
     authCommands.push_back("PART");
     authCommands.push_back("KICK");    
     authCommands.push_back("TOPIC");
-    authCommands.push_back("MODE");
 }
 
 Commands::~Commands()
@@ -67,8 +66,7 @@ void    Commands::makeUpper(String &param)
 
 bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
 {
-    /// to fix mode command later
-    switch(index)
+    switch (index)
     {
         case 0:
             replyto(ERR_NONICKNAMEGIVEN, _it->first); 
@@ -93,7 +91,9 @@ bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
                 return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
         case 7:
-                break ;
+            if (_it->second.getStatus() == CLIENT)    
+                return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
+            return (replyto(ERR_NOTREGISTERED, _it->first), false);
         case 8:
             if (_it->second.getStatus() == CLIENT)    
                 return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false); 
@@ -107,7 +107,7 @@ bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
 
 bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BMemFunGuest _commands[])
 {
-    switch(index)
+    switch (index)
     {
         case 0:
             if (!validateNick(params[1], _users,  _it->first))
@@ -140,8 +140,6 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
             if (_it->second.getStatus() != GUEST)
                 return((this->*_commands[index])(params, _it));
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
-        //   case 9:
-        //         break ;
         default:
             return(replyto(ERR_UNKNOWNCOMMAND(params[0]), _it->first), false);
     }
@@ -164,6 +162,19 @@ void    Commands::countUsers (int &numbers)
         numbers++;
 }
 
+void    Commands::Welcome(String nickName, String userName, String hostName, int reciever)
+{
+    replyto(RPL_WELCOME(nickName, userName, hostName), reciever);
+    replyto(RPL_YOURHOST(nickName), reciever);
+    replyto(RPL_CREATED(nickName, currentTime()), reciever);
+    replyto(RPL_MYINFO(nickName), reciever);
+    replyto(RPL_INFO1(nickName), reciever);
+    replyto(RPL_INFO2(nickName), reciever);
+    replyto(RPL_INFO3(nickName), reciever);
+    replyto(RPL_INFO(nickName), reciever);
+    replyto(RPL_OTD(nickName), reciever);
+}
+
 void    Commands::setPrivelege(Iterator &_it)
 {
    
@@ -171,10 +182,17 @@ void    Commands::setPrivelege(Iterator &_it)
                 && _it->second.getUserName() != "" &&  _it->second.getStatus() == GUEST)
     {
        _it->second.setStatus(CLIENT);
-       replyto(RPL_YOURHOST, _it->first);
-       replyto(RPL_CREATED(currentTime()), _it->first);
+       Welcome(_it->second.getNickName(), _it->second.getUserName(),_it->second.getHostName(),_it->first);
        NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
     }
+}
+
+bool    Commands::ignoredCommands(String cmd)
+{
+    if (!cmd.compare("QUIT") || !cmd.compare("AWAY") || !cmd.compare("PING") \
+            || !cmd.compare("MODE") || !cmd.compare("WHO") || !cmd.compare("ISON"))
+        return (false);
+    return (true);
 }
 
 void    Commands::authentification(String &string, Map &_clients, int fd)
@@ -189,8 +207,9 @@ void    Commands::authentification(String &string, Map &_clients, int fd)
         Vector tmp = splite(tmp1[j], " ");
         if (tmp.size() == 0)
             return ;
+        if (!ignoredCommands(tmp[0]))
+            return ;
         makeUpper(tmp[0]);
-        size_t i = 0;
         for (i = 0;  i < 9 && tmp[0].compare(authCommands[i]); i++);
         if (tmp.size() == 1 || tmp[1] == ":")
         {   
@@ -250,8 +269,9 @@ void    Commands::appendToParams(Vector params, String &tmp, size_t index)
         tmp += params[index];
         return;
     }
-    if (params[index].size() > 2 && params[index][0] == ':' &&  params[index][1] == ':' )
-        return ;
+    /// @NOTICE:to remeber it later
+    // if (params[index].size() > 2 && params[index][0] == ':' &&  params[index][1] == ':' )
+    //     return ;
     tmp = params[index].substr(1, params[index].size());
     for (size_t i = ++index; i < params.size(); i++)
     {
