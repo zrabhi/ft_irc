@@ -55,16 +55,7 @@ enum T_flag
 
 
 # define   ARGS_ERR                         "Usage: ./ircserv <port> <password>\nport: A number between 1025 and 65536\npassword: a sequence of characeters"
-# define   INVALID_ARGS()                   std::cerr << ARGS_ERR << std::endl
-# define   ERR_USERNOTINCHANNEL(a, b)       std::cout << a << " :They aren't on that channel" << b << std::endl;
-# define   ERR_USERONCHANNEL(a, b)          std::cout << a << " " << b << " :is already on channel" << std::endl;
-# define   ERR_SUMMONDISABLED(a)            std::cout << a << " has been disabled" << std::endl;
-# define   ERR_YOUREBANNEDCREEP             std::cout << " You are banned from this server" << std::endl;
-# define   ERR_INVITEONLYCHAN(a)            std::cout << a << " :Cannot join channel (+i)" << std::endl;
-# define   ERR_CHANNELISFULL(a)             std::cout << a << " :Cannot join channel (+l)" << std::endl;
-# define   ERR_BANNEDFROMCHAN(a)            std::cout << a << "  :Cannot join channel (+b)" << std::endl;
-# define   ERR_NOPRIVILEGES                 std::cout << " :Permission Denied- You're not an IRC operator" << std::endl;
-# define   ERR_CANTKILLSERVER               std::cout << " You cant kill a server!" << std::endl;
+# define   INVALID_ARGS                      std::cerr << ARGS_ERR << std::endl
 
 # define   ERR_ALREADYREGISTRED             "451 ERR_NOTREGISTERED :You have not registered\r\n" 
 # define   ERR_NEEDMOREPARAMS(a)            "461 ERR_NEEDMOREPARAMS <" + a +">:Not enough parameters\r\n"
@@ -94,23 +85,21 @@ enum T_flag
 # define   CLOSINGLINK(a)                    "ERROR :Closing Link: localhost (Quit: " + a +")\r\n"
 
 
-# define  NICKNAMEMESG(a)  "\033[1m\033[33myou are known as " +  a  +  RESET + "\n"
-# define  KNOWNNOWAS(a, b) std::cout << "\033[1m\033[32m" + a + " is now known as " + b + RESET << std::endl;
-# define  NEW_CLIENT(a, b, c)   std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
-# define  REPLYPASS(a)   "\033[1m\033[32mReply(650) : PASS <password>\n\033[0m"
+# define  NEW_CLIENT(a, b, c)  std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
 # define  REPLYUSER(a)   BOLDGREEN + a + " <username> <unused> <unused> :<realname> " + RESET + "\n"
-# define  KNOWNAS(a)  std::cout << BOLDCYAN  << "You are known as " + a << RESET << std::endl;
-# define  REPLYACCESS std::cout <<  BOLDGREEN << "Reply(650) : You dont have privilege " << RESET << std::endl; 
-# define  ERR_ALREADYUSED  "\033[1m\033[33m:Username is already in use \033[0m\n" 
-# define  NEWUSERNAME(a)  BOLDYELLOW + a + " is your username" + RESET + "\n"
-# define  NEWREALNAME(a)  BOLDYELLOW + a + " is your realname" + RESET + "\n"
 
-# define RPL_LUSERCLIENT(a)  "251 RPL_LUSERCLIENT :There are " + a[0] + " users and 1 server"
 
-# define  REPLYPRIVMSG       "\033[1m\033[33m<receiver> <text to be sent>\n\033[1m"
-# define  RPL_YOURHOST       "002 RPL_YOURHOST Your host is ft_irc_server, running version 1.1.2\r\n"
-# define  RPL_CREATED(a)     "003 RPL_CREATED This server was created " + a + "\r\n"  
-# define  RPL_WELCOME(a,b,c) "001 RPL_WELCOME Welcome to the Internet Relay Network " + a + "!"+ b +"@" + c + "\r\n"
+# define  RPL_LUSERCLIENT(a)    ":localhost 251 :There are " + a[0] + " users and 1 server"
+# define  RPL_WELCOME(a,b,c)    ":localhost 001 " + a +  " :Welcome to the Internet Relay Network " + a + "!"+ b +"@" + c + "\r\n"
+# define  RPL_YOURHOST(a)       ":localhost 002 " + a +  " :Your host is ft_irc_server, running version 1.1.2\r\n"
+# define  RPL_CREATED(a, b)     ":localhost 003 " + a +  " :This server was created " + b + "\r\n"  
+# define  RPL_MYINFO(a)         ":localhost 004 " + a +  " :localhost 1.0 - -\r\n"    
+# define  RPL_INFO(a)           ":localhost 372 " + a +  " :Please enjoy your stay!\r\n"
+# define  RPL_INFO1(a)          ":localhost 372 " + a +  " :         ┬ ┬┌─┐┬  ┌─┐┌─┐┌┬┐┌─┐  ┌┬┐┌─┐  ┬┬─┐┌─┐  ┌─┐┌─┐┬─┐┬  ┬┌─┐┬─┐\r\n"
+# define  RPL_INFO2(a)          ":localhost 372 " + a +  " :         │││├┤ │  │  │ ││││├┤    │ │ │  │├┬┘│    └─┐├┤ ├┬┘└┐┌┘├┤ ├┬┘\r\n"
+# define  RPL_INFO3(a)          ":localhost 372 " + a +  " :         └┴┘└─┘┴─┘└─┘└─┘┴ ┴└─┘   ┴ └─┘  ┴┴└─└─┘  └─┘└─┘┴└─ └┘ └─┘┴└─\r\n"
+
+# define  RPL_OTD(a)            ":localhost 376 " + a +  " :To show msg of the day run /MOTD command\r\n"
 #if a 
     {
         # define REPLY_PASS(a) std:: cout << BOLDGREEN << "Reply(650) : PASS <password>" 

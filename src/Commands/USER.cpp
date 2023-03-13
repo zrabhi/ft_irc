@@ -6,8 +6,6 @@ bool    Commands::USER(Vector params, Iterator &_client)
     if (params.size() < 5)
         return (replyto(ERR_NEEDMOREPARAMS(params[0]), _client->first) \
                 ,replyto(REPLYUSER(params[0]), _client->first), false);
-    else if (!validateUserName(params[1], _users, _client->first))
-            return (replyto(ERR_ALREADYUSED, _client->first), false);
     else if (!validateUser(params[1], true))
             return (replyto(ERR_ERRONEUSNICKNAME(params[1]), _client->first), false);  
     String tmp("");
