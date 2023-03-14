@@ -16,7 +16,9 @@ int main(int ac, char **av)
     try {  
         Server  server(av[1], av[2]);
         server.init();
-    } catch(std::exception& e) {
+    } 
+    catch(std::exception& e)
+    {
         std::cout << e.what() << std::endl;
         return 1;
     }

@@ -22,6 +22,7 @@ class Channel;
 class Client
 {
     private:
+        
         int                               _port;
         int                               _fd;
         int                               _auth;
@@ -37,6 +38,8 @@ class Client
         
         
     public:
+        std::string  _buffer;
+
         Client();
         Client(int newFd, std::string _serverPass, std::string hostName, int port, int newStatus);
         ~Client();
@@ -72,7 +75,6 @@ class Client
 
         void    partFromChannel(Channel &channel);
         void    joinChannel(Channel& channel);
-        std::string  _buffer;
 
 };
 

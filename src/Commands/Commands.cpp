@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/13 06:19:23 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/14 09:25:43 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void    Commands::makeUpper(String &param)
 
 bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
 {
+    
     switch (index)
     {
         case 0:
@@ -173,11 +174,11 @@ void    Commands::Welcome(String nickName, String userName, String hostName, int
     replyto(RPL_YOURHOST(nickName), reciever);
     replyto(RPL_CREATED(nickName, currentTime()), reciever);
     replyto(RPL_MYINFO(nickName), reciever);
-    replyto(RPL_INFO1(nickName), reciever);
-    replyto(RPL_INFO2(nickName), reciever);
-    replyto(RPL_INFO3(nickName), reciever);
-    replyto(RPL_INFO(nickName), reciever);
-    replyto(RPL_OTD(nickName), reciever);
+    replyto(RPL_INFO1(nickName),  reciever);
+    replyto(RPL_INFO2(nickName),  reciever);
+    replyto(RPL_INFO3(nickName),  reciever);
+    replyto(RPL_INFO(nickName),   reciever);
+    replyto(RPL_LAST(nickName),   reciever);
 }
 
 void    Commands::setPrivelege(Iterator &_it)
@@ -195,36 +196,31 @@ void    Commands::setPrivelege(Iterator &_it)
 bool    Commands::ignoredCommands(String cmd)
 {
     if (!cmd.compare("QUIT") || !cmd.compare("AWAY") || !cmd.compare("PING") \
-            || !cmd.compare("MODE") || !cmd.compare("WHO") || !cmd.compare("ISON"))
+            || !cmd.compare("MODE") || !cmd.compare("WHO") || !cmd.compare("ISON") || \
+                !cmd.compare("PONG"))
         return (false);
     return (true);
 }
 
 void    Commands::authentification(String &string, Map &_clients, int fd)
 {
-    Vector tmp1 = splite(string, "\r\n");
     _users = _clients;
     Iterator _it = _clients.find(fd); 
     size_t i = 0;
     
-    for (size_t j = 0; j < tmp1.size(); j++)
-    {
-        Vector tmp = splite(tmp1[j], " ");
-        if (tmp.size() == 0)
-            return ;
-        if (!ignoredCommands(tmp[0]))
-            return ;
-        makeUpper(tmp[0]);
-        for (i = 0;  i < 10 && tmp[0].compare(authCommands[i]); i++);
-        if (tmp.size() == 1 || tmp[1] == ":")
-        {   
-            commandsErrors(tmp[0], _clients.find(fd), i);
-            return;
-        }
-        if (!authCommandCheck(tmp, i,_it, _commands))
-            return ;
-        setPrivelege(_it);
+    Vector tmp = splite(string, " ");
+    if (tmp.size() == 0 || !ignoredCommands(tmp[0]))
+        return ;
+    makeUpper(tmp[0]);
+    for (i = 0;  i < 10 && tmp[0].compare(authCommands[i]); i++);
+    if (tmp.size() == 1 || tmp[1] == ":")
+    {   
+        commandsErrors(tmp[0], _clients.find(fd), i);
+        return;
     }
+    if (!authCommandCheck(tmp, i,_it, _commands))
+        return ;
+    setPrivelege(_it);
 }
 
 bool  Commands::validateNick(String nickName, Map _user, int fd)

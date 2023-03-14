@@ -13,3 +13,4 @@ bool Commands::QUIT(Vector params, Iterator &_client)
     close(_client->first);
     return (true);
 }
+ 

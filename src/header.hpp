@@ -30,7 +30,6 @@ enum T_flag
     GUEST,
     CLIENT,
     O,
-    o,
 };
 
 # define RESET       "\033[0m"
@@ -41,14 +40,15 @@ enum T_flag
 # define MAGENTA     "\033[35m"      
 # define CYAN        "\033[36m"      
 # define WHITE       "\033[37m"     
-# define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
-# define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
-# define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
-# define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
-# define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
-# define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
-# define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
-# define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+
+# define BOLDBLACK   "\033[1m\033[30m"    
+# define BOLDRED     "\033[1m\033[31m"     
+# define BOLDGREEN   "\033[1m\033[32m"    
+# define BOLDYELLOW  "\033[1m\033[33m"    
+# define BOLDBLUE    "\033[1m\033[34m"    
+# define BOLDMAGENTA "\033[1m\033[35m"    
+# define BOLDCYAN    "\033[1m\033[36m"    
+# define BOLDWHITE   "\033[1m\033[37m"    
 
 
 # define   ARGS_ERR                         "Usage: ./ircserv <port> <password>\nport: A number between 1025 and 65536\npassword: a sequence of characeters"
@@ -96,15 +96,6 @@ enum T_flag
 # define  RPL_INFO2(a)          ":localhost 372 " + a +  " :         │││├┤ │  │  │ ││││├┤    │ │ │  │├┬┘│    └─┐├┤ ├┬┘└┐┌┘├┤ ├┬┘\r\n"
 # define  RPL_INFO3(a)          ":localhost 372 " + a +  " :         └┴┘└─┘┴─┘└─┘└─┘┴ ┴└─┘   ┴ └─┘  ┴┴└─└─┘  └─┘└─┘┴└─ └┘ └─┘┴└─\r\n"
 
-# define  RPL_OTD(a)            ":localhost 376 " + a +  " :To show msg of the day run /MOTD command\r\n"
+# define  RPL_LAST(a)            ":localhost 376 " + a +  " :Made by ooumlil && zrabhi\r\n"
 
 # define ERR_BOT                ":461 ERR_NEEDMOREPARAMS :Use BOT help for more informations\r\n"
-#if a 
-    {
-        # define REPLY_PASS(a) std:: cout << BOLDGREEN << "Reply(650) : PASS <password>" 
-    }
-// #else
-// {
-//     std::cout << "else\n";
-// }
-#endif
