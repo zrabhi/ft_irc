@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/14 12:02:55 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/14 13:51:04 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ void    Commands::makeUpper(String &param)
 
 bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
 {
-    
+    if (index > 2 && index < 9 &&  _it->second.getStatus() != CLIENT )
+         return (replyto(ERR_NOTREGISTERED, _it->first), false);
     switch (index)
     {
         case 0:
@@ -79,31 +80,19 @@ bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
         case 2:
             return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
         case 3:
-            if (_it->second.getStatus() == CLIENT)
-                return (replyto(ERR_NORECIPIENT(cmd), _it->first), false);
-            return (replyto(ERR_UNKNOWNCOMMAND(cmd), _it->first), false);
+            return (replyto(ERR_NORECIPIENT(cmd), _it->first), false);
         case 4:
-            if (_it->second.getStatus() == CLIENT)
-                return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
-            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+            return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
         case 5:
-            if (_it->second.getStatus() == CLIENT)
-                return (false);
-            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+            return (false);
         case 6 :
-             if (_it->second.getStatus() == CLIENT)    
-                return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
-            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+            return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
         case 7:
-            if (_it->second.getStatus() == CLIENT)    
-                return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
-            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+            return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false);
         case 8:
-            if (_it->second.getStatus() == CLIENT)    
-                return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false); 
-            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+            return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false); 
         case 9:
-            return (ERR_BOT, false);
+            return (false);
      default:
             return (replyto(ERR_UNKNOWNCOMMAND(cmd), _it->first), false);
     }
@@ -112,6 +101,8 @@ bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
 
 bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BMemFunGuest _commands[])
 {
+    if (index > 2 && index < 9 && _it->second.getStatus() != CLIENT)
+        return (replyto(ERR_NOTREGISTERED, _it->first), false);
     switch (index)
     {
         case 0:
@@ -123,28 +114,17 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
         case 2:
             return((this->*_commands[index])(params, _it));
         case 3:
-            if (_it->second.getStatus() != GUEST)
-                return((this->*_commands[index])(params, _it));
+            return((this->*_commands[index])(params, _it));
         case 4:
-            if (_it->second.getStatus() != GUEST)
-                return((this->*_commands[index])(params, _it));
-            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+            return((this->*_commands[index])(params, _it));
         case 5:
-            if (_it->second.getStatus() != GUEST)
-                return((this->*_commands[index])(params, _it));
-            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+            return((this->*_commands[index])(params, _it));
         case 6:
-            if (_it->second.getStatus() != GUEST)
-                return((this->*_commands[index])(params, _it));
-            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+            return((this->*_commands[index])(params, _it));
         case 7:
-            if (_it->second.getStatus() != GUEST)
-                return((this->*_commands[index])(params, _it));
-            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+            return((this->*_commands[index])(params, _it));
         case 8:
-            if (_it->second.getStatus() != GUEST)
-                return((this->*_commands[index])(params, _it));
-            return (replyto(ERR_NOTREGISTERED, _it->first), false);
+            return((this->*_commands[index])(params, _it));
         case 9:
             return((this->*_commands[index])(params, _it));
         default:
@@ -180,11 +160,11 @@ void    Commands::Welcome(String nickName, String userName, String hostName, int
     replyto(RPL_CREATED(nickName, currentTime()), reciever);
     replyto(RPL_MYINFO(nickName), reciever);
     replyto(RPL_LUSERCLIENT(nickName, std::string(std::to_string(number))), reciever);
-    // replyto(RPL_HELLO, reciever);
     replyto(RPL_INFO1(nickName),  reciever);
     replyto(RPL_INFO2(nickName),  reciever);
     replyto(RPL_INFO3(nickName),  reciever);
     replyto(RPL_INFO(nickName),   reciever);
+    replyto(RPL_BOT(nickName), reciever);
     replyto(RPL_LAST(nickName),   reciever);
 }
 
@@ -210,8 +190,8 @@ void    Commands::setPrivelege(Iterator &_it)
 bool    Commands::ignoredCommands(String cmd)
 {
     if (!cmd.compare("QUIT") || !cmd.compare("AWAY") || !cmd.compare("PING") \
-            || !cmd.compare("MODE") || !cmd.compare("WHO") || !cmd.compare("ISON") || \
-                !cmd.compare("PONG"))
+            || !cmd.compare("MODE") || !cmd.compare("WHO") || !cmd.compare("ISON") \
+                || !cmd.compare("PONG"))
         return (false);
     return (true);
 }
@@ -229,7 +209,7 @@ void    Commands::authentification(String &string, Map &_clients, int fd)
     for (i = 0;  i < 10 && tmp[0].compare(authCommands[i]); i++);
     if (tmp.size() == 1 || tmp[1] == ":")
     {   
-        commandsErrors(tmp[0], _clients.find(fd), i);
+        commandsErrors(tmp[0], _it, i);
         return;
     }
     if (!authCommandCheck(tmp, i,_it, _commands))
@@ -284,7 +264,6 @@ void    Commands::appendToParams(Vector params, String &tmp, size_t index)
         tmp += params[index];
         return;
     }
-    /// @NOTICE:to remeber it later
     // if (params[index].size() > 2 && params[index][0] == ':' &&  params[index][1] == ':' )
     //     return ;
     tmp = params[index].substr(1, params[index].size());

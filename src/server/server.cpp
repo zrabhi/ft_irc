@@ -167,10 +167,7 @@ void Server::incomingClientData()
                 String msg = _clients.at(_fds.at(i).fd)._buffer.substr(0, pos);
                 _clients.at(_fds.at(i).fd)._buffer = _clients.at(_fds.at(i).fd)._buffer.substr(pos + 1);
                 if (!msg.empty())
-				{
-					std::cout << "[" << msg << "]" << std::endl;
                     _cmd.authentification(msg, _clients, _fds[i].fd);
-				}
                 pos = _clients[_fds[i].fd]._buffer.find_first_of("\r\n");
             }
             if (result == 0)
