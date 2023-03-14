@@ -19,7 +19,7 @@ Commands::BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
                                 &Commands::USER, &Commands::PRIVMSG,
                                 &Commands::JOIN, &Commands::NOTICE,
                                 &Commands::PART,&Commands::KICK,
-                                &Commands::TOPIC, &Commands::QUOTE};
+                                &Commands::TOPIC, &Commands::BOT};
 Commands::Commands()
 {
     authCommands.push_back("NICK");
@@ -29,9 +29,9 @@ Commands::Commands()
     authCommands.push_back("JOIN");
     authCommands.push_back("NOTICE");
     authCommands.push_back("PART");
-    authCommands.push_back("KICK");    
+    authCommands.push_back("KICK");
     authCommands.push_back("TOPIC");
-    authCommands.push_back("QUOTE");
+    authCommands.push_back("BOT");
 }
 
 Commands::~Commands()
@@ -101,7 +101,7 @@ bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
                 return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false); 
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
         case 9:
-            return (ERR_BOT ,false);
+            return (ERR_BOT, false);
      default:
             return (replyto(ERR_UNKNOWNCOMMAND(cmd), _it->first), false);
     }

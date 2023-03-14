@@ -59,7 +59,6 @@ std::string getQuote()
         return "FAILURE";
     }
     std::string quote = quote_content.substr(0, quote_end_pos);
-
     // Clean up
     curl_easy_cleanup(curl);
     curl_global_cleanup();
@@ -81,7 +80,7 @@ std::string failedQuote()
     return quotes[rand() % 8];
 }
 
-bool    Commands::QUOTE(Vector params, Iterator &_client)
+bool    Commands::BOT(Vector params, Iterator &_client)
 {
     (void)params;
     String response("");
