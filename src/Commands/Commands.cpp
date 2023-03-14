@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/14 13:51:04 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/14 14:17:57 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ Commands::~Commands()
 Vector Commands::splite(String &parametrs,  String delemiter)
 {
 	Vector splited;
+    
 	for (char *token = std::strtok(const_cast<char *>(parametrs.c_str()), delemiter.c_str());\
          token != NULL; token = std::strtok(nullptr, delemiter.c_str()))
 		splited.push_back(token);
@@ -136,9 +137,10 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
 String Commands::currentTime()
 {
    time_t now(time(0));
+   String value;
    char* dt(ctime(&now));
-   std::string value(dt);
    
+   value = dt;
    return (value.substr(0, value.find("\n")));
 }
 
@@ -159,12 +161,12 @@ void    Commands::Welcome(String nickName, String userName, String hostName, int
     replyto(RPL_YOURHOST(nickName), reciever);
     replyto(RPL_CREATED(nickName, currentTime()), reciever);
     replyto(RPL_MYINFO(nickName), reciever);
-    replyto(RPL_LUSERCLIENT(nickName, std::string(std::to_string(number))), reciever);
+    replyto(RPL_LUSERCLIENT(nickName, String(std::to_string(number))), reciever);
     replyto(RPL_INFO1(nickName),  reciever);
     replyto(RPL_INFO2(nickName),  reciever);
     replyto(RPL_INFO3(nickName),  reciever);
     replyto(RPL_INFO(nickName),   reciever);
-    replyto(RPL_BOT(nickName), reciever);
+    replyto(RPL_BOT(nickName),    reciever);
     replyto(RPL_LAST(nickName),   reciever);
 }
 
@@ -175,6 +177,7 @@ void    Commands::WelcomeGuest(int reciever)
 	replyto(NOTICEGUEST, reciever);
 	replyto(AV_COMMANDS, reciever);
 }
+
 void    Commands::setPrivelege(Iterator &_it)
 {
    

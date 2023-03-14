@@ -14,7 +14,6 @@ bool Commands::NOTICE(Vector params, Iterator &_client)
     reciever = FindUser(params[1], _client->first);
     if (reciever == _users.end())
         return (false);
-    replyto(NOTICE_MSG(_client->second.getNickName(), params[1], tmp), reciever->first);
-    std::cout << "Message is sent !" << std::endl;
-    return (true);
+    return (replyto(NOTICE_MSG(_client->second.getNickName(), params[1], tmp),\
+            reciever->first), true);
 }

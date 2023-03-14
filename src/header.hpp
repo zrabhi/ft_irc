@@ -24,14 +24,14 @@
 # include "Commands/Commands.hpp"
 
 
-enum T_flag
+enum t_flag
 {   
     NOT_REGISTERED = 0,
     REGISTERD = 1,
     GUEST,
     CLIENT,
     O,
-};
+} ;
 
 # define RESET       "\033[0m"
 # define RED         "\033[30m"

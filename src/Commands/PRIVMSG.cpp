@@ -28,6 +28,5 @@ bool    Commands::PRIVMSG(Vector params,  Iterator &_client)
                 }
             }
     }
-    std::cout << "Message is sent !" << std::endl;
     return (true);
 }

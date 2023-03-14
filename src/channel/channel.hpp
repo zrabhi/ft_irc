@@ -4,12 +4,6 @@
 # include "../client/client.hpp"
 # include <map>
 
-enum {
-    PUBLIC = 0,
-    INVITE_ONLY = 1,
-    RESTRICTED = 2,
-    PRIVATE = 3
-} ;
 
 class Channel
 {

@@ -6,13 +6,13 @@
 #include <curl/curl.h>
 #include <vector>
 
-static size_t WriteCallback(char* ptr, size_t size, size_t nmemb, std::string* data)
+static size_t WriteCallback(char* ptr, size_t size, size_t nmemb, String* data)
 {
     data->append(ptr, size * nmemb);
     return size * nmemb;
 }
 
-std::string getQuote()
+String getQuote()
 {
     // Initialize curl
     curl_global_init(CURL_GLOBAL_ALL);
@@ -23,12 +23,10 @@ std::string getQuote()
         return "FAILURE";
     // Set the URL to fetch a random quote
     curl_easy_setopt(curl, CURLOPT_URL, "http://www.quotationspage.com/random.php");
-
     // Set the callback function to handle the received data
-    std::string response;
+    String response;
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-
     // Perform the request
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK)
@@ -37,37 +35,36 @@ std::string getQuote()
         curl_global_cleanup();
         return "FAILURE";
     }
-
     // Find the quote in the received data
-    std::string start_tag = "<a title=\"Click for further information about this quotation\" href=\"";
-    std::string end_tag = "\">";
-    std::string::size_type start_pos = response.find(start_tag);
-    std::string::size_type end_pos = response.find(end_tag, start_pos + start_tag.length());
-    if (start_pos == std::string::npos || end_pos == std::string::npos)
+    String start_tag = "<a title=\"Click for further information about this quotation\" href=\"";
+    String end_tag = "\">";
+    String::size_type start_pos = response.find(start_tag);
+    String::size_type end_pos = response.find(end_tag, start_pos + start_tag.length());
+    if (start_pos == String::npos || end_pos == String::npos)
     {
         curl_easy_cleanup(curl);
         curl_global_cleanup();
         return "FAILURE";
     }
-    std::string quote_content = response.substr(end_pos + end_tag.length());
-    std::string::size_type quote_end_pos = quote_content.find("</a>");
-    if (quote_end_pos == std::string::npos)
+    String quote_content = response.substr(end_pos + end_tag.length());
+    String::size_type quote_end_pos = quote_content.find("</a>");
+    if (quote_end_pos == String::npos)
     {
         std::cerr << "Failed to find end of quote content." << std::endl;
         curl_easy_cleanup(curl);
         curl_global_cleanup();
         return "FAILURE";
     }
-    std::string quote = quote_content.substr(0, quote_end_pos);
+    String quote = quote_content.substr(0, quote_end_pos);
     // Clean up
     curl_easy_cleanup(curl);
     curl_global_cleanup();
     return quote;
 }
 
-std::string failedQuote() 
+String failedQuote() 
 {
-    std::vector<std::string> quotes;
+    Vector quotes;
     srand(time(0));
     quotes.push_back("The only way to do great work is to love what you do.");
     quotes.push_back("I am not a product of my circumstances. I am a product of my decisions.");
