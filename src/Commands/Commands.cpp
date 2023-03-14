@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/14 09:25:43 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/14 09:51:34 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,7 @@ void    Commands::countUsers(int &numbers)
 
 void    Commands::Welcome(String nickName, String userName, String hostName, int reciever)
 {
+
     replyto(RPL_WELCOME(nickName, userName, hostName), reciever);
     replyto(RPL_YOURHOST(nickName), reciever);
     replyto(RPL_CREATED(nickName, currentTime()), reciever);

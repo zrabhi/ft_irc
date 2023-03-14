@@ -129,6 +129,8 @@ bool	Server::acceptNewConnection()
 
 void	Server::addClientSockettoFdSet() 
 {
+	_cmd.replyto(NOTICE1, _newSocketFd);
+	_cmd.replyto(NOTICE2, _newSocketFd);
 	Client _new_client(_newSocketFd, _password, inet_ntoa(_address.sin_addr),\
 				ntohs(_address.sin_port) , GUEST);
 	_new_client._buffer = "";

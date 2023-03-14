@@ -86,6 +86,8 @@ enum T_flag
 # define  REPLYUSER(a)   BOLDGREEN + a + " <username> <unused> <unused> :<realname> " + RESET + "\n"
 
 
+# define  NOTICE1                ":localhost NOTICE AUTH :*** Looking up for your hostname...\r\n"
+# define  NOTICE2                ":localhost NOTICE AUTH :*** Found your hostname\r\n"  
 # define  RPL_LUSERCLIENT(a)    ":localhost 251 :There are " + a[0] + " users and 1 server"
 # define  RPL_WELCOME(a,b,c)    ":localhost 001 " + a +  " :Welcome to the Internet Relay Network " + a + "!"+ b +"@" + c + "\r\n"
 # define  RPL_YOURHOST(a)       ":localhost 002 " + a +  " :Your host is ft_irc_server, running version 1.1.2\r\n"
@@ -95,7 +97,7 @@ enum T_flag
 # define  RPL_INFO1(a)          ":localhost 372 " + a +  " :         ┬ ┬┌─┐┬  ┌─┐┌─┐┌┬┐┌─┐  ┌┬┐┌─┐  ┬┬─┐┌─┐  ┌─┐┌─┐┬─┐┬  ┬┌─┐┬─┐\r\n"
 # define  RPL_INFO2(a)          ":localhost 372 " + a +  " :         │││├┤ │  │  │ ││││├┤    │ │ │  │├┬┘│    └─┐├┤ ├┬┘└┐┌┘├┤ ├┬┘\r\n"
 # define  RPL_INFO3(a)          ":localhost 372 " + a +  " :         └┴┘└─┘┴─┘└─┘└─┘┴ ┴└─┘   ┴ └─┘  ┴┴└─└─┘  └─┘└─┘┴└─ └┘ └─┘┴└─\r\n"
-
+# define  RPL_INFO4(a)           ":localhost 372 " + a + " : "
 # define  RPL_LAST(a)            ":localhost 376 " + a +  " :Made by ooumlil && zrabhi\r\n"
 
 # define ERR_BOT                ":461 ERR_NEEDMOREPARAMS :Use BOT help for more informations\r\n"
