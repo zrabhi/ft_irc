@@ -105,16 +105,11 @@ bool	Server::listenforConnections()
 
 bool	Server::monitorEvents()
 {
-	int poll_ret = poll(&_fds[0], _fds.size(), -1); /// Should add a timeout for poll instead of -1
-	if (poll_ret <= 0)
+	if (poll(&_fds[0], _fds.size(), -1) == -1)
 	{
-		if (poll_ret == -1)
-		{
-			std::cerr << "poll() failed: " << strerror(errno) << std::endl;
-			close(_serverFd);
-			return false;
-		}
-		/// to add a condition for timeout
+		std::cerr << "poll() failed: " << strerror(errno) << std::endl;
+		close(_serverFd);
+		return false;
 	}
 	return true;
 }
@@ -136,11 +131,11 @@ void	Server::addClientSockettoFdSet()
 {
 	Client _new_client(_newSocketFd, _password, inet_ntoa(_address.sin_addr),\
 				ntohs(_address.sin_port) , GUEST);
+	_new_client._buffer = "";
 	struct pollfd newGuestFd;
 	newGuestFd.fd = _newSocketFd;
 	newGuestFd.events = POLLIN;
 	_fds.push_back(newGuestFd);
-	std::cout << "Welcome Client #" << _fds.at(_fds.size() - 1).fd << std::endl;
 	_clients.insert(std::make_pair(_newSocketFd, _new_client));
 }
 
@@ -155,38 +150,48 @@ bool	Server::incomingConnectionRequest()
 	return true;
 }
 
-void	Server::incomingClientData()
+void Server::incomingClientData()
 {
-	for (size_t i = 1; i < _fds.size(); i++)
-	{	
-		if (_fds.at(i).revents & POLLIN)
-		{
-			char buffer[1024] = {0};
-			int result = recv(_fds.at(i).fd, &buffer, sizeof(buffer), 0);
-			std::cout << "buffer__" << buffer << std::endl;
-			if (buffer[0] != '\n' && buffer[0] != 0)
-			{
-				std::string buf(buffer);
-				_cmd.authentification(buf, _clients, _fds[i].fd);
-			}
-			if (result == 0)
-			{
-				std::cout << "Client #" << _fds.at(i).fd << " Left" << std::endl;
-				_clients.erase(_fds.at(i).fd);
-				close(_fds.at(i).fd);
-				_fds.erase(_fds.begin() + i);
-				i--;
-			} 
-			else if (result == -1) 
-			{
-				if (errno != EAGAIN)
-				{
-					close(_fds.at(i).fd);
-					_fds.erase(_fds.begin() + i);
-				}
-			}
-		}
-	}
+    for (size_t i = 1; i < _fds.size(); i++)
+    {   
+        if (_fds.at(i).revents & POLLIN)
+        {
+            char buffer[1024] = {0};
+            int result = recv(_fds.at(i).fd, &buffer, sizeof(buffer), 0);
+            if (result > 0)
+                _clients.at(_fds.at(i).fd)._buffer += std::string(buffer, result);
+            size_t pos = _clients.at(_fds.at(i).fd)._buffer.find_first_of("\r\n");
+            while (pos != std::string::npos)
+            {
+                std::string msg = _clients.at(_fds.at(i).fd)._buffer.substr(0, pos);
+                _clients.at(_fds.at(i).fd)._buffer = _clients.at(_fds.at(i).fd)._buffer.substr(pos + 1);
+                if (!msg.empty())
+                    _cmd.authentification(msg, _clients, _fds[i].fd);
+                pos = _clients[_fds[i].fd]._buffer.find_first_of("\r\n");
+            }
+            if (result == 0)
+            {
+				std::string name = _clients[_fds.at(i).fd].getNickName();
+				if (name.empty())
+	                std::cout << "Guest Left" << std::endl;
+				else
+	                std::cout << name << " Left" << std::endl;
+                _clients.at(_fds.at(i).fd)._buffer.clear();
+                _clients.erase(_fds.at(i).fd);
+                close(_fds.at(i).fd);
+                _fds.erase(_fds.begin() + i);
+                i--;
+            } 
+            else if (result == -1) 
+            {
+                if (errno != EWOULDBLOCK)
+                {
+                    close(_fds.at(i).fd);
+                    _fds.erase(_fds.begin() + i);
+                }
+            }
+        }
+    }
 }
 
 void	Server::init()

@@ -17,8 +17,9 @@
 
 Commands::BMemFunGuest _commands[] = {&Commands::NICK, &Commands::PASS,
                                 &Commands::USER, &Commands::PRIVMSG,
-                                &Commands::JOIN, &Commands::NOTICE, &Commands::PART,
-                                &Commands::KICK, &Commands::TOPIC};
+                                &Commands::JOIN, &Commands::NOTICE,
+                                &Commands::PART,&Commands::KICK,
+                                &Commands::TOPIC, &Commands::QUOTE};
 Commands::Commands()
 {
     authCommands.push_back("NICK");
@@ -30,6 +31,7 @@ Commands::Commands()
     authCommands.push_back("PART");
     authCommands.push_back("KICK");    
     authCommands.push_back("TOPIC");
+    authCommands.push_back("QUOTE");
 }
 
 Commands::~Commands()
@@ -98,12 +100,13 @@ bool    Commands::commandsErrors(String cmd, Iterator _it, size_t index)
             if (_it->second.getStatus() == CLIENT)    
                 return (replyto(ERR_NEEDMOREPARAMS(cmd), _it->first), false); 
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
+        case 9:
+            return (ERR_BOT ,false);
      default:
             return (replyto(ERR_UNKNOWNCOMMAND(cmd), _it->first), false);
     }
     return (false);
 }
-
 
 bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BMemFunGuest _commands[])
 {
@@ -140,6 +143,8 @@ bool    Commands::authCommandCheck(Vector params, size_t index, Iterator _it, BM
             if (_it->second.getStatus() != GUEST)
                 return((this->*_commands[index])(params, _it));
             return (replyto(ERR_NOTREGISTERED, _it->first), false);
+        case 9:
+            return((this->*_commands[index])(params, _it));
         default:
             return(replyto(ERR_UNKNOWNCOMMAND(params[0]), _it->first), false);
     }
@@ -155,7 +160,7 @@ String Commands::currentTime()
    return (value.substr(0, value.find("\n")));
 }
 
-void    Commands::countUsers (int &numbers)
+void    Commands::countUsers(int &numbers)
 {
     Iterator _it = _users.begin();
     for(;_it != _users.end();_it++)
@@ -183,7 +188,7 @@ void    Commands::setPrivelege(Iterator &_it)
     {
        _it->second.setStatus(CLIENT);
        Welcome(_it->second.getNickName(), _it->second.getUserName(),_it->second.getHostName(),_it->first);
-       NEW_CLIENT(_it->first, _it->second.getHostName(), _it->second.getPort());
+       NEW_CLIENT(_it->second.getNickName(), _it->second.getHostName(), _it->second.getPort());
     }
 }
 
@@ -210,7 +215,7 @@ void    Commands::authentification(String &string, Map &_clients, int fd)
         if (!ignoredCommands(tmp[0]))
             return ;
         makeUpper(tmp[0]);
-        for (i = 0;  i < 9 && tmp[0].compare(authCommands[i]); i++);
+        for (i = 0;  i < 10 && tmp[0].compare(authCommands[i]); i++);
         if (tmp.size() == 1 || tmp[1] == ":")
         {   
             commandsErrors(tmp[0], _clients.find(fd), i);

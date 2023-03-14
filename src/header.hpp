@@ -23,9 +23,6 @@
 # include <sys/_types/_socklen_t.h>
 # include "Commands/Commands.hpp"
 
-
-
-
 enum T_flag
 {   
     NOT_REGISTERED = 0,
@@ -85,7 +82,7 @@ enum T_flag
 # define   CLOSINGLINK(a)                    "ERROR :Closing Link: localhost (Quit: " + a +")\r\n"
 
 
-# define  NEW_CLIENT(a, b, c)  std::cout << "New client #" << a << " added from " << b << ":" << c << std::endl;
+# define  NEW_CLIENT(a, b, c)  std::cout << "New client <" << a << "> added from " << b << ":" << c << std::endl;
 # define  REPLYUSER(a)   BOLDGREEN + a + " <username> <unused> <unused> :<realname> " + RESET + "\n"
 
 
@@ -100,6 +97,8 @@ enum T_flag
 # define  RPL_INFO3(a)          ":localhost 372 " + a +  " :         └┴┘└─┘┴─┘└─┘└─┘┴ ┴└─┘   ┴ └─┘  ┴┴└─└─┘  └─┘└─┘┴└─ └┘ └─┘┴└─\r\n"
 
 # define  RPL_OTD(a)            ":localhost 376 " + a +  " :To show msg of the day run /MOTD command\r\n"
+
+# define ERR_BOT                ":461 ERR_NEEDMOREPARAMS :Use BOT help for more informations\r\n"
 #if a 
     {
         # define REPLY_PASS(a) std:: cout << BOLDGREEN << "Reply(650) : PASS <password>" 

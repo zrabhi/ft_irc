@@ -91,6 +91,7 @@ class Commands
         bool        INVITE(Vector params, Iterator &_client);
         bool        TOPIC(Vector params, Iterator &_client);
         bool        QUIT(Vector params, Iterator &_client);
+        bool        QUOTE(Vector params, Iterator &_client);
         // bool        LIST(Vector params, Iterator &_client);
 };
 

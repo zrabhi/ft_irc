@@ -72,6 +72,7 @@ class Client
 
         void    partFromChannel(Channel &channel);
         void    joinChannel(Channel& channel);
+        std::string  _buffer;
 
 };
 
