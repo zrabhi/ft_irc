@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 18:57:03 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/10 00:31:55 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/14 11:28:10 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ Client::Client() : _port(),
 
 }
 
-Client::Client(int newFd, std::string _serverPass, std::string hostName, int port, int newStatus) :_port(port),
+Client::Client(int newFd, String _serverPass, String hostName, int port, int newStatus) :_port(port),
     _fd(newFd),
         _auth(NOT_REGISTERED),
              _status(newStatus),
@@ -55,7 +55,7 @@ int     Client::getFd() const
     return _fd;
 }
 
-std::string Client::getNickName() const
+String Client::getNickName() const
 {
     return (_nickname);
 }
@@ -65,27 +65,27 @@ int Client::getAuth() const
     return (_auth);
 }
 
-std::string Client::getPassWord() const
+String Client::getPassWord() const
 {
     return (passWord);
 }
 
-std::string  Client::getRealName() const
+String  Client::getRealName() const
 {
     return (_realname);
 }
 
-std::string Client::getServerPass() const
+String Client::getServerPass() const
 {
     return (serverPass);
 }
 
-std::string Client::getUserName() const
+String Client::getUserName() const
 {
     return (_username);
 }
 
-std::string Client::getHostName() const
+String Client::getHostName() const
 {
     return (_hostname);
 }
@@ -110,12 +110,12 @@ int Client::getOperatorPrivilege() const
     return opreatorPrivilege;
 }
 
-std::map<std::string, Channel> Client::getJoinedChannels() const
+ChannelMap Client::getJoinedChannels() const
 {
     return _joinedChannels;
 }
 
-void    Client::setNickName(std::string NickName)
+void    Client::setNickName(String NickName)
 {
     _nickname = NickName;
 }
@@ -125,17 +125,17 @@ void    Client::setPort(int __port)
 {
     _port = __port;
 }
-void    Client::setPassWord(std::string _password)
+void    Client::setPassWord(String _password)
 {
     passWord = _password;
 }
 
-void    Client::setServerPass(std::string _serverpass)
+void    Client::setServerPass(String _serverpass)
 {
     serverPass = _serverpass;
 }
 
-void    Client::setRealName(std::string realName)
+void    Client::setRealName(String realName)
 {
     _realname = realName;
 }
@@ -155,7 +155,7 @@ void   Client::setStatus(int newStatus)
     _status = newStatus;
 }
 
-void    Client::setUserName(std::string UserName)
+void    Client::setUserName(String UserName)
 {
     _username = UserName;
 }
@@ -170,9 +170,9 @@ void    Client::partFromChannel(Channel &channel)
     _joinedChannels.erase(channel.getName());
 }
 
-bool Client::isInChannel(std::string channelName)
+bool Client::isInChannel(String channelName)
 {
-    std::map<std::string, Channel>::iterator _it = _joinedChannels.begin();
+    ChannelMap::iterator _it = _joinedChannels.begin();
     for(; _it !=  _joinedChannels.end(); _it++)
     {
         if (channelName == _it->first)

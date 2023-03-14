@@ -21,27 +21,30 @@ class Channel;
 
 class Client
 {
+    public:
+        typedef std::string                     String;
+        typedef std::map<String, Channel>       ChannelMap;
     private:
         
-        int                               _port;
-        int                               _fd;
-        int                               _auth;
-        int                               _status;
-        int                               opreatorPrivilege;
-        std::string                       _hostname;
-        std::string                       serverPass;         
-        std::string                       passWord;
-        std::string                       _nickname;
-        std::string                       _username;
-        std::string                       _realname;
-        std::map<std::string, Channel>    _joinedChannels;
+        int                  _port;
+        int                  _fd;
+        int                  _auth;
+        int                  _status;
+        int                  opreatorPrivilege;
+        String               _hostname;
+        String               serverPass;         
+        String               passWord;
+        String               _nickname;
+        String               _username;
+        String               _realname;
+        ChannelMap           _joinedChannels;
         
         
     public:
-        std::string  _buffer;
+        String  _buffer;
 
         Client();
-        Client(int newFd, std::string _serverPass, std::string hostName, int port, int newStatus);
+        Client(int newFd, String _serverPass, String hostName, int port, int newStatus);
         ~Client();
 
         /// @brief getters 
@@ -50,33 +53,34 @@ class Client
         int         getStatus() const;
         int         getFd() const;
         int         getOperatorPrivilege() const;
-        std::string getPassWord() const;
-        std::string getHostName() const;
-        std::string getServerPass() const;
-        std::string getRealName()   const;
-        std::string getNickName() const;
-        std::string getUserName() const;
+        String      getPassWord() const;
+        String      getHostName() const;
+        String      getServerPass() const;
+        String      getRealName()   const;
+        String      getNickName() const;
+        String      getUserName() const;
 
-        std::map<std::string, Channel> getJoinedChannels() const;
+        ChannelMap  getJoinedChannels() const;
      
         /// @brief Setters
+        bool        isInChannel(String channelName);
 
-        bool   isInChannel(std::string channelName);
-        void   setPort(int __port);
-        void   setNickName(std::string NickName);
-        void   setPassWord(std::string _password);
-        void   setServerPass(std::string _serverpass);
-        void   setAuth(int newAuth);
-        void   setStatus(int newStatus);
-        void   setFd(int newFd);
-        void   setRealName(std::string realName);
-        void   setUserName(std::string UserName);
-        void   setOperatorPrivilege(int Privilege);
-
-        void    partFromChannel(Channel &channel);
-        void    joinChannel(Channel& channel);
+        
+        void        setPort(int __port);
+        void        setNickName(String NickName);
+        void        setPassWord(String _password);
+        void        setServerPass(String _serverpass);
+        void        setAuth(int newAuth);
+        void        setStatus(int newStatus);
+        void        setFd(int newFd);
+        void        setRealName(String realName);
+        void        setUserName(String UserName);
+        void        setOperatorPrivilege(int Privilege);
+        void        partFromChannel(Channel &channel);
+        void        joinChannel(Channel& channel);
 
 };
 
-
+typedef Client::String      String;
+typedef Client::ChannelMap  ChannelMap;
 #endif

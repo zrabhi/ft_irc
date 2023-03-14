@@ -13,35 +13,40 @@ enum {
 
 class Channel
 {
+
+    public:
+          typedef std::string                    String;
+          typedef std::map<int , Client>         Map;
     private:
-        std::string           _name; // contains up to 50 characters, doesnt have spaces or comma (,) in the name.
-        std::string           _topic; // contains up to 200 characters
-        std::string           _key; //
-        std::map<int, Client> _operators; //
-        std::map<int, Client> _users; //
-        bool                  _hasKey; //
-        Client                _creator; //
-        // std::map<int, Client> _operators;
-        // to add clients map here for operators;
+        String          _name; // contains up to 50 characters, doesnt have spaces or comma (,) in the name.
+        String          _topic; // contains up to 200 characters
+        String          _key; //
+        Map             _operators; //
+        Map             _users; //
+        Client          _creator; //
+        bool            _hasKey; //
+       
         
     public:
         Channel();
-        Channel(std::string name, std::string key, Client creator);
+        Channel(String name, String key, Client creator);
         ~Channel();
 
-        std::string    getName() const;
-        std::string    getKey() const;
-        std::map<int, Client> getUsers() const;
-        std::string     getUsersList() const;
-        short           getType() const;
-        std::string     geTopic() const;   
+        String    getName() const;
+        String    getKey() const;
+        Map       getUsers() const;
+        String    getUsersList() const;
+        short     getType() const;
+        String    geTopic() const;   
 
-        void    setName(const std::string&);
-        void    setKey(const std::string&);
-        void    setType(short);
-        void    setTopic(const std::string topic);
-
-        void    RemoveUser(Client &client);
-        bool    checkKey(const std::string& key) const;
-        void    addUser(Client& client,bool PrivilegeSetter);
+        void      setName(const String&);
+        void      setKey(const String&);
+        void      setType(short);
+        void      setTopic(const String topic);
+        void      RemoveUser(Client &client);
+        bool      checkKey(const String& key) const;
+        void      addUser(Client& client,bool PrivilegeSetter);
 } ;
+
+typedef   Channel::Map           Map;
+typedef   Channel::String        String;

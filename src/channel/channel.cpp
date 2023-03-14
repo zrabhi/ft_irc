@@ -5,7 +5,7 @@ Channel::Channel() :
 _name(""), _topic(""), _key("")
 {}
 
-Channel::Channel(std::string name, std::string key, Client creator) : 
+Channel::Channel(String name, String key, Client creator) : 
 _name(name), _topic(""), _key(key), _creator(creator)
 {
 }
@@ -15,16 +15,16 @@ Channel::~Channel()
 
 }
 
-std::string    Channel::getName() const 
+String    Channel::getName() const 
 {
     return _name;
 }
 
-std::string     Channel::getUsersList() const
+String     Channel::getUsersList() const
 {
-    std::string list = ":";
+    String list = ":";
 
-    std::map<int, Client>::const_iterator iter = _users.begin();
+    Map::const_iterator iter = _users.begin();
     for (; iter != _users.end(); iter++)
     {
         if (iter->second.getNickName() == _creator.getNickName())
@@ -36,38 +36,38 @@ std::string     Channel::getUsersList() const
     return (list);
 }
 
-std::map<int, Client> Channel::getUsers()  const
+Map Channel::getUsers()  const
 {
     return _users;
 }
 
-std::string    Channel::getKey() const 
+String    Channel::getKey() const 
 {
     return _key;
 }
 
-void    Channel::setName(const std::string& name) 
+void    Channel::setName(const String& name) 
 {
     _name = name;
 }
 
-void    Channel::setTopic(const std::string topic)
+void    Channel::setTopic(const String topic)
 {
     _topic = topic;
 }
 
-std::string Channel::geTopic() const
+String Channel::geTopic() const
 {
     return _topic;
 }
 
-void    Channel::setKey(const std::string& key) 
+void    Channel::setKey(const String& key) 
 {
     _key = key;
 }
 
 
-bool Channel::checkKey(const std::string& key) const
+bool Channel::checkKey(const String& key) const
 {
     return (key == _key);
 }

@@ -6,7 +6,7 @@
 #include <vector>
 // #include "../header.hpp"
 
-Server::Server( std::string port, std::string password) 
+Server::Server( String port, String password) 
 {
 	if (atoi(port.c_str()) < 1024 || atoi(port.c_str()) > 65536)
 		throw std::runtime_error("Port number should be between 1025 and 65536");
@@ -24,7 +24,7 @@ void	Server::setPort( int n )
 	_port = n; 
 }
 
-void	Server::setPassword( std::string password )
+void	Server::setPassword( String password )
 {
 	_password = password; 
 }
@@ -34,11 +34,11 @@ int		Server::getPort() const
 	return _port;
 } 
 
-std::map<int, Client> Server::getClients() const 
+Map Server::getClients() const 
 { 
 	return _clients; 
 }
-std::string Server::getPassword() const 
+String Server::getPassword() const 
 { 
 	return _password; 
 }
@@ -129,10 +129,9 @@ bool	Server::acceptNewConnection()
 
 void	Server::addClientSockettoFdSet() 
 {
-	_cmd.replyto(NOTICE1, _newSocketFd);
-	_cmd.replyto(NOTICE2, _newSocketFd);
+	_cmd.WelcomeGuest(_newSocketFd);
 	Client _new_client(_newSocketFd, _password, inet_ntoa(_address.sin_addr),\
-				ntohs(_address.sin_port) , GUEST);
+			ntohs(_address.sin_port) , GUEST);
 	_new_client._buffer = "";
 	struct pollfd newGuestFd;
 	newGuestFd.fd = _newSocketFd;
@@ -161,11 +160,11 @@ void Server::incomingClientData()
             char buffer[1024] = {0};
             int result = recv(_fds.at(i).fd, &buffer, sizeof(buffer), 0);
             if (result > 0)
-                _clients.at(_fds.at(i).fd)._buffer += std::string(buffer, result);
+                _clients.at(_fds.at(i).fd)._buffer += String(buffer, result);
             size_t pos = _clients.at(_fds.at(i).fd)._buffer.find_first_of("\r\n");
-            while (pos != std::string::npos)
+            while (pos != String::npos)
             {
-                std::string msg = _clients.at(_fds.at(i).fd)._buffer.substr(0, pos);
+                String msg = _clients.at(_fds.at(i).fd)._buffer.substr(0, pos);
                 _clients.at(_fds.at(i).fd)._buffer = _clients.at(_fds.at(i).fd)._buffer.substr(pos + 1);
                 if (!msg.empty())
 				{
@@ -176,7 +175,7 @@ void Server::incomingClientData()
             }
             if (result == 0)
             {
-				std::string name = _clients[_fds.at(i).fd].getNickName();
+				String name = _clients[_fds.at(i).fd].getNickName();
 				if (name.empty())
 	                std::cout << "Guest Left" << std::endl;
 				else

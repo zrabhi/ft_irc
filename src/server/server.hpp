@@ -11,29 +11,36 @@
 
 class Server {
 
+	public:
+		
+		typedef std::string          		String;
+		typedef std::map<int , Client>    	Map;
+		typedef	std::vector<pollfd>         VectorFDS;
+	
 	private:
 		int					  _port;
-		std::string 		  _password;
+		String 		  	      _password;
 		int					  _serverFd;
 		int					  _newSocketFd;
 		struct sockaddr_in	  _address;
-		std::vector<pollfd>	  _fds;
+		VectorFDS	  	      _fds;
 		Commands			  _cmd;
-		std::map<int, Client> _clients;
+		Map 				  _clients;
 
 		Server();
 		Server(const Server& obj);
 		Server& operator = (const Server& obj);
 
 	public:
-		Server( std::string port, std::string password);
+		Server( String port, String password);
 		~Server();
+		
 		void		setPort( int n );
-		void		setPassword( std::string password );
+		void		setPassword( String password );
 
 		int			getPort() const;
-		std::string getPassword() const;
-		std::map<int, Client> getClients() const;
+		String 		getPassword() const;
+		Map 		getClients() const;
 
 		bool		createSocket();
 		bool		setSocketOptions();
@@ -47,5 +54,9 @@ class Server {
 		void		addClientSockettoFdSet();
 		void		init();
 } ;
+
+typedef Server::Map          	Map;
+typedef Server::String        	String;
+typedef	Server::VectorFDS       VectorFDS;
 
 #endif

@@ -87,9 +87,6 @@ bool    Commands::BOT(Vector params, Iterator &_client)
     String quote = getQuote();
     if (quote == "FAILURE")
         quote = failedQuote();
-    response += "300 RPL_NONE :";
-    response += quote;
-    response += "\r\n";
-    replyto(response, _client->first);
-    return true;
+    response += "300 RPL_NONE :" + quote + "\r\n";
+    return (replyto(response, _client->first), true);
 }

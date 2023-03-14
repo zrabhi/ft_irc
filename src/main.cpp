@@ -1,6 +1,7 @@
 #include "header.hpp"
 # include "./server/server.hpp"
-bool isNum(char *arg) {
+bool isNum(char *arg) 
+{
     if (!arg || !arg[0])
         return false;
     for (int i = 0; arg[i]; i++)

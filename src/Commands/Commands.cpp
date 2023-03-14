@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:39:35 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/14 09:51:34 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/14 12:02:55 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void    Commands::replyto(String _message, int fd)
 {
     message = _message;
     send(fd, message.c_str(), message.size(), 0);
+    std::string tmp;
 } 
 
 void    Commands::makeUpper(String &param)
@@ -170,11 +171,16 @@ void    Commands::countUsers(int &numbers)
 
 void    Commands::Welcome(String nickName, String userName, String hostName, int reciever)
 {
+    int number;
 
+    number = 0;
+    countUsers(number);
     replyto(RPL_WELCOME(nickName, userName, hostName), reciever);
     replyto(RPL_YOURHOST(nickName), reciever);
     replyto(RPL_CREATED(nickName, currentTime()), reciever);
     replyto(RPL_MYINFO(nickName), reciever);
+    replyto(RPL_LUSERCLIENT(nickName, std::string(std::to_string(number))), reciever);
+    // replyto(RPL_HELLO, reciever);
     replyto(RPL_INFO1(nickName),  reciever);
     replyto(RPL_INFO2(nickName),  reciever);
     replyto(RPL_INFO3(nickName),  reciever);
@@ -182,6 +188,13 @@ void    Commands::Welcome(String nickName, String userName, String hostName, int
     replyto(RPL_LAST(nickName),   reciever);
 }
 
+void    Commands::WelcomeGuest(int reciever)
+{
+    replyto(NOTICE1, reciever);
+	replyto(NOTICE2, reciever);
+	replyto(NOTICEGUEST, reciever);
+	replyto(AV_COMMANDS, reciever);
+}
 void    Commands::setPrivelege(Iterator &_it)
 {
    

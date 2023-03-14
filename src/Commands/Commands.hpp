@@ -6,7 +6,7 @@
 /*   By: zrabhi <zrabhi@student.1337.ma >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 20:28:24 by zrabhi            #+#    #+#             */
-/*   Updated: 2023/03/13 05:06:57 by zrabhi           ###   ########.fr       */
+/*   Updated: 2023/03/14 11:44:52 by zrabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ class Commands
         void        broadcastTopicMessage(Iterator _client, Channel &channel, String message);
         void        noticeClient(Iterator client, Channel channel);
         void        Welcome(String nickName, String userName, String hostName, int reciever);
-        
         bool        FindUsersInChannel(String channelName,Vector_map &Users, int fd);
         bool        checkParams(String params);
         bool        commandsErrors(String cmd, Iterator _it, size_t index);
@@ -76,6 +75,7 @@ class Commands
         Commands();
         ~Commands();
        
+        void        WelcomeGuest(int reciever);
         void        authentification(String &string, Map &_clients, int fd);
         void        replyto(String message, int fd);
         bool        authCommandCheck(Vector params, size_t index, Iterator _it, BMemFunGuest _commands[]);
@@ -92,7 +92,6 @@ class Commands
         bool        TOPIC(Vector params, Iterator &_client);
         bool        QUIT(Vector params, Iterator &_client);
         bool        BOT(Vector params, Iterator &_client);
-        // bool        LIST(Vector params, Iterator &_client);
 };
 
 typedef Commands::ChannelMap    ChannelMap;
@@ -101,7 +100,7 @@ typedef Commands::Vector_map    Vector_map;
 typedef Commands::Map           Map;
 typedef Commands::String        String;
 typedef Commands::Iterator      Iterator;
-typedef Commands::Vector_it      Vector_it;
+typedef Commands::Vector_it     Vector_it;
 
 
 #endif
