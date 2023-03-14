@@ -98,12 +98,10 @@ enum t_flag
 # define  RPL_INFO2(a)          ":localhost 372 " + a +  " :         │││├┤ │  │  │ ││││├┤    │ │ │  │├┬┘│    └─┐├┤ ├┬┘└┐┌┘├┤ ├┬┘\r\n"
 # define  RPL_INFO3(a)          ":localhost 372 " + a +  " :         └┴┘└─┘┴─┘└─┘└─┘┴ ┴└─┘   ┴ └─┘  ┴┴└─└─┘  └─┘└─┘┴└─ └┘ └─┘┴└─\r\n"
 # define  RPL_INFO(a)           ":localhost 372 " + a +  " :                        Please enjoy your stay!\r\n"
-# define  RPL_BOT(a)            ":localhost 372 " + a +  " :you can use bot command (<BOT> <unused>) to get quote of the day!\r\n"
+# define  RPL_BOT(a)            ":localhost 372 " + a +  " :you can use bot command (BOT) to get quote of the day!\r\n"
 # define  RPL_LAST(a)           ":localhost 376 " + a +  " :Made by ooumlil && zrabhi\r\n"
 
 
 
 # define NOTICEGUEST            ":localhost NOTICE AUTH :*** You are now connected to the server as `Guest`,If you want to be an irc 'CLIENT' you have to register\r\n"
 # define AV_COMMANDS            ":localhost NOTICE AUTH :*** Available commands for resgistration: \n          NICK: <nickname>\n          USER: username> <unused> <unused> <realname>\n          PASS: <password>\r\n"
-
-# define ERR_BOT                ":461 ERR_NEEDMOREPARAMS :Use BOT help for more informations\r\n"

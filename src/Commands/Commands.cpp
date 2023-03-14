@@ -210,7 +210,7 @@ void    Commands::authentification(String &string, Map &_clients, int fd)
         return ;
     makeUpper(tmp[0]);
     for (i = 0;  i < 10 && tmp[0].compare(authCommands[i]); i++);
-    if (tmp.size() == 1 || tmp[1] == ":")
+    if (tmp.at(0) != "BOT" && (tmp.size() == 1 || tmp[1] == ":"))
     {   
         commandsErrors(tmp[0], _it, i);
         return;

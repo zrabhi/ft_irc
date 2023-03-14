@@ -14,20 +14,14 @@ static size_t WriteCallback(char* ptr, size_t size, size_t nmemb, String* data)
 
 String getQuote()
 {
-    // Initialize curl
     curl_global_init(CURL_GLOBAL_ALL);
-
-    // Create a curl handle
     CURL* curl = curl_easy_init();
     if (!curl)
         return "FAILURE";
-    // Set the URL to fetch a random quote
     curl_easy_setopt(curl, CURLOPT_URL, "http://www.quotationspage.com/random.php");
-    // Set the callback function to handle the received data
     String response;
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-    // Perform the request
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK)
     {
@@ -35,7 +29,6 @@ String getQuote()
         curl_global_cleanup();
         return "FAILURE";
     }
-    // Find the quote in the received data
     String start_tag = "<a title=\"Click for further information about this quotation\" href=\"";
     String end_tag = "\">";
     String::size_type start_pos = response.find(start_tag);
@@ -50,13 +43,11 @@ String getQuote()
     String::size_type quote_end_pos = quote_content.find("</a>");
     if (quote_end_pos == String::npos)
     {
-        std::cerr << "Failed to find end of quote content." << std::endl;
         curl_easy_cleanup(curl);
         curl_global_cleanup();
         return "FAILURE";
     }
     String quote = quote_content.substr(0, quote_end_pos);
-    // Clean up
     curl_easy_cleanup(curl);
     curl_global_cleanup();
     return quote;
@@ -74,7 +65,7 @@ String failedQuote()
     quotes.push_back("The greatest glory in living lies not in never falling, but in rising every time we fall.");
     quotes.push_back("Life is 10% what happens to us and 90% how we react to it.");
     quotes.push_back("Success is not final, failure is not fatal: it is the courage to continue that counts.");
-    return quotes[rand() % 8];
+    return quotes[rand() % quotes.size()];
 }
 
 bool    Commands::BOT(Vector params, Iterator &_client)
